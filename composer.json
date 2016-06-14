@@ -3,7 +3,7 @@
     "description": "WonderWP Framework part",
     "type": "library",
     "require": {
-        
+        "symfony/http-foundation": "~2.8|^3.0"
     },
     "license": "MIT",
     "authors": [
