@@ -1,0 +1,15 @@
+{
+    "name": « wonderwp/framework »,
+    "description": "WonderWP Framework part",
+    "type": "library",
+    "require": {
+        
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jeremy Desvaux",
+            "email": "jeremy.desvaux@wonderful.com"
+        }
+    ]
+}
