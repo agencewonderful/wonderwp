@@ -1,5 +1,5 @@
 {
-    "name": « wonderwp/framework »,
+    "name": "wonderwp/framework",
     "description": "WonderWP Framework part",
     "type": "library",
     "require": {
