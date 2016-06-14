@@ -11,5 +11,11 @@
             "name": "Jeremy Desvaux",
             "email": "jeremy.desvaux@wonderful.com"
         }
-    ]
+    ],
+    "autoload": {
+        "psr-4": { "WonderWp\\": "src" },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
+    }
 }
