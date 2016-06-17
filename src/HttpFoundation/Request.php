@@ -9,25 +9,18 @@
 namespace WonderWp\HttpFoundation;
 
 use \Symfony\Component\HttpFoundation\Request as SRequest;
+use Symfony\Component\HttpFoundation\Session\Session;
+use WonderWp\AbstractDefinitions\Singleton;
 
-class Request{
+class Request extends Singleton{
 
     private static $_instance = null;
-
-    /**
-     * Prevent external instance creation
-     */
-    private function __construct() { }
-
-    /**
-     * Prevent external instance cloning
-     */
-    private function __clone() { }
 
     public static function getInstance()
     {
         if (!self::$_instance instanceof SRequest) {
             self::$_instance = SRequest::createFromGlobals();
+            self::$_instance->setSession(new Session());
         }
         return self::$_instance;
     }
