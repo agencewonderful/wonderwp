@@ -1,0 +1,10 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: jeremydesvaux
+ * Date: 15/06/2016
+ * Time: 18:33
+ */
+?>
+<div id="wonderwp-wrap">
+    <h1><?php echo esc_html( $values['title'] ); ?></h1>
