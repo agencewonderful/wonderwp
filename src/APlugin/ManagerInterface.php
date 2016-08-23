@@ -24,4 +24,6 @@ interface ManagerInterface{
 
     public function getRouter();
 
+    public function getAssetService();
+
 }

@@ -2,6 +2,7 @@
 
 namespace WonderWp\APlugin;
 
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use WonderWp\DI\Container;
 
@@ -23,6 +24,7 @@ abstract class AbstractPluginActivator implements ActivatorInterface{
         if ( $installed_ver != $this->_version ) {
 
             $container = Container::getInstance();
+            /** @var EntityManager $entityManager */
             $entityManager = $container->offsetGet('entityManager');
             $st = new SchemaTool($entityManager);
 

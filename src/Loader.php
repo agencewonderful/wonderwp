@@ -9,9 +9,20 @@ namespace WonderWp;
 
 use WonderWp\AbstractDefinitions\Singleton;
 use WonderWp\Assets\Asset;
+use WonderWp\Assets\AssetEnqueuer;
+use WonderWp\Assets\AssetManager;
+use WonderWp\Assets\AssetExporter;
+use WonderWp\Assets\AssetRenderer;
+use WonderWp\Assets\DirectAssetEnqueuer;
+use WonderWp\Assets\JsonAssetEnqueuer;
+use WonderWp\Assets\JsonAssetExporter;
 use WonderWp\DI\Container;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
+use WonderWp\Forms\Form;
+use WonderWp\Forms\FormValidator;
+use WonderWp\Forms\ModelForm;
+use WonderWp\Forms\FormView;
 
 class Loader extends Singleton{
 
@@ -92,11 +103,42 @@ class Loader extends Singleton{
             return EntityManager::create($conn, $config, $evm);
         };
 
-        //AssetsManager
+        //Assets
         $container['wwp.assets.manager'] = function(){
-            return AssetsManager::getInstance();
+            return AssetManager::getInstance();
         };
+        $container['wwp.assets.exporterClass'] = JsonAssetExporter::class;
         $container['wwp.assets.assetClass'] = Asset::class;
+        $container['wwp.assets.manifest.path'] = $container['path_root'].'/assets.json';
+        $container['wwp.assets.enqueuer'] = function($container){
+            return new JsonAssetEnqueuer($container['wwp.assets.manifest.path']);
+        };
+        $container['wwp.assets.folder.prefix'] = './';
+        $container['wwp.assets.folder.path'] = str_replace(get_bloginfo('url'),'',get_stylesheet_directory_uri());
+
+        //Forms
+        $container['wwp.forms.modelForm'] = $container->factory(function($c){
+            return new ModelForm();
+        });
+        $container['wwp.forms.form'] = $container->factory(function($c){
+            return new Form();
+        });
+        $container['wwp.forms.formView'] = $container->factory(function($c){
+            return new FormView();
+        });
+        $container['wwp.forms.formValidator'] = $container->factory(function($c){
+            return new FormValidator();
+        });
+
+        //FileSystem
+        $container['wwp.fileSystem'] = function(){
+            global $wp_filesystem;
+            if (empty($wp_filesystem)) {
+                require_once (ABSPATH . '/wp-admin/includes/file.php');
+                WP_Filesystem();
+            }
+            return $wp_filesystem;
+        };
 
         /**
          * Make container available

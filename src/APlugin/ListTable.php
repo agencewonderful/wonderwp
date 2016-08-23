@@ -96,7 +96,7 @@ class ListTable extends \WP_List_Table{
             'action'=>'edit'
         );
         $editPage = admin_url('/admin.php?'.http_build_query($editParams));
-        $addBtn = '<a href="'.$editPage.'" class="button action noewpaddrecordbtn">'.__('addRecord.trad').'</a>';
+        $addBtn = '<a href="'.$editPage.'" class="button action noewpaddrecordbtn">'.esc_html_x('Add New', 'link').'</a>';
         echo $addBtn;
     }
 
@@ -157,8 +157,8 @@ class ListTable extends \WP_List_Table{
         );
         $deleteParams=$editParams;
         $deleteParams['action']='delete';
-        if(in_array('edit',$allowedActions)){ echo '<a href="'.admin_url('/admin.php?'.http_build_query($editParams)).'">Editer</a>'; }
-        if(in_array('delete',$allowedActions)){ echo '<a href="'.admin_url('/admin.php?'.http_build_query($deleteParams)).'">Supprimer</a>'; }
+        if(in_array('edit',$allowedActions)){ echo '<a class="edit-link" href="'.admin_url('/admin.php?'.http_build_query($editParams)).'">'.__( 'Edit' ).'</a>'; }
+        if(in_array('delete',$allowedActions)){ echo '<a class="delete-link" href="'.admin_url('/admin.php?'.http_build_query($deleteParams)).'">'. __( 'Delete' ).'</a>'; }
     }
 
 }

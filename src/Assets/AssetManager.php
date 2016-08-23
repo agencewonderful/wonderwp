@@ -1,13 +1,14 @@
 <?php
 
 namespace WonderWp\Assets;
+use WonderWp\DI\Container;
 
 /**
  * AssetsManager
  *
  * @author Jeremy D Noe
  */
-class AssetsManager {
+class AssetManager {
 
     /**
      * Instance
@@ -24,6 +25,8 @@ class AssetsManager {
      * @var array
      */
     protected $_queue = array();
+
+    protected $_services = array();
 
 
     /**
@@ -58,6 +61,18 @@ class AssetsManager {
         return self::$_instance;
     }
 
+    public function addAssetService(AssetServiceInterface $assetService){
+        $this->_services[] = $assetService;
+    }
+
+    public function callServices(){
+        if(!empty($this->_services)){ foreach($this->_services as $service){
+            /** @var AssetServiceInterface $service */
+            $assetClass = Container::getInstance()->offsetGet('wwp.assets.assetClass');
+            $service->registerAssets($this,$assetClass);
+        }}
+    }
+
     /**
      * Add a dependency to consider
      * @param string $type ('js' || 'css'), the type of asset to use
@@ -72,7 +87,7 @@ class AssetsManager {
      */
     public function registerAsset($type,$dependency){
         $dependencies = $this->_dependencies;
-        $dependencies[$type][$dependency->name] = $dependency;
+        $dependencies[$type][$dependency->handle] = $dependency;
         $this->_dependencies = $dependencies;
         return $this;
     }
@@ -129,7 +144,7 @@ class AssetsManager {
                 $groupFiles = $this->getDependenciesFromGroup($group);
                 foreach($groupFiles as $dep) {
                     /* @var $dep Asset */
-                    if($group != 'min' || in_array($dep->name, $toRender)) $filesToRender[] = $dep->name;
+                    if($group != 'min' || in_array($dep->handle, $toRender)) $filesToRender[] = $dep->handle;
                 }
             }
             $toRender = array_merge($toRender, $filesToRender);
@@ -143,7 +158,7 @@ class AssetsManager {
         if(!empty($this->_queue[$type])){ foreach($this->_queue[$type] as $i=>$handle){
             /* @var $handle Asset */
             if(!empty($jsIndex[$handle])){
-                $group = $jsIndex[$handle]->group;
+                $group = $jsIndex[$handle]->concatGroup;
                 if(!isset($fullQueue[$group])) $fullQueue[$group] = array();
                 $fullQueue[$group][]=$jsIndex[$handle];
                 $groupsOrder[$group] = $i;
@@ -162,26 +177,24 @@ class AssetsManager {
      * Reorder the dependencies in the right order
      * @param array $toRender
      * @param string $type, the type to reorder (by default js)
-     * @param bool $renderAllGroup, if true and handle is a group, order every js of the group
      * @return array
      */
-    public function orderDependencies($toRender=array(),$type='js',$renderAllGroup=true){
+    public function orderDependencies($toRender=array(),$type='js'){
         $jsIndex = $this->_dependencies[$type];
         if(!empty($toRender)){ foreach($toRender as $handle){
             /* @var $s Asset */
             if(!empty($jsIndex[$handle])){
                 $s = $jsIndex[$handle];
-                $s->renderAllGroup = $s->renderAllGroup ? true : $renderAllGroup;
-                $deps = $s->requires;
+                $deps = $s->deps;
                 if(!empty($deps)){ $this->orderDependencies($deps,$type,false); }
                 //echo'<br />Ordering '.$s->name;
-                array_push($this->_queue[$type],$s->name);
+                array_push($this->_queue[$type],$s->handle);
             } else if(strpos($handle, 'group:') !== false) {
                 $group = str_replace('group:', '', $handle);
                 $deps = $this->getDependenciesFromGroup($group, $type);
                 $depsFlat = array();
                 foreach($deps as $dep) {
-                    $depsFlat[] = $dep->name;
+                    $depsFlat[] = $dep->handle;
                 }
                 $this->orderDependencies($depsFlat, $type);
             }

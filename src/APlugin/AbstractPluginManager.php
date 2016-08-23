@@ -67,6 +67,7 @@ abstract class AbstractPluginManager extends AbstractManager{
         }
 
         $this->_translate();
+        add_action( 'wwp_gather_assets', array($this,'registerAssets') );
 
     }
 
@@ -79,6 +80,8 @@ abstract class AbstractPluginManager extends AbstractManager{
         };
         $container[$this->plugin_name.'.wwp.path.templates.frags.header'] = $templatePath.'/t_header.php';
         $container[$this->plugin_name.'.wwp.path.templates.frags.list'] = $templatePath.'/t_list.php';
+        $container[$this->plugin_name.'.wwp.path.templates.frags.edit'] = $templatePath.'/t_edit.php';
+        $container[$this->plugin_name.'.wwp.path.templates.frags.tabs'] = $templatePath.'/t_tabs.php';
         $container[$this->plugin_name.'.wwp.path.templates.frags.footer'] = $templatePath.'/t_footer.php';
     }
 
@@ -110,6 +113,7 @@ abstract class AbstractPluginManager extends AbstractManager{
      * @since    1.0.0
      */
     public function run() {
+        parent::run();
         $this->loader->run();
     }
 
@@ -149,5 +153,9 @@ abstract class AbstractPluginManager extends AbstractManager{
     }
 
     public function loadTextdomain(){}
+
+    public function getAssetService(){
+        return $this->_container->offsetExists($this->plugin_name.'.assetService') ? $this->_container->offsetGet($this->plugin_name.'.assetService') : null;
+    }
 
 }
