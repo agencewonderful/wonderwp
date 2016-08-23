@@ -158,4 +158,8 @@ abstract class AbstractPluginBackendController{
     public function getTabs(){
 
     }
+
+    public function getMinCapability(){
+        return 'read';
+    }
 }

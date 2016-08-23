@@ -93,7 +93,10 @@ abstract class AbstractPluginManager extends AbstractManager{
      * @access   private
      */
     protected function define_admin_hooks($adminController) {
-
+        if(method_exists($adminController, 'customizeMenus')){
+            //Admin pages
+            $this->loader->add_action( 'admin_menu', $adminController, 'customizeMenus' );
+        }
     }
 
     /**
