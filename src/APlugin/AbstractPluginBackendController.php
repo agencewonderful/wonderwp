@@ -51,7 +51,7 @@ abstract class AbstractPluginBackendController{
 
     }
 
-    public function route(){
+    public function getRoute(){
         $request = Request::getInstance();
         $action = $request->get('action','');
         if(empty($action)){
@@ -62,6 +62,15 @@ abstract class AbstractPluginBackendController{
             }
             if(empty($action)){ $action = 'list'; }
         }
+        return $action;
+    }
+
+    public function route(){
+        $action = $this->getRoute();
+        $this->execRoute($action);
+    }
+
+    public function execRoute($action){
         $action.='Action';
 
         if(method_exists($this,$action)) {
@@ -76,6 +85,16 @@ abstract class AbstractPluginBackendController{
 
         if(empty($listTableInstance)) {
             $listTableInstance = $container->offsetGet($this->plugin_name . '.wwp.listTable.class');
+        }
+
+        $entityName = $listTableInstance->getEntityName();
+        if(empty($entityName) && $container->offsetExists($this->plugin_name . '.wwp.entityName')){
+            $listTableInstance->setEntityName($container->offsetGet($this->plugin_name . '.wwp.entityName'));
+        }
+
+        $textDomain = $listTableInstance->getTextDomain();
+        if(empty($textDomain) && $container->offsetExists($this->plugin_name . '.wwp.textDomain')){
+            $listTableInstance->setTextDomain($container->offsetGet($this->plugin_name . '.wwp.textDomain'));
         }
 
         $tabs = $this->getTabs();
@@ -109,6 +128,11 @@ abstract class AbstractPluginBackendController{
         //Build model form, by adding fields corresponding to the model attributes, to the form instance
         /* @var $modelForm \WonderWp\Forms\ModelForm */
         $modelForm = $container->offsetExists($this->plugin_name.'wwp.forms.modelForm') ? $container->offsetGet($this->plugin_name.'wwp.forms.modelForm') : $container->offsetGet('wwp.forms.modelForm');
+        $textDomain = $modelForm->getTextDomain();
+        if(empty($textDomain) && $container->offsetExists($this->plugin_name . '.wwp.textDomain')){
+            $container->offsetGet($this->plugin_name . '.wwp.textDomain');
+            $modelForm->setTextDomain($container->offsetGet($this->plugin_name . '.wwp.textDomain'));
+        }
         $modelForm->setModelInstance($item);
         $modelForm->setFormInstance($formInstance)->buildForm();
 
@@ -144,11 +168,11 @@ abstract class AbstractPluginBackendController{
         //Load entity
         $id = $request->get('id',0);
         $entityName = $container->offsetGet($this->plugin_name.'.wwp.entityName');
-        /*if(!empty($id)) {
+        if(!empty($id)) {
             $item = $em->find($entityName, $id);
             $em->remove($item);
             $em->flush();
-        }*/
+        }
         $request->query->remove('action');
         $request->query->remove('id');
 

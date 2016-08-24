@@ -18,6 +18,8 @@ class ModelForm{
     /** @var Form */
     protected $_formInstance;
 
+    protected $_textDomain;
+
     /**
      * @return mixed
      */
@@ -49,6 +51,22 @@ class ModelForm{
     {
         $this->_formInstance = $formInstance;
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTextDomain()
+    {
+        return $this->_textDomain;
+    }
+
+    /**
+     * @param mixed $textDomain
+     */
+    public function setTextDomain($textDomain)
+    {
+        $this->_textDomain = $textDomain;
     }
 
     public function buildForm(){
@@ -83,14 +101,15 @@ class ModelForm{
         $entity = $this->_modelInstance;
 
         $val = $entity->$fieldName;
+        $label = __($fieldName.'.trad',$this->_textDomain);
 
         //Field
         switch($type){
             case'text':
-                $f = new TextAreaField($attr->getFieldName(), $val, ['label'=>'Label '.$fieldName]);
+                $f = new TextAreaField($attr->getFieldName(), $val, ['label'=>$label]);
                 break;
             default:
-                $f = new InputField($attr->getFieldName(), $val, ['label'=>'Label '.$fieldName]);
+                $f = new InputField($attr->getFieldName(), $val, ['label'=>$label]);
                 break;
         }
 

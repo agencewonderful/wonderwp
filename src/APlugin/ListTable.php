@@ -29,7 +29,7 @@ class ListTable extends \WP_List_Table{
     {
         //Extend args
         if(!empty($args['entityName'])){ $this->_entityName=$args['entityName']; }
-        $this->_textDomain = !empty($args['textdomain']) ? $args['textdomain'] : 'default';
+        if(!empty($args['textDomain'])){ $this->_textDomain =  $args['textDomain']; }
 
         $this->_container = Container::getInstance();
         $this->_em = $this->_container->offsetGet('entityManager');
@@ -37,6 +37,38 @@ class ListTable extends \WP_List_Table{
         parent::__construct($args);
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEntityName()
+    {
+        return $this->_entityName;
+    }
+
+    /**
+     * @param string $entityName
+     */
+    public function setEntityName($entityName)
+    {
+        $this->_entityName = $entityName;
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function getTextDomain()
+    {
+        return $this->_textDomain;
+    }
+
+    /**
+     * @param mixed|string $textDomain
+     */
+    public function setTextDomain($textDomain)
+    {
+        $this->_textDomain = $textDomain;
     }
 
     public function prepare_items()
@@ -157,8 +189,8 @@ class ListTable extends \WP_List_Table{
         );
         $deleteParams=$editParams;
         $deleteParams['action']='delete';
-        if(in_array('edit',$allowedActions)){ echo '<a class="edit-link" href="'.admin_url('/admin.php?'.http_build_query($editParams)).'">'.__( 'Edit' ).'</a>'; }
-        if(in_array('delete',$allowedActions)){ echo '<a class="delete-link" href="'.admin_url('/admin.php?'.http_build_query($deleteParams)).'">'. __( 'Delete' ).'</a>'; }
+        if(in_array('edit',$allowedActions)){ echo ' <a class="edit-link" href="'.admin_url('/admin.php?'.http_build_query($editParams)).'">'.__( 'Edit' ).'</a>'; }
+        if(in_array('delete',$allowedActions)){ echo ' <a class="delete-link" href="'.admin_url('/admin.php?'.http_build_query($deleteParams)).'">'. __( 'Delete' ).'</a>'; }
     }
 
 }

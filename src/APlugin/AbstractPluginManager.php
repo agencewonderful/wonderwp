@@ -82,6 +82,7 @@ abstract class AbstractPluginManager extends AbstractManager{
         $container[$this->plugin_name.'.wwp.path.templates.frags.list'] = $templatePath.'/t_list.php';
         $container[$this->plugin_name.'.wwp.path.templates.frags.edit'] = $templatePath.'/t_edit.php';
         $container[$this->plugin_name.'.wwp.path.templates.frags.tabs'] = $templatePath.'/t_tabs.php';
+        $container[$this->plugin_name.'.wwp.path.templates.frags.options'] = $templatePath.'/t_options.php';
         $container[$this->plugin_name.'.wwp.path.templates.frags.footer'] = $templatePath.'/t_footer.php';
     }
 
