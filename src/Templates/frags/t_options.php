@@ -20,6 +20,7 @@ if ($request->getMethod() == 'POST' && !empty($request->request->get('action') &
     }
 }
 ?>
+<div class="options-wrap">
 <form method="post" action="" class="">
 
     <table class="form-table">
@@ -149,3 +150,4 @@ if ($request->getMethod() == 'POST' && !empty($request->request->get('action') &
         <input type="hidden" name="action" value="save"/>
     </p>
 </form>
+</div>
