@@ -5,6 +5,7 @@ namespace WonderWp\APlugin;
 use WonderWp\DI\Container;
 use Pimple\Container as PContainer;
 use WonderWp\HttpFoundation\Request;
+use WonderWp\Route\Router;
 
 abstract class AbstractManager implements ManagerInterface
 {
@@ -161,6 +162,16 @@ abstract class AbstractManager implements ManagerInterface
             $assetManager = $this->_container->offsetGet('wwp.assets.manager');
             $assetManager->addAssetService($assetService);
         }
+
+        //Routes
+        /** @var RouteServiceInterface $routeService */
+        $routeService = $this->getService(self::$ROUTESERVICENAME);
+        if (is_object($routeService)) {
+            /** @var Router $router */
+            $router = $this->_container->offsetGet('wwp.Router');
+            $router->addService($routeService);
+        }
+
     }
 
 }

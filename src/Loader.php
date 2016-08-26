@@ -23,6 +23,7 @@ use WonderWp\Forms\Form;
 use WonderWp\Forms\FormValidator;
 use WonderWp\Forms\ModelForm;
 use WonderWp\Forms\FormView;
+use WonderWp\Route\Router;
 
 class Loader extends Singleton{
 
@@ -101,6 +102,11 @@ class Loader extends Singleton{
 
             $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
             return EntityManager::create($conn, $config, $evm);
+        };
+
+        //Routes
+        $container['wwp.routes.router'] = function(){
+            return new Router();
         };
 
         //Assets
