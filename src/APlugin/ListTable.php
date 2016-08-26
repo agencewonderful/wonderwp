@@ -8,9 +8,6 @@ use WonderWp\HttpFoundation\Request;
 
 class ListTable extends \WP_List_Table{
 
-    /* @var \WonderWp\DI\Container */
-    protected $_container;
-
     /* @var \Doctrine\ORM\EntityManager */
     protected $_em;
 
@@ -31,8 +28,7 @@ class ListTable extends \WP_List_Table{
         if(!empty($args['entityName'])){ $this->_entityName=$args['entityName']; }
         if(!empty($args['textDomain'])){ $this->_textDomain =  $args['textDomain']; }
 
-        $this->_container = Container::getInstance();
-        $this->_em = $this->_container->offsetGet('entityManager');
+        $this->_em = Container::getInstance()->offsetGet('entityManager');
 
         parent::__construct($args);
 

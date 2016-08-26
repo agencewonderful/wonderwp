@@ -22,8 +22,4 @@ interface ManagerInterface{
     
     public function run();
 
-    public function getRouter();
-
-    public function getAssetService();
-
 }

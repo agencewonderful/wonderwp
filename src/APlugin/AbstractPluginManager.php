@@ -2,18 +2,22 @@
 
 namespace WonderWp\APlugin;
 
+use WonderWp\Assets\AssetManager;
+use WonderWp\Assets\AssetServiceInterface;
 use WonderWp\DI\Container;
 use WonderWp\APlugin\loader;
 use Pimple\Container as PContainer;
+use WonderWp\Services\HookServiceInterface;
 
-abstract class AbstractPluginManager extends AbstractManager{
+abstract class AbstractPluginManager extends AbstractManager
+{
 
     /**
      * The unique identifier of this plugin.
      *
      * @since    1.0.0
      * @access   protected
-     * @var      string    $plugin_name    The string used to uniquely identify this plugin.
+     * @var      string $plugin_name The string used to uniquely identify this plugin.
      */
     protected $plugin_name;
 
@@ -22,19 +26,9 @@ abstract class AbstractPluginManager extends AbstractManager{
      *
      * @since    1.0.0
      * @access   protected
-     * @var      string    $version    The current version of the plugin.
+     * @var      string $version The current version of the plugin.
      */
     protected $version;
-
-    /**
-     * The loader that's responsible for maintaining and registering all hooks that power
-     * the plugin.
-     *
-     * @since    1.0.0
-     * @access   protected
-     * @var      Wonderwp_Loader    $loader    Maintains and registers all hooks for the plugin.
-     */
-    protected $loader;
 
     /**
      * Define the core functionality of the plugin.
@@ -44,81 +38,47 @@ abstract class AbstractPluginManager extends AbstractManager{
      * the public-facing side of the site.
      *
      * @since    1.0.0
+     *
+     * @param Container $plugin_name
+     * @param $plugin_version
      */
-    public function __construct($plugin_name,$plugin_version) {
+    public function __construct($plugin_name, $plugin_version)
+    {
 
         $this->plugin_name = $plugin_name;
         $this->version = $plugin_version;
 
-        parent::__construct();
-
-        $container = Container::getInstance();
-
-        $this->loader = new \WonderWp\APlugin\Loader();
-
-        if($container->offsetExists($this->plugin_name.'.adminController')) {
-            $adminController = $container->offsetGet($this->plugin_name . '.adminController');
-            $this->define_admin_hooks($adminController);
-        }
-
-        if($container->offsetExists($this->plugin_name.'.publicController')) {
-            $publicController = $container->offsetGet($this->plugin_name . '.publicController');
-            $this->define_public_hooks($publicController);
-        }
-
-        $this->_translate();
-        add_action( 'wwp_gather_assets', array($this,'registerAssets') );
-
+        return parent::__construct();
     }
 
+    /**
+     * Registers config, controllers, services etc usable by the plugin components
+     * @param PContainer $container
+     */
     public function register(PContainer $container)
     {
-        $templatePath = $container->offsetGet('wwp.path.templates.frags');
+        //Config
+        $prefix = $this->get_plugin_name();
+        $this->setConfig('prefix', $prefix);
+        $this->setConfig('version', $this->get_version());
 
-        $container[$this->plugin_name.'.wwp.listTable.class'] = function(){
+        //Services
+        $this->addService(AbstractManager::$LISTTABLESERVICENAME, function ($container) {
             return new \WP_List_Table();
-        };
-        $container[$this->plugin_name.'.wwp.path.templates.frags.header'] = $templatePath.'/t_header.php';
-        $container[$this->plugin_name.'.wwp.path.templates.frags.list'] = $templatePath.'/t_list.php';
-        $container[$this->plugin_name.'.wwp.path.templates.frags.edit'] = $templatePath.'/t_edit.php';
-        $container[$this->plugin_name.'.wwp.path.templates.frags.tabs'] = $templatePath.'/t_tabs.php';
-        $container[$this->plugin_name.'.wwp.path.templates.frags.options'] = $templatePath.'/t_options.php';
-        $container[$this->plugin_name.'.wwp.path.templates.frags.footer'] = $templatePath.'/t_footer.php';
-    }
+        });
 
-    /**
-     * Register all of the hooks related to the admin area functionality
-     * of the plugin.
-     *
-     * @since    1.0.0
-     * @access   private
-     */
-    protected function define_admin_hooks($adminController) {
-        if(method_exists($adminController, 'customizeMenus')){
-            //Admin pages
-            $this->loader->add_action( 'admin_menu', $adminController, 'customizeMenus' );
-        }
-    }
+        //Other
+        $templatePath = $container->offsetGet('wwp.path.templates.frags');
+        $container[$prefix . '.wwp.path.templates.frags.header'] = $templatePath . '/t_header.php';
+        $container[$prefix . '.wwp.path.templates.frags.list'] = $templatePath . '/t_list.php';
+        $container[$prefix . '.wwp.path.templates.frags.edit'] = $templatePath . '/t_edit.php';
+        $container[$prefix . '.wwp.path.templates.frags.tabs'] = $templatePath . '/t_tabs.php';
+        $container[$prefix . '.wwp.path.templates.frags.options'] = $templatePath . '/t_options.php';
+        $container[$prefix . '.wwp.path.templates.frags.footer'] = $templatePath . '/t_footer.php';
 
-    /**
-     * Register all of the hooks related to the public-facing functionality
-     * of the plugin.
-     *
-     * @since    1.0.0
-     * @access   private
-     */
-    protected function define_public_hooks($publicController) {
+        $container[$prefix . '.Manager'] = $this;
 
-    }
-
-    /**
-     * Run the loader to execute all of the hooks with WordPress.
-     *
-     * @since    1.0.0
-     */
-    public function run() {
-        parent::run();
-        $this->loader->run();
+        return $this;
     }
 
     /**
@@ -128,18 +88,9 @@ abstract class AbstractPluginManager extends AbstractManager{
      * @since     1.0.0
      * @return    string    The name of the plugin.
      */
-    public function get_plugin_name() {
+    public function get_plugin_name()
+    {
         return $this->plugin_name;
-    }
-
-    /**
-     * The reference to the class that orchestrates the hooks with the plugin.
-     *
-     * @since     1.0.0
-     * @return    Wonderwp_Loader    Orchestrates the hooks of the plugin.
-     */
-    public function get_loader() {
-        return $this->loader;
     }
 
     /**
@@ -148,18 +99,9 @@ abstract class AbstractPluginManager extends AbstractManager{
      * @since     1.0.0
      * @return    string    The version number of the plugin.
      */
-    public function get_version() {
+    public function get_version()
+    {
         return $this->version;
-    }
-
-    protected function _translate(){
-        $this->loader->add_action( 'plugins_loaded', $this, 'loadTextdomain' );
-    }
-
-    public function loadTextdomain(){}
-
-    public function getAssetService(){
-        return $this->_container->offsetExists($this->plugin_name.'.assetService') ? $this->_container->offsetGet($this->plugin_name.'.assetService') : null;
     }
 
 }

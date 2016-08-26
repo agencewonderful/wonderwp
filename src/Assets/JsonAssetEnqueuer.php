@@ -22,8 +22,7 @@ class JsonAssetEnqueuer extends AbstractAssetEnqueuer{
 
     public function enqueueStyles($groupNames)
     {
-        //\WonderWp\trace($this->_manifest);
-        $versionNum = include($_SERVER['DOCUMENT_ROOT'].$this->_container['wwp.assets.folder.path'].'/version.php');
+        $versionNum = $this->getVersion();
 
         if(!empty($groupNames)){ foreach($groupNames as $group){
             if(array_key_exists($group,$this->_manifest->css)) {
@@ -36,7 +35,7 @@ class JsonAssetEnqueuer extends AbstractAssetEnqueuer{
     public function enqueueScripts($groupNames)
     {
         $isProd = false;
-        $versionNum = include($_SERVER['DOCUMENT_ROOT'].$this->_container['wwp.assets.folder.path'].'/version.php');
+        $versionNum = $this->getVersion();
 
         if(!empty($groupNames)){ foreach($groupNames as $group){
             if(array_key_exists($group,$this->_manifest->js)) {
@@ -52,6 +51,11 @@ class JsonAssetEnqueuer extends AbstractAssetEnqueuer{
                 }
             }
         }}
+    }
+
+    public function getVersion(){
+        $fileVersion = $_SERVER['DOCUMENT_ROOT'].$this->_container['wwp.assets.folder.path'].'/version.php';
+        return file_exists($fileVersion) ? include($fileVersion) : null;
     }
 
 }
