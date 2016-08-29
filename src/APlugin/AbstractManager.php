@@ -25,6 +25,7 @@ abstract class AbstractManager implements ManagerInterface
     public static $LISTTABLESERVICENAME = 'listTable';
     public static $MODELFORMSERVICENAME = 'modelForm';
     public static $COMMANDSERVICENAME = 'command';
+    public static $VIEWSERVICENAME = 'view';
 
     public function __construct(Container $container = null)
     {
