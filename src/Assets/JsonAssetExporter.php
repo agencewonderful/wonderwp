@@ -30,8 +30,10 @@ class JsonAssetExporter extends AbstractAssetExporter{
                 'id'=>  $blog_id,
                 'title'=>  get_bloginfo('name'),
                 'url' => $blogurl,
-                'theme_dest' => $this->_container['wwp.assets.folder.path'],
-                'prefix' =>$this->_container['wwp.assets.folder.prefix']
+                'assets_src'=>$this->_container['wwp.assets.folder.src'],
+                'assets_dest' => $this->_container['wwp.assets.folder.dest'],
+                'prefix' =>$this->_container['wwp.assets.folder.prefix'],
+                'env'=>WP_ENV
             ),
             'css' => array(),
             'js' => array()

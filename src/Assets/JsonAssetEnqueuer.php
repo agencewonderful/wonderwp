@@ -26,7 +26,7 @@ class JsonAssetEnqueuer extends AbstractAssetEnqueuer{
 
         if(!empty($groupNames)){ foreach($groupNames as $group){
             if(array_key_exists($group,$this->_manifest->css)) {
-                $src = $this->_blogurl . str_replace($this->_container['wwp.assets.folder.prefix'], '', $this->_manifest->site->theme_dest) . '/css/' . $group . $versionNum . '.css';
+                $src = $this->_blogurl . str_replace($this->_container['wwp.assets.folder.prefix'], '', $this->_manifest->site->assets_dest) . '/css/' . $group . $versionNum . '.css';
                 wp_enqueue_style($group, $src, array(), null);
             }
         }}
@@ -40,7 +40,7 @@ class JsonAssetEnqueuer extends AbstractAssetEnqueuer{
         if(!empty($groupNames)){ foreach($groupNames as $group){
             if(array_key_exists($group,$this->_manifest->js)) {
                 if($isProd) {
-                    $src = $this->_blogurl . str_replace($this->_container['wwp.assets.folder.prefix'], '', $this->_manifest->site->theme_dest) . '/js/' . $group . $versionNum . '.js';
+                    $src = $this->_blogurl . str_replace($this->_container['wwp.assets.folder.prefix'], '', $this->_manifest->site->assets_dest) . '/js/' . $group . $versionNum . '.js';
                     wp_enqueue_script($group, $src, array(), null, true);
                 } else {
                     if(!empty($this->_manifest->js->$group)){ foreach($this->_manifest->js->$group as $i=>$jsFile){
@@ -54,7 +54,7 @@ class JsonAssetEnqueuer extends AbstractAssetEnqueuer{
     }
 
     public function getVersion(){
-        $fileVersion = $_SERVER['DOCUMENT_ROOT'].$this->_container['wwp.assets.folder.path'].'/version.php';
+        $fileVersion = $_SERVER['DOCUMENT_ROOT'].$this->_container['wwp.assets.folder.dest'].'/version.php';
         return file_exists($fileVersion) ? include($fileVersion) : null;
     }
 
