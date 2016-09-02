@@ -23,6 +23,8 @@ use WonderWp\Forms\Form;
 use WonderWp\Forms\FormValidator;
 use WonderWp\Forms\ModelForm;
 use WonderWp\Forms\FormView;
+use WonderWp\Panel\Panel;
+use WonderWp\Panel\PanelManager;
 use WonderWp\Route\Router;
 
 class Loader extends Singleton{
@@ -145,6 +147,14 @@ class Loader extends Singleton{
             }
             return $wp_filesystem;
         };
+
+        //Panels
+        $container['wwp.panel.Manager'] = function(){
+            return new PanelManager();
+        };
+        $container['wwp.panel.Panel'] = $container->factory(function($c){
+            return new Panel();
+        });
 
         /**
          * Make container available
