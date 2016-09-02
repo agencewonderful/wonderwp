@@ -25,8 +25,9 @@ abstract class AbstractField implements FieldInterface{
 
     public function __construct($name, $value=null, $displayRules=array(), $validationRules=array())
     {
-        $this->name = $name;
-        $this->value = $value;
+        $this
+            ->setName($name)
+            ->setValue($value);
 
         $this->computeDisplayRules($displayRules);
         $this->computeValidationRules($validationRules);
@@ -163,6 +164,7 @@ abstract class AbstractField implements FieldInterface{
                 'for'=>$this->name
             )
         );
+
         $this->displayRules = \WonderWp\array_merge_recursive_distinct($this->displayRules, $defaultRules);
         $this->displayRules = \WonderWp\array_merge_recursive_distinct($this->displayRules,$passedRules);
         return $this;

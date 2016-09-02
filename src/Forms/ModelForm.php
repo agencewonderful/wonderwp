@@ -3,8 +3,8 @@
 namespace WonderWp\Forms;
 
 use Doctrine\ORM\Tools\SchemaTool;
-use WonderWp\AbstractDefinitions\EntityAttribute;
 use WonderWp\DI\Container;
+use WonderWp\Entity\EntityAttribute;
 use WonderWp\Forms\Fields\InputField;
 use WonderWp\Forms\Fields\TextAreaField;
 
@@ -106,10 +106,10 @@ class ModelForm{
         //Field
         switch($type){
             case'text':
-                $f = new TextAreaField($attr->getFieldName(), $val, ['label'=>$label]);
+                $f = new TextAreaField($fieldName, $val, ['label'=>$label]);
                 break;
             default:
-                $f = new InputField($attr->getFieldName(), $val, ['label'=>$label]);
+                $f = new InputField($fieldName, $val, ['label'=>$label]);
                 break;
         }
 

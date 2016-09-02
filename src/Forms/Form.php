@@ -2,6 +2,7 @@
 
 namespace WonderWp\Forms;
 
+use WonderWp\DI\Container;
 use WonderWp\Forms\Fields\fieldInterface;
 
 class Form implements FormInterface{
@@ -48,6 +49,14 @@ class Form implements FormInterface{
 
     public function getField($fieldName){
         return !empty($this->_fields[$fieldName]) ? $this->_fields[$fieldName] : null;
+    }
+
+    public function renderView($opts=array()){
+        $container = Container::getInstance();
+        /** @var FormView $formView */
+        $formView = $container->offsetGet('wwp.forms.formView');
+        $formView->setFormInstance($this);
+        return $formView->render($opts);
     }
 
 }

@@ -2,6 +2,7 @@
 
 namespace WonderWp\Forms;
 
+use WonderWp\Forms\Fields\AbstractField;
 use WonderWp\Forms\Fields\FieldInterface;
 use WonderWp\Forms\Fields\SelectField;
 
@@ -34,6 +35,7 @@ class FormView implements FormViewInterface{
     {
         $markup='';
         $optsStart = !empty($opts['formStart']) ? $opts['formStart'] : array();
+        $optsEnd = !empty($opts['formEnd']) ? $opts['formEnd'] : array();
         $markup .= $this->formStart($optsStart);
         $markup .= $this->formErrors();
         $fields = $this->_formInstance->getFields();
@@ -41,7 +43,7 @@ class FormView implements FormViewInterface{
             /* @var $f fieldInterface */
             $markup.= $this->renderField($f->getName());
         }}
-        $markup .= $this->formEnd();
+        $markup .= $this->formEnd($optsEnd);
 
         return $markup;
     }
@@ -89,7 +91,7 @@ class FormView implements FormViewInterface{
     public function fieldWrapStart($fieldName)
     {
         $markup = '';
-        $f = $this->_formInstance->getField($fieldName);
+        $f = ($fieldName instanceof AbstractField) ? $fieldName : $this->_formInstance->getField($fieldName);
         $displayRules = $f->getDisplayRules();
         $wrapAttributes = $displayRules['wrapAttributes'];
 
@@ -105,6 +107,10 @@ class FormView implements FormViewInterface{
 
         if(!empty($f)){
             $markup.='<div '.$this->paramsToHtml($wrapAttributes).'>';
+
+            if(!empty($displayRules['before'])){
+                $markup.=$displayRules['before'];
+            }
         }
         return $markup;
     }
@@ -112,7 +118,7 @@ class FormView implements FormViewInterface{
     public function fieldLabel($fieldName)
     {
         $markup = '';
-        $f = $this->_formInstance->getField($fieldName);
+        $f = ($fieldName instanceof AbstractField) ? $fieldName : $this->_formInstance->getField($fieldName);
         if(!empty($f)) {
             $displayRules = $f->getDisplayRules();
             if(!empty($displayRules['label'])) {
@@ -124,7 +130,7 @@ class FormView implements FormViewInterface{
 
     public function fieldStart($fieldName)
     {
-        $f = $this->_formInstance->getField($fieldName);
+        $f = ($fieldName instanceof AbstractField) ? $fieldName : $this->_formInstance->getField($fieldName);
 
         $tag = !empty($f) ? $f->getTag() : '';
         $type = !empty($f) ? $f->getType() : array();
@@ -163,13 +169,22 @@ class FormView implements FormViewInterface{
     public function fieldBetween($fieldName)
     {
         $markup = '';
-        $f = $this->_formInstance->getField($fieldName);
+        /** @var AbstractField $f */
+        $f = ($fieldName instanceof AbstractField) ? $fieldName : $this->_formInstance->getField($fieldName);
         $displayRules = $f->getDisplayRules();
 
         if(!empty($f)) {
             $tag = $f->getTag();
             $val = $f->getValue();
             $type = $f->getType();
+
+            //If group -> recurse
+            if(method_exists($f,'getGroup')){
+                $group = $f->getGroup();
+                if(!empty($group)){ foreach($group as $fFromFroup){
+                    $markup.=$this->renderField($fFromFroup);
+                }}
+            }
 
             if($val instanceof \DateTime){
                 $val = $val->format('Y-m-d H:i:s');
@@ -202,10 +217,14 @@ class FormView implements FormViewInterface{
 
     public function fieldEnd($fieldName)
     {
-        $f = $this->_formInstance->getField($fieldName);
+        $f = ($fieldName instanceof AbstractField) ? $fieldName : $this->_formInstance->getField($fieldName);
         $tag = !empty($f) ? $f->getTag() : '';
 
         $markup='';
+
+        if(!empty($displayRules['after'])){
+            $markup.=$displayRules['after'];
+        }
 
         if($tag=='input'){ $markup = ' />'; }
         else {
@@ -218,7 +237,7 @@ class FormView implements FormViewInterface{
     public function fieldError($fieldName)
     {
         $markup='';
-        $f = $this->_formInstance->getField($fieldName);
+        $f = ($fieldName instanceof AbstractField) ? $fieldName : $this->_formInstance->getField($fieldName);
         $errors = $f->getErrors();
         $displayRules = $f->getDisplayRules();
         $fieldId = !empty($displayRules) && !empty($displayRules['inputAttributes']) && !empty($displayRules['inputAttributes']['id']) ? $displayRules['inputAttributes']['id'] : '';
@@ -237,7 +256,7 @@ class FormView implements FormViewInterface{
     {
         $markup='';
 
-        if(empty($optsEnd['showSubmit']) || $optsEnd['showSubmit']==1) {
+        if(!isset($optsEnd['showSubmit']) || $optsEnd['showSubmit']==1) {
             $markup .= '<div class="submitFormField">
                 <input type="submit" class="btn button"/>
             </div>';

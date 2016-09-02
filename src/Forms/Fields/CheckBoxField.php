@@ -16,6 +16,8 @@ class CheckBoxField extends InputField{
         $this->type = 'checkbox';
 
         if(empty($this->displayRules['inputAttributes']['value'])){ $this->displayRules['inputAttributes']['value']=1; }
+        if(empty($this->displayRules['wrapAttributes']['class'])){ $this->displayRules['wrapAttributes']['class']=array(); }
+        $this->displayRules['wrapAttributes']['class'][] = 'checkbox-wrap';
     }
 
 }

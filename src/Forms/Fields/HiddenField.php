@@ -10,9 +10,9 @@ namespace WonderWp\Forms\Fields;
 class HiddenField extends InputField{
 
     public function __construct($name, $value=null, $displayRules=array(), $validationRules=array()){
+        if(!empty($displayRules['label'])){ unset($displayRules['label']); }
         parent::__construct($name, $value, $displayRules, $validationRules);
         $this->type = 'hidden';
-        $this->label = null;
     }
 
 }
