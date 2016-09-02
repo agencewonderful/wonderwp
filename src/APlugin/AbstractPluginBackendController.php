@@ -10,6 +10,7 @@ namespace WonderWp\APlugin;
 
 use WonderWp\DI\Container;
 use WonderWp\HttpFoundation\Request;
+use WonderWp\Services\AbstractService;
 use WonderWp\Templates\VueFrag;
 
 abstract class AbstractPluginBackendController{
@@ -80,7 +81,7 @@ abstract class AbstractPluginBackendController{
         $container = Container::getInstance();
 
         if(empty($listTableInstance)) {
-            $listTableInstance = $this->_manager->getService(AbstractManager::$LISTTABLESERVICENAME);
+            $listTableInstance = $this->_manager->getService(AbstractService::$LISTTABLESERVICENAME);
         }
 
         $entityName = $listTableInstance->getEntityName();
@@ -123,7 +124,7 @@ abstract class AbstractPluginBackendController{
 
         //Build model form, by adding fields corresponding to the model attributes, to the form instance
         /* @var $modelForm \WonderWp\Forms\ModelForm */
-        $modelForm = $this->_manager->getService(AbstractManager::$MODELFORMSERVICENAME);
+        $modelForm = $this->_manager->getService(AbstractService::$MODELFORMSERVICENAME);
         if(!is_object($modelForm)){ $modelForm = $container->offsetGet('wwp.forms.modelForm'); }
 
         $textDomain = $modelForm->getTextDomain();
