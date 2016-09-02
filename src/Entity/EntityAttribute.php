@@ -1,6 +1,6 @@
 <?php
 
-namespace WonderWp\AbstractDefinitions;
+namespace WonderWp\Entity;
 
 class EntityAttribute{
 

@@ -1,8 +1,7 @@
 <?php
 
-namespace WonderWp\APlugin;
+namespace WonderWp\Entity;
 
-use WonderWp\AbstractDefinitions\EntityAttribute;
 use WonderWp\DI\Container;
 
 abstract class AbstractEntity {

@@ -68,8 +68,13 @@ class AssetManager {
     public function callServices(){
         if(!empty($this->_services)){ foreach($this->_services as $service){
             /** @var AssetServiceInterface $service */
-            $assetClass = Container::getInstance()->offsetGet('wwp.assets.assetClass');
-            $service->registerAssets($this,$assetClass);
+            $assets = $service->getAssets();
+            if(!empty($assets['css'])){ foreach($assets['css'] as $cssAsset){
+                $this->registerAsset('css',$cssAsset);
+            }}
+            if(!empty($assets['js'])){ foreach($assets['js'] as $jsAsset){
+                $this->registerAsset('js',$jsAsset);
+            }}
         }}
     }
 

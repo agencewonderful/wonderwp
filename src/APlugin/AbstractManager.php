@@ -2,10 +2,13 @@
 
 namespace WonderWp\APlugin;
 
+use WonderWp\Api\ApiServiceInterface;
 use WonderWp\DI\Container;
 use Pimple\Container as PContainer;
 use WonderWp\HttpFoundation\Request;
 use WonderWp\Route\Router;
+use WonderWp\Services\AbstractService;
+use WonderWp\Shortcode\ShortcodeServiceInterface;
 
 abstract class AbstractManager implements ManagerInterface
 {
@@ -18,14 +21,6 @@ abstract class AbstractManager implements ManagerInterface
 
     public static $ADMINCONTROLLERTYPE = 'admin';
     public static $PUBLICCONTROLLERTYPE = 'public';
-
-    public static $ASSETSSERVICENAME = 'assets';
-    public static $HOOKSERVICENAME = 'hooks';
-    public static $ROUTESERVICENAME = 'route';
-    public static $LISTTABLESERVICENAME = 'listTable';
-    public static $MODELFORMSERVICENAME = 'modelForm';
-    public static $COMMANDSERVICENAME = 'command';
-    public static $VIEWSERVICENAME = 'view';
 
     public function __construct(Container $container = null)
     {
@@ -150,14 +145,14 @@ abstract class AbstractManager implements ManagerInterface
          */
         //Hooks
         /** @var HookServiceInterface $hookService */
-        $hookService = $this->getService(self::$HOOKSERVICENAME);
+        $hookService = $this->getService(AbstractService::$HOOKSERVICENAME);
         if (is_object($hookService)) {
             $hookService->run();
         }
 
         //Assets
         /** @var AssetServiceInterface $assetService */
-        $assetService = $this->getService(self::$ASSETSSERVICENAME);
+        $assetService = $this->getService(AbstractService::$ASSETSSERVICENAME);
         if (is_object($assetService)) {
             /** @var AssetManager $assetManager */
             $assetManager = $this->_container->offsetGet('wwp.assets.manager');
@@ -166,12 +161,27 @@ abstract class AbstractManager implements ManagerInterface
 
         //Routes
         /** @var RouteServiceInterface $routeService */
-        $routeService = $this->getService(self::$ROUTESERVICENAME);
+        $routeService = $this->getService(AbstractService::$ROUTESERVICENAME);
         if (is_object($routeService)) {
             /** @var Router $router */
             $router = $this->_container->offsetGet('wwp.Router');
             $router->addService($routeService);
         }
+
+        //Apis
+        /** @var ApiServiceInterface $apiService */
+        $apiService = $this->getService(AbstractService::$APISERVICENAME);
+        if (is_object($apiService)) {
+            $apiService->registerEndpoints();
+        }
+
+        //Shortcode
+        /** @var ShortcodeServiceInterface $shortcodeService */
+        $shortcodeService = $this->getService(AbstractService::$SHORTCODESERVICENAME);
+        if (is_object($shortcodeService)) {
+            $shortcodeService->registerShortcodes();
+        }
+
 
     }
 

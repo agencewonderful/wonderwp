@@ -7,6 +7,7 @@ use WonderWp\Assets\AssetServiceInterface;
 use WonderWp\DI\Container;
 use WonderWp\APlugin\loader;
 use Pimple\Container as PContainer;
+use WonderWp\Services\AbstractService;
 use WonderWp\Services\HookServiceInterface;
 
 abstract class AbstractPluginManager extends AbstractManager
@@ -63,7 +64,7 @@ abstract class AbstractPluginManager extends AbstractManager
         $this->setConfig('version', $this->get_version());
 
         //Services
-        $this->addService(AbstractManager::$LISTTABLESERVICENAME, function ($container) {
+        $this->addService(AbstractService::$LISTTABLESERVICENAME, function ($container) {
             return new \WP_List_Table();
         });
 
