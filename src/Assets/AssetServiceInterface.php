@@ -10,6 +10,6 @@ namespace WonderWp\Assets;
 
 interface AssetServiceInterface{
 
-    public function registerAssets(AssetManager $assetManager, $assetClass);
+    public function getAssets();
 
 }

@@ -6,7 +6,9 @@
  * Time: 17:03
  */
 
-namespace WonderWp\Services;
+namespace WonderWp\Hooks;
+
+use WonderWp\Services\AbstractService;
 
 abstract class AbstractHookService extends AbstractService implements HookServiceInterface{
 

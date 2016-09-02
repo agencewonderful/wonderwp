@@ -10,4 +10,14 @@ namespace WonderWp\Assets;
 
 abstract class AbstractAssetService implements AssetServiceInterface{
 
+    public static $PUBLICASSETSGROUP = 'app';
+    public static $ADMINASSETSGROUP = 'admin';
+
+    protected $_assets = array();
+
+    public function __construct()
+    {
+        $this->_assets = array();
+    }
+
 }

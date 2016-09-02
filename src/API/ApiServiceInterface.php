@@ -6,10 +6,10 @@
  * Time: 17:02
  */
 
-namespace WonderWp\Services;
+namespace WonderWp\Api;
 
-interface HookServiceInterface{
+interface ApiServiceInterface{
 
-    public function run();
+    public function registerEndpoints();
 
 }
