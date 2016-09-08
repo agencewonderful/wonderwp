@@ -6,7 +6,12 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use WonderWp\DI\Container;
 use WonderWp\HttpFoundation\Request;
 
-class ListTable extends \WP_List_Table{
+if (!class_exists('WP_List_Table')) {
+    require_once(ABSPATH . 'wp-admin/includes/class-wp-list-table.php');
+}
+
+class ListTable extends \WP_List_Table
+{
 
     /* @var \Doctrine\ORM\EntityManager */
     protected $_em;
@@ -14,7 +19,7 @@ class ListTable extends \WP_List_Table{
     /* @var string */
     protected $_entityName;
 
-    /* @var  ClassMetadata*/
+    /* @var  ClassMetadata */
     protected $_entityMetas;
 
     /* @var array */
@@ -25,8 +30,12 @@ class ListTable extends \WP_List_Table{
     public function __construct($args = array())
     {
         //Extend args
-        if(!empty($args['entityName'])){ $this->_entityName=$args['entityName']; }
-        if(!empty($args['textDomain'])){ $this->_textDomain =  $args['textDomain']; }
+        if (!empty($args['entityName'])) {
+            $this->_entityName = $args['entityName'];
+        }
+        if (!empty($args['textDomain'])) {
+            $this->_textDomain = $args['textDomain'];
+        }
 
         $this->_em = Container::getInstance()->offsetGet('entityManager');
 
@@ -70,7 +79,7 @@ class ListTable extends \WP_List_Table{
     public function prepare_items()
     {
         $items = array();
-        if(!empty($this->_entityName)) {
+        if (!empty($this->_entityName)) {
             $repository = $this->_em->getRepository($this->_entityName);
             $this->items = $repository->findAll();
         }
@@ -80,7 +89,8 @@ class ListTable extends \WP_List_Table{
         return $this;
     }
 
-    protected function _defineColumnHeaders(){
+    protected function _defineColumnHeaders()
+    {
         //Register the Columns
         $columns = $this->get_columns();
         $hidden = $this->get_hidden_columns();
@@ -90,48 +100,54 @@ class ListTable extends \WP_List_Table{
 
     public function get_columns()
     {
-        if(empty($this->_columns)) {
-            $this->_columns=array();
+        if (empty($this->_columns)) {
+            $this->_columns = array();
             $bulkActions = $this->get_bulk_actions();
-            if(!empty($bulkActions)){
+            if (!empty($bulkActions)) {
                 $this->_columns['cb'] = '<input type="checkbox" />';
             }
 
             $this->_entityMetas = $this->_em->getClassMetaData($this->_entityName);
-            if(!empty($this->_entityMetas->fieldNames)){ foreach($this->_entityMetas->fieldNames as $fieldName){
-                $this->_columns[$fieldName] = __($fieldName.'.trad',$this->_textDomain);
-            }}
-            $this->_columns["action"] = __("Actions",$this->_textDomain);
+            if (!empty($this->_entityMetas->fieldNames)) {
+                foreach ($this->_entityMetas->fieldNames as $fieldName) {
+                    $this->_columns[$fieldName] = __($fieldName . '.trad', $this->_textDomain);
+                }
+            }
+            $this->_columns["action"] = __("Actions", $this->_textDomain);
         }
         return $this->_columns;
     }
 
-    public function get_hidden_columns(){
+    public function get_hidden_columns()
+    {
         return array();
     }
 
-    function get_bulk_actions() {
+    function get_bulk_actions()
+    {
         $actions = array(
-            'delete'    => __('Delete')
+            'delete' => __('Delete')
         );
         return $actions;
     }
 
-    function extra_tablenav( $which, $showAdd = true ) {
+    function extra_tablenav($which, $showAdd = true)
+    {
         $request = Request::getInstance();
         $editParams = array(
-            'page'=>$request->get('page'),
-            'action'=>'edit'
+            'page' => $request->get('page'),
+            'action' => 'edit'
         );
-        $editPage = admin_url('/admin.php?'.http_build_query($editParams));
-        $addBtn = '<a href="'.$editPage.'" class="button action noewpaddrecordbtn">'.esc_html_x('Add New', 'link').'</a>';
+        $editPage = admin_url('/admin.php?' . http_build_query($editParams));
+        $addBtn = '<a href="' . $editPage . '" class="button action noewpaddrecordbtn">' . esc_html_x('Add New', 'link') . '</a>';
         echo $addBtn;
     }
 
-    function column_cb($item) {
+    function column_cb($item)
+    {
         $identifier = $this->_entityMetas->getIdentifier();
         return sprintf(
-            '<input type="checkbox" name="item[]" value="%s" />', $this->_getItemVal($item,reset($identifier))
+            '<input type="checkbox" name="item[]" value="%s" />', $this->_getItemVal($item, reset($identifier))
         );
     }
 
@@ -140,30 +156,33 @@ class ListTable extends \WP_List_Table{
      * @param object $item
      * @param string $column_name
      */
-    public function column_default($item, $column_name){
-        $val = $this->_getItemVal($item,$column_name);
+    public function column_default($item, $column_name)
+    {
+        $val = $this->_getItemVal($item, $column_name);
         echo $this->_formatVal($val);
     }
 
-    private function _getItemVal($item,$column_name){
+    private function _getItemVal($item, $column_name)
+    {
         $val = '';
-        if(is_object($item)){
-            if ( method_exists( $item, 'get' .ucfirst($column_name)  ) ) {
-                $val = call_user_func(array($item,'get' .ucfirst($column_name)));
+        if (is_object($item)) {
+            if (method_exists($item, 'get' . ucfirst($column_name))) {
+                $val = call_user_func(array($item, 'get' . ucfirst($column_name)));
             } else {
                 $val = $item->$column_name;
             }
-        } elseif(is_array($item)) {
+        } elseif (is_array($item)) {
             $val = $item[$column_name];
         }
         return $val;
     }
 
-    private function _formatVal($val){
+    private function _formatVal($val)
+    {
         $valType = gettype($val);
-        if($valType==='object'){
+        if ($valType === 'object') {
             $calledClass = get_class($val);
-            if($calledClass=='DateTime'){
+            if ($calledClass == 'DateTime') {
                 $val = $val->format('d/m/Y H:i');
             }
         }
@@ -173,20 +192,27 @@ class ListTable extends \WP_List_Table{
     /**
      * Get the default noewp row actions (edit, delete, duplicate...)
      * @param object $item
-     * @param array $allowedActions, you can narrow down the things to return
+     * @param array $allowedActions , you can narrow down the things to return
      */
-    function column_action($item,$allowedActions=array('edit','delete')){
+    function column_action($item, $allowedActions = array('edit', 'delete'), $givenEditParams = array(), $givenDeleteParams = array())
+    {
         $request = Request::getInstance();
         $identifier = $this->_entityMetas->getIdentifier();
-        $editParams = array(
-            'page'=>$request->get('page'),
-            'action'=>'edit',
-            'id'=>$this->_getItemVal($item,reset($identifier))
+        $defaultEditParams = array(
+            'page' => $request->get('page'),
+            'action' => 'edit',
+            'id' => $this->_getItemVal($item, reset($identifier))
         );
-        $deleteParams=$editParams;
-        $deleteParams['action']='delete';
-        if(in_array('edit',$allowedActions)){ echo ' <a class="edit-link" href="'.admin_url('/admin.php?'.http_build_query($editParams)).'">'.__( 'Edit' ).'</a>'; }
-        if(in_array('delete',$allowedActions)){ echo ' <a class="delete-link" href="'.admin_url('/admin.php?'.http_build_query($deleteParams)).'">'. __( 'Delete' ).'</a>'; }
+        $editParams = \WonderWp\array_merge_recursive_distinct($defaultEditParams, $givenEditParams);
+        $defaultDeleteParams = $editParams;
+        $defaultDeleteParams['action'] = 'delete';
+        $deleteParams = \WonderWp\array_merge_recursive_distinct($defaultDeleteParams,$givenDeleteParams);
+        if (in_array('edit', $allowedActions)) {
+            echo ' <a class="edit-link" href="' . admin_url('/admin.php?' . http_build_query($editParams)) . '">' . __('Edit') . '</a>';
+        }
+        if (in_array('delete', $allowedActions)) {
+            echo ' <a class="delete-link" href="' . admin_url('/admin.php?' . http_build_query($deleteParams)) . '">' . __('Delete') . '</a>';
+        }
     }
 
 }
