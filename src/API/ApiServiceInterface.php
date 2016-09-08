@@ -6,7 +6,7 @@
  * Time: 17:02
  */
 
-namespace WonderWp\Api;
+namespace WonderWp\API;
 
 interface ApiServiceInterface{
 

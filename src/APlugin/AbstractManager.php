@@ -2,7 +2,7 @@
 
 namespace WonderWp\APlugin;
 
-use WonderWp\Api\ApiServiceInterface;
+use WonderWp\API\ApiServiceInterface;
 use WonderWp\DI\Container;
 use Pimple\Container as PContainer;
 use WonderWp\HttpFoundation\Request;

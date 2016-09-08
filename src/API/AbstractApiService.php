@@ -6,7 +6,7 @@
  * Time: 17:03
  */
 
-namespace WonderWp\Api;
+namespace WonderWp\API;
 
 use WonderWp\HttpFoundation\Request;
 use WonderWp\Plugin\PageSettings\AbstractPageSettingsService;

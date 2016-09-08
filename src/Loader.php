@@ -81,12 +81,20 @@ class Loader extends Singleton{
             //Paths
             $autoLoader = $container->offsetGet('wwp.autoLoader');
             $multiPaths = $autoLoader->getPrefixesPsr4();
+
             $paths = array();
-            if(!empty($multiPaths)){ foreach($multiPaths as $aPath){
-                $paths = array_merge($paths,$aPath);
+            if(!empty($multiPaths)){ foreach($multiPaths as $pathName=>$aPath){
+                if(strpos($pathName,'WonderWp')!==false) {
+                    $paths = array_merge($paths, $aPath);
+                }
             }}
+
             //Env
             $isDevMode = WP_ENV=='development';
+            $proxyDir=null;
+            $cache=null;
+            $useSimpleAnnotationReader = true;
+
             //Evm
             $evm = new \Doctrine\Common\EventManager;
             //Prefix
@@ -100,9 +108,18 @@ class Loader extends Singleton{
                 'dbname'   => DB_NAME,
                 'host'     => DB_HOST
             );
+
             $conn = \Doctrine\DBAL\DriverManager::getConnection($dbParams,null,$evm);
 
-            $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
+            //$config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
+            //return EntityManager::create($conn, $config, $evm);
+
+            $config = Setup::createConfiguration($isDevMode, $proxyDir, $cache);
+            $anDriver = $config->newDefaultAnnotationDriver($paths, $useSimpleAnnotationReader);
+            $anDriver->addExcludePaths([
+                $container['path_framework_root'].'/Templates/frags'
+            ]);
+            $config->setMetadataDriverImpl($anDriver);
             return EntityManager::create($conn, $config, $evm);
         };
 
