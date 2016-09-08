@@ -8,9 +8,9 @@
 
 namespace WonderWp\Forms\Fields;
 
-use WonderWp\Forms\Fields\AbstractFieldGroup;
+use WonderWp\Forms\Fields\FieldGroup;
 
-class CheckBoxesField extends AbstractFieldGroup
+class CheckBoxesField extends FieldGroup
 {
 
     public function __construct($name, $value = null, $displayRules = array(), $validationRules = array())

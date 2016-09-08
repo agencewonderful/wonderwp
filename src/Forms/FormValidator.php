@@ -47,7 +47,7 @@ class FormValidator implements FormValidatorInterface{
             $validationRules = $f->getValidationRules();
 
             $fieldData = !empty($data[$f->getName()]) ? $data[$f->getName()] : null;
-            $f->setValue($fieldData);
+
             $fieldErrors = array();
 
             if(!empty($validationRules)){ foreach($validationRules as $validationRule){

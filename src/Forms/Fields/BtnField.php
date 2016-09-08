@@ -7,7 +7,7 @@
  */
 namespace WonderWp\Forms\Fields;
 
-class HiddenField extends InputField{
+class BtnField extends AbstractField{
 
     /**
      * HiddenField constructor.
@@ -18,10 +18,8 @@ class HiddenField extends InputField{
      * @return HiddenField
      */
     public function __construct($name, $value=null, $displayRules=array(), $validationRules=array()){
-        if(!empty($displayRules['label'])){ unset($displayRules['label']); }
         parent::__construct($name, $value, $displayRules, $validationRules);
-        $this->type = 'hidden';
-        $this->displayRules['wrapAttributes']['no-wrap'] = true;
+        $this->tag= 'button';
         return $this;
     }
 

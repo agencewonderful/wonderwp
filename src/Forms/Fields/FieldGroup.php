@@ -11,7 +11,7 @@ namespace WonderWp\Forms\Fields;
 use WonderWp\Forms\Fields\AbstractField;
 use WonderWp\Forms\Fields\AbstractOptionsField;
 
-abstract class AbstractFieldGroup extends AbstractField{
+class FieldGroup extends AbstractField{
 
     //Options trait
     use AbstractOptionsField;
@@ -22,6 +22,9 @@ abstract class AbstractFieldGroup extends AbstractField{
     {
         parent::__construct($name, $value, $displayRules, $validationRules);
         $this->tag = 'div';
+        $this->displayRules['wrapAttributes']['no-wrap'] = true;
+        if(empty($this->displayRules['inputAttributes']['class'])){ $this->displayRules['inputAttributes']['class']=array(); }
+        $this->displayRules['inputAttributes']['class'][] = 'field-group';
     }
 
     public function addFieldToGroup(AbstractField $field){

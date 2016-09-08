@@ -3,16 +3,22 @@
 namespace WonderWp\Forms;
 
 use Doctrine\ORM\Tools\SchemaTool;
+use Symfony\Component\HttpFoundation\Request;
 use WonderWp\DI\Container;
+use WonderWp\Entity\AbstractEntity;
 use WonderWp\Entity\EntityAttribute;
+use WonderWp\Entity\EntityRelation;
+use WonderWp\Forms\Fields\AbstractField;
+use WonderWp\Forms\Fields\HiddenField;
 use WonderWp\Forms\Fields\InputField;
 use WonderWp\Forms\Fields\TextAreaField;
-
 use Respect\Validation\Validator;
-use Symfony\Component\HttpFoundation\Request;
 
-class ModelForm{
-
+class ModelForm
+{
+    /**
+     * @var AbstractEntity
+     */
     protected $_modelInstance;
 
     /** @var Form */
@@ -45,9 +51,9 @@ class ModelForm{
     }
 
     /**
-     * @param mixed $formInstance
+     * @param FormInterface $formInstance
      */
-    public function setFormInstance($formInstance)
+    public function setFormInstance(FormInterface $formInstance)
     {
         $this->_formInstance = $formInstance;
         return $this;
@@ -69,75 +75,103 @@ class ModelForm{
         $this->_textDomain = $textDomain;
     }
 
-    public function buildForm(){
+    public function buildForm()
+    {
+        $this->preBuild();
 
-        $attributes = $this->_modelInstance->getAttributes();
+        //Form Entity Fields
+        $attributes = $this->_modelInstance->getFields();
+        if (!empty($attributes)) {
+            foreach ($attributes as $attr) {
+                /** @var $attr EntityAttribute */
+                $f = $this->newField($attr);
+                $f->computeDisplayRules($this->specifyDisplayRules($attr));
+                $f->computeValidationRules($this->specifyValidationRules($attr));
+                //Add field
+                $this->addField($f);
+            }
+        }
 
-        if(!empty($attributes)){ foreach($attributes as $attr){
-            /** @var $attr EntityAttribute */
-            $f = $this->newField($attr);
-            $f->computeDisplayRules($this->specifyDisplayRules($attr));
-            $f->computeValidationRules($this->specifyValidationRules($attr));
-            //Add field
-            $this->_formInstance->addField($f);
-        }}
+        //Form Relation Fields
+        $relations = $this->_modelInstance->getRelations();
+        if (!empty($relations)) {
+            foreach ($relations as $attr) {
+                /** @var $attr EntityRelation */
+                $f = $this->newRelation($attr);
+                if (!empty($f)) {
+                    //Add field
+                    $this->addField($f);
+                }
+            }
+        }
+
+        $this->postBuild();
 
         return $this;
     }
 
-    public function preBuild(){
+    public function preBuild()
+    {
 
     }
 
-    public function postBuild(){
+    public function postBuild()
+    {
 
     }
 
-    public function newField(EntityAttribute $attr){
+    public function newField(EntityAttribute $attr)
+    {
 
-        $type=$attr->getType();
+        $type = $attr->getType();
         $fieldName = $attr->getFieldName();
 
         $entity = $this->_modelInstance;
 
         $val = $entity->$fieldName;
-        $label = __($fieldName.'.trad',$this->_textDomain);
+        $label = __($fieldName . '.trad', $this->_textDomain);
 
         //Field
-        switch($type){
+        switch ($type) {
             case'text':
-                $f = new TextAreaField($fieldName, $val, ['label'=>$label]);
+                $f = new TextAreaField($fieldName, $val, ['label' => $label]);
                 break;
             default:
-                $f = new InputField($fieldName, $val, ['label'=>$label]);
+                if ($attr->getIsId()) {
+                    $f = new HiddenField($fieldName, $val);
+                } else {
+                    $f = new InputField($fieldName, $val, ['label' => $label]);
+                }
                 break;
         }
 
         return $f;
     }
 
-    public function specifyDisplayRules(EntityAttribute $attr){
+    public function specifyDisplayRules(EntityAttribute $attr)
+    {
         $displayRules = array();
 
         return $displayRules;
     }
 
-    public function specifyValidationRules(EntityAttribute $attr){
+    public function specifyValidationRules(EntityAttribute $attr)
+    {
 
         $validationRules = array();
 
         //Validate required fields
-        if(!$attr->getNullable()){
+        if (!$attr->getNullable() && !$attr->getIsId()) {
             $validationRules[] = array(Validator::notEmpty());
         }
         //Validate length
         $length = $attr->getLength();
-        if($length > 0){
-            $validationRules[] = array(Validator::length(null,$length));
+        if ($length > 0) {
+            $validationRules[] = array(Validator::length(null, $length));
         }
         //validate type
-        $type=$attr->getType();
-        switch($type){
+        $type = $attr->getType();
+        switch ($type) {
             case 'integer':
                 $validationRules[] = array(Validator::optional(Validator::numeric()));
                 break;
@@ -149,16 +183,31 @@ class ModelForm{
         return $validationRules;
     }
 
-    public function handleRequest(Request $request, FormValidatorInterface $formValidator){
+    public function addField(AbstractField $f, $groupName = '')
+    {
+        //Add field
+        $this->_formInstance->addField($f, $groupName);
+    }
+
+    public function newRelation(EntityRelation $relationAttr)
+    {
+
+    }
+
+    public function handleRequest(array $data, FormValidatorInterface $formValidator)
+    {
+        //Fill form with posted data
+        $this->_formInstance->fill($data);
+
         //Form Validation
         $formValidator->setFormInstance($this->_formInstance);
-        $data = $this->formatData($request->request->all());
         $errors = $formValidator->validate($data);
 
-        if(empty($errors)){
+        if (empty($errors)) {
             $container = Container::getInstance();
             $em = $container->offsetGet('entityManager');
             $this->_modelInstance->populate($data);
+
             $em->persist($this->_modelInstance);
             $em->flush();
         }
@@ -166,7 +215,8 @@ class ModelForm{
         return $errors;
     }
 
-    public function formatData($data){
+    public function formatData($data)
+    {
 
         return $data;
     }

@@ -68,7 +68,7 @@ interface FormViewInterface {
     /**
      * @return mixed
      */
-    public function fieldWrapEnd();
+    public function fieldWrapEnd($fieldName);
 
     /**
      * @param array $optsEnd

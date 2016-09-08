@@ -4,7 +4,22 @@ namespace WonderWp\Forms;
 
 use WonderWp\Forms\Fields\fieldInterface;
 
-interface FormInterface {
+/**
+ * Interface FormInterface
+ * @package WonderWp\Forms
+ */
+interface FormInterface
+{
+    /**
+     * @param $name
+     * @return mixed
+     */
+    public function getName();
+
+    /**
+     * @return mixed
+     */
+    public function setName($name);
 
     /**
      * @return mixed
@@ -26,8 +41,35 @@ interface FormInterface {
      */
     public function setErrors($errors);
 
+    /**
+     * @param fieldInterface $field
+     * @return mixed
+     */
     public function addField(fieldInterface $field);
 
+    /**
+     * @param $fieldName
+     * @return mixed
+     */
     public function getField($fieldName);
+
+    /**
+     * @return mixed
+     */
+    public function getGroups();
+
+    /**
+     * @param $groups
+     * @return mixed
+     */
+    public function setGroups($groups);
+
+    /**
+     * @param FormGroup $group
+     * @return mixed
+     */
+    public function addGroup(FormGroup $group);
+
+    public function fill(array $data);
 
 }
