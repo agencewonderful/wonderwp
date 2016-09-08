@@ -13,7 +13,8 @@ use WonderWp\HttpFoundation\Request;
 use WonderWp\Services\AbstractService;
 use WonderWp\Templates\VueFrag;
 
-abstract class AbstractPluginBackendController{
+abstract class AbstractPluginBackendController
+{
 
 
     /**
@@ -42,77 +43,98 @@ abstract class AbstractPluginBackendController{
      * AbstractPluginBackendController constructor.
      * @param ManagerInterface $manager
      */
-    public function __construct( ManagerInterface $manager ) {
+    public function __construct(ManagerInterface $manager)
+    {
 
         $this->_manager = $manager;
 
     }
 
-    public function getRoute(){
+    public function getRoute()
+    {
         $request = Request::getInstance();
-        $action = $request->get('action','');
-        if(empty($action)){
-            $tabIndex = $request->get('tab',1);
+        $action = $request->get('action', '');
+        if (empty($action)) {
+            $tabIndex = $request->get('tab', 1);
             $tabs = $this->getTabs();
-            if(!empty($tabs[$tabIndex]) && !empty($tabs[$tabIndex]['action'])){
+            if (!empty($tabs[$tabIndex]) && !empty($tabs[$tabIndex]['action'])) {
                 $action = $tabs[$tabIndex]['action'];
             }
-            if(empty($action)){ $action = 'list'; }
+            if (empty($action)) {
+                $action = 'list';
+            }
         }
         return $action;
     }
 
-    public function route(){
+    public function route()
+    {
         $action = $this->getRoute();
         $this->execRoute($action);
     }
 
-    public function execRoute($action){
-        $action.='Action';
+    public function execRoute($action)
+    {
+        $action .= 'Action';
 
-        if(method_exists($this,$action)) {
+        if (method_exists($this, $action)) {
             call_user_func(array($this, $action));
         } else {
             echo "Method $action not callable on this controller";
         }
     }
 
-    public function listAction(ListTable $listTableInstance=null){
+    public function listAction(ListTable $listTableInstance = null)
+    {
         $container = Container::getInstance();
 
-        if(empty($listTableInstance)) {
+        if (empty($listTableInstance)) {
             $listTableInstance = $this->_manager->getService(AbstractService::$LISTTABLESERVICENAME);
         }
 
         $entityName = $listTableInstance->getEntityName();
-        if(empty($entityName)){ $entityName = $this->_manager->getConfig('entityName'); }
-        if(!empty($entityName)){ $listTableInstance->setEntityName($entityName); }
+        if (empty($entityName)) {
+            $entityName = $this->_manager->getConfig('entityName');
+        }
+        if (!empty($entityName)) {
+            $listTableInstance->setEntityName($entityName);
+        }
 
         $textDomain = $listTableInstance->getTextDomain();
-        if(empty($textDomain)){ $textDomain = $this->_manager->getConfig('textDomain'); }
-        if(!empty($textDomain)){ $listTableInstance->setTextDomain($textDomain); }
+        if (empty($textDomain)) {
+            $textDomain = $this->_manager->getConfig('textDomain');
+        }
+        if (!empty($textDomain)) {
+            $listTableInstance->setTextDomain($textDomain);
+        }
 
         $tabs = $this->getTabs();
 
         $prefix = $this->_manager->getConfig('prefix');
         $vue = $container->offsetGet('wwp.basePlugin.backendView');
-        $vue->addFrag(new VueFrag( $container->offsetGet($prefix.'.wwp.path.templates.frags.header'),array('title'=>get_admin_page_title())));
-        if(!empty($tabs)){ $vue->addFrag(new VueFrag( $container->offsetGet($prefix.'.wwp.path.templates.frags.tabs'),array('tabs'=>$tabs))); }
-        $vue->addFrag(new VueFrag( $container->offsetGet($prefix.'.wwp.path.templates.frags.list'),array('listTableInstance'=>$listTableInstance)));
-        $vue->addFrag(new VueFrag( $container->offsetGet($prefix.'.wwp.path.templates.frags.footer')));
+        $vue->addFrag(new VueFrag($container->offsetGet($prefix . '.wwp.path.templates.frags.header'), array('title' => get_admin_page_title())));
+        if (!empty($tabs)) {
+            $vue->addFrag(new VueFrag($container->offsetGet($prefix . '.wwp.path.templates.frags.tabs'), array('tabs' => $tabs)));
+        }
+        $vue->addFrag(new VueFrag($container->offsetGet($prefix . '.wwp.path.templates.frags.list'), array('listTableInstance' => $listTableInstance)));
+        $vue->addFrag(new VueFrag($container->offsetGet($prefix . '.wwp.path.templates.frags.footer')));
         $vue->render();
     }
 
-    public function editAction(){
+    public function editAction($entityName = '', $modelForm = null)
+    {
+
         $container = Container::getInstance();
         $em = $container->offsetGet('entityManager');
         $request = Request::getInstance();
         $prefix = $this->_manager->getConfig('prefix');
 
         //Load entity
-        $id = $request->get('id',0);
-        $entityName = $this->_manager->getConfig('entityName');
-        if(!empty($id)) {
+        $id = $request->get('id', 0);
+        if (empty($entityName)) {
+            $entityName = $this->_manager->getConfig('entityName');
+        }
+        if (!empty($id)) {
             $item = $em->find($entityName, $id);
         } else {
             $item = new $entityName();
@@ -124,20 +146,32 @@ abstract class AbstractPluginBackendController{
 
         //Build model form, by adding fields corresponding to the model attributes, to the form instance
         /* @var $modelForm \WonderWp\Forms\ModelForm */
-        $modelForm = $this->_manager->getService(AbstractService::$MODELFORMSERVICENAME);
-        if(!is_object($modelForm)){ $modelForm = $container->offsetGet('wwp.forms.modelForm'); }
+        if (is_null($modelForm)) {
+            $modelForm = $this->_manager->getService(AbstractService::$MODELFORMSERVICENAME);
+        }
+        if (is_null($modelForm)) {
+            $modelForm = $container->offsetGet('wwp.forms.modelForm');
+        }
 
         $textDomain = $modelForm->getTextDomain();
-        if(empty($textDomain)){ $textDomain = $this->_manager->getConfig('textDomain'); }
-        if(!empty($textDomain)){ $modelForm->setTextDomain($textDomain); }
+        if (empty($textDomain)) {
+            $textDomain = $this->_manager->getConfig('textDomain');
+        }
+        if (!empty($textDomain)) {
+            $modelForm->setTextDomain($textDomain);
+        }
 
         $modelForm->setModelInstance($item);
         $modelForm->setFormInstance($formInstance)->buildForm();
 
         $errors = array();
         if ($request->getMethod() == 'POST') {
-            $formValidator = $container->offsetExists($prefix.'wwp.forms.formValidator') ? $container->offsetGet($prefix.'wwp.forms.formValidator') : $container->offsetGet('wwp.forms.formValidator');
-            $errors = $modelForm->handleRequest($request,$formValidator);
+            $data = $request->request->all();
+            /*} else {
+                $data = array();
+            }*/
+            $formValidator = $container->offsetExists($prefix . 'wwp.forms.formValidator') ? $container->offsetGet($prefix . 'wwp.forms.formValidator') : $container->offsetGet('wwp.forms.formValidator');
+            $errors = $modelForm->handleRequest($data, $formValidator);
         }
 
         $formInstance = $modelForm->getFormInstance();
@@ -150,23 +184,26 @@ abstract class AbstractPluginBackendController{
         $tabs = $this->getTabs();
 
         $vue = $container->offsetGet('wwp.basePlugin.backendView');
-        $vue->addFrag(new VueFrag( $container->offsetGet($prefix.'.wwp.path.templates.frags.header'),array('title'=>get_admin_page_title())));
-        if(!empty($tabs)){ $vue->addFrag(new VueFrag( $container->offsetGet($prefix.'.wwp.path.templates.frags.tabs'),array('tabs'=>$tabs))); }
-        $vue->addFrag(new VueFrag( $container->offsetGet($prefix.'.wwp.path.templates.frags.edit'),array('formView'=>$formView, 'formSubmitted'=>($request->getMethod() == 'POST'), 'formValid'=>(empty($errors)))));
-        $vue->addFrag(new VueFrag( $container->offsetGet($prefix.'.wwp.path.templates.frags.footer')));
+        $vue->addFrag(new VueFrag($container->offsetGet($prefix . '.wwp.path.templates.frags.header'), array('title' => get_admin_page_title())));
+        if (!empty($tabs)) {
+            $vue->addFrag(new VueFrag($container->offsetGet($prefix . '.wwp.path.templates.frags.tabs'), array('tabs' => $tabs)));
+        }
+        $vue->addFrag(new VueFrag($container->offsetGet($prefix . '.wwp.path.templates.frags.edit'), array('formView' => $formView, 'formSubmitted' => ($request->getMethod() == 'POST'), 'formValid' => (empty($errors)))));
+        $vue->addFrag(new VueFrag($container->offsetGet($prefix . '.wwp.path.templates.frags.footer')));
         $vue->render();
 
     }
 
-    public function deleteAction(){
+    public function deleteAction()
+    {
         $container = Container::getInstance();
         $em = $container->offsetGet('entityManager');
         $request = Request::getInstance();
 
         //Load entity
-        $id = $request->get('id',0);
-        $entityName = $container->offsetGet($this->plugin_name.'.wwp.entityName');
-        if(!empty($id)) {
+        $id = $request->get('id', 0);
+        $entityName = $container->offsetGet($this->plugin_name . '.wwp.entityName');
+        if (!empty($id)) {
             $item = $em->find($entityName, $id);
             $em->remove($item);
             $em->flush();
@@ -174,14 +211,16 @@ abstract class AbstractPluginBackendController{
         $request->query->remove('action');
         $request->query->remove('id');
 
-        \WonderWp\redirect($request->getBaseUrl().'?'.http_build_query($request->query->all()));
+        \WonderWp\redirect($request->getBaseUrl() . '?' . http_build_query($request->query->all()));
     }
 
-    public function getTabs(){
+    public function getTabs()
+    {
 
     }
 
-    public function getMinCapability(){
+    public function getMinCapability()
+    {
         return 'read';
     }
 }
