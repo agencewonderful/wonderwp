@@ -44,10 +44,10 @@ abstract class AbstractPluginFrontendController{
     }
 
     public function handleShortcode($atts){
-        $this->defaultAction();
+        return $this->defaultAction($atts);
     }
 
-    public function defaultAction(){
+    public function defaultAction($atts){
 
     }
 
