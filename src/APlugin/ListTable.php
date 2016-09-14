@@ -131,16 +131,19 @@ class ListTable extends \WP_List_Table
         return $actions;
     }
 
-    function extra_tablenav($which, $showAdd = true)
+    function extra_tablenav($which, $showAdd = true, $givenEditParams = array())
     {
-        $request = Request::getInstance();
-        $editParams = array(
-            'page' => $request->get('page'),
-            'action' => 'edit'
-        );
-        $editPage = admin_url('/admin.php?' . http_build_query($editParams));
-        $addBtn = '<a href="' . $editPage . '" class="button action noewpaddrecordbtn">' . esc_html_x('Add New', 'link') . '</a>';
-        echo $addBtn;
+        if($showAdd) {
+            $request = Request::getInstance();
+            $defaultEditParams = array(
+                'page' => $request->get('page'),
+                'action' => 'edit'
+            );
+            $editParams = \WonderWp\array_merge_recursive_distinct($defaultEditParams,$givenEditParams);
+            $editPage = admin_url('/admin.php?' . http_build_query($editParams));
+            $addBtn = '<a href="' . $editPage . '" class="button action noewpaddrecordbtn">' . esc_html_x('Add New', 'link') . '</a>';
+            echo $addBtn;
+        }
     }
 
     function column_cb($item)
