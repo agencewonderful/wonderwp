@@ -2,31 +2,31 @@
 /**
  * Created by PhpStorm.
  * User: jeremydesvaux
- * Date: 06/09/2016
- * Time: 11:08
+ * Date: 14/09/2016
+ * Time: 16:21
  */
 
 namespace WonderWp\Forms\Fields;
 
-class NumericField extends InputField{
 
+class DateField extends InputField
+{
     /**
      * NumericField constructor.
      * @param $name
      * @param null $value
      * @param array $displayRules
      * @param array $validationRules
-     * @return NumericField
+     * @return DateField
      */
     public function __construct($name, $value, $displayRules=array(), $validationRules=array())
     {
         parent::__construct($name, $value, $displayRules, $validationRules);
-        $this->type = 'number';
+        $this->type = 'date';
 
         if(empty($this->displayRules['inputAttributes']['class'])){ $this->displayRules['inputAttributes']['class']=array(); }
         $this->displayRules['inputAttributes']['class'][] = 'text';
 
         return $this;
     }
-
 }

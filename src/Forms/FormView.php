@@ -2,6 +2,7 @@
 
 namespace WonderWp\Forms;
 
+use WonderWp\DI\Container;
 use WonderWp\Forms\Fields\AbstractField;
 use WonderWp\Forms\Fields\FieldInterface;
 use WonderWp\Forms\Fields\SelectField;
@@ -21,6 +22,7 @@ class FormView implements FormViewInterface
     public function setFormInstance(FormInterface $form)
     {
         $this->_formInstance = $form;
+        $this->_container = Container::getInstance();
         return $this;
     }
 
@@ -152,6 +154,8 @@ class FormView implements FormViewInterface
     {
         $markup = '';
         $f = ($fieldName instanceof AbstractField) ? $fieldName : $this->_formInstance->getField($fieldName);
+        $formValidator = $this->_container->offsetGet('wwp.forms.formValidator');
+        $validationRules = !empty($f) ? $f->getValidationRules() : array();
 
         //fields that  use the label differently:
         if($f->getTag()=='button'){ return $markup; }
@@ -159,7 +163,12 @@ class FormView implements FormViewInterface
         if (!empty($f)) {
             $displayRules = $f->getDisplayRules();
             if (!empty($displayRules['label'])) {
-                $markup = '<label ' . (!empty($displayRules['labelAttributes']) ? $this->paramsToHtml($displayRules['labelAttributes']) : '') . '>' . $displayRules['label'] . '</label>';
+                $markup = '<label ' . (!empty($displayRules['labelAttributes']) ? $this->paramsToHtml($displayRules['labelAttributes']) : '') . '>';
+                    $markup.= $displayRules['label'];
+                    if($formValidator::hasRule($validationRules,'NotEmpty')){
+                        $markup.='<span class="required">*</span>';
+                    }
+                $markup.= '</label>';
             }
         }
         return $markup;
@@ -172,8 +181,10 @@ class FormView implements FormViewInterface
         $tag = !empty($f) ? $f->getTag() : '';
         $type = !empty($f) ? $f->getType() : array();
         $displayRules = !empty($f) ? $f->getDisplayRules() : array();
+        $validationRules = !empty($f) ? $f->getValidationRules() : array();
         $params = !empty($displayRules['inputAttributes']) ? $displayRules['inputAttributes'] : array();
-
+        /** @var FormValidator $formValidator */
+        $formValidator = $this->_container->offsetGet('wwp.forms.formValidator');
 
         //Classes
         if (empty($params['class'])) {
@@ -184,6 +195,11 @@ class FormView implements FormViewInterface
         if ($tag == 'input') {
             $params['class'][] = $type;
         }
+        if($formValidator::hasRule($validationRules,'NotEmpty')){
+            $params['required'] = '';
+        }
+
+
 
         //Open tag
         $markup = '<' . $tag;
@@ -272,17 +288,18 @@ class FormView implements FormViewInterface
     {
         $f = ($fieldName instanceof AbstractField) ? $fieldName : $this->_formInstance->getField($fieldName);
         $tag = !empty($f) ? $f->getTag() : '';
+        $displayRules = $f->getDisplayRules();
 
         $markup = '';
 
-        if (!empty($displayRules['after'])) {
-            $markup .= $displayRules['after'];
+        if ($tag == 'input') {
+            $markup .= ' />';
+        } else {
+            $markup .= '</' . $tag . '>';
         }
 
-        if ($tag == 'input') {
-            $markup = ' />';
-        } else {
-            $markup = '</' . $tag . '>';
+        if (!empty($displayRules['after'])) {
+            $markup .= $displayRules['after'];
         }
 
         return $markup;

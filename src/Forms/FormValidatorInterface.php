@@ -16,4 +16,6 @@ interface FormValidatorInterface {
 
     public function validate(array $data);
 
+    public static function hasRule(array $validationRules, $ruleName);
+
 }

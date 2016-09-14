@@ -2,25 +2,23 @@
 /**
  * Created by PhpStorm.
  * User: jeremydesvaux
- * Date: 31/08/2016
- * Time: 12:26
+ * Date: 14/09/2016
+ * Time: 17:49
  */
 
 namespace WonderWp\Forms\Fields;
 
-use WonderWp\Forms\Fields\FieldGroup;
 
-class CheckBoxesField extends FieldGroup
+class RadioField extends FieldGroup
 {
-
     public function __construct($name, $value = null, $displayRules = array(), $validationRules = array())
     {
         parent::__construct($name, $value, $displayRules, $validationRules);
         if(empty($this->displayRules['wrapAttributes']['class'])){ $this->displayRules['wrapAttributes']['class']=array(); }
-        $this->displayRules['wrapAttributes']['class'][] = 'checkbox-group';
+        $this->displayRules['wrapAttributes']['class'][] = 'radio-group';
     }
 
-    public function generateCheckBoxes($passedGroupedDisplayRules=array(),$passedGroupedValidationRules=array())
+    public function generateRadios($passedGroupedDisplayRules=array(),$passedGroupedValidationRules=array())
     {
         $name = $this->getName();
         if (!empty($this->options)) {
@@ -36,7 +34,8 @@ class CheckBoxesField extends FieldGroup
                 $passedOptDisplayRules = isset($passedGroupedDisplayRules[$val]) ? $passedGroupedDisplayRules[$val] : array();
                 $optDisplayRules =\WonderWp\array_merge_recursive_distinct($defaultOptDisplayRules,$passedOptDisplayRules);
 
-                $optField = new CheckBoxField($optFieldName, isset($this->value[$val]) ? $this->value[$val] : null, $optDisplayRules);
+                $optField = new InputField($optFieldName, isset($this->value[$val]) ? $this->value[$val] : null, $optDisplayRules);
+                $optField->setType('radio');
                 $this->addFieldToGroup($optField);
             }
         }
@@ -59,5 +58,4 @@ class CheckBoxesField extends FieldGroup
         }
         return $this;
     }
-
 }

@@ -9,8 +9,10 @@ use WonderWp\Entity\AbstractEntity;
 use WonderWp\Entity\EntityAttribute;
 use WonderWp\Entity\EntityRelation;
 use WonderWp\Forms\Fields\AbstractField;
+use WonderWp\Forms\Fields\DateField;
 use WonderWp\Forms\Fields\HiddenField;
 use WonderWp\Forms\Fields\InputField;
+use WonderWp\Forms\Fields\NumericField;
 use WonderWp\Forms\Fields\TextAreaField;
 use Respect\Validation\Validator;
 
@@ -133,15 +135,21 @@ class ModelForm
 
         //Field
         switch ($type) {
-            case'text':
-                $f = new TextAreaField($fieldName, $val, ['label' => $label]);
-                break;
-            default:
+            case 'integer':
                 if ($attr->getIsId()) {
                     $f = new HiddenField($fieldName, $val);
                 } else {
-                    $f = new InputField($fieldName, $val, ['label' => $label]);
+                    $f = new NumericField($fieldName, $val, ['label' => $label]);
                 }
+                break;
+            case'text':
+                $f = new TextAreaField($fieldName, $val, ['label' => $label]);
+                break;
+            case'datetime':
+                $f = new DateField($fieldName, $val, ['label' => $label]);
+                break;
+            default:
+                $f = new InputField($fieldName, $val, ['label' => $label]);
                 break;
         }
 
@@ -162,21 +170,21 @@ class ModelForm
 
         //Validate required fields
         if (!$attr->getNullable() && !$attr->getIsId()) {
-            $validationRules[] = array(Validator::notEmpty());
+            $validationRules[] = Validator::notEmpty();
         }
         //Validate length
         $length = $attr->getLength();
         if ($length > 0) {
-            $validationRules[] = array(Validator::length(null, $length));
+            $validationRules[] = Validator::length(null, $length);
         }
         //validate type
         $type = $attr->getType();
         switch ($type) {
             case 'integer':
-                $validationRules[] = array(Validator::optional(Validator::numeric()));
+                $validationRules[] = Validator::optional(Validator::numeric());
                 break;
             case 'string':
-                $validationRules[] = array(Validator::optional(Validator::stringType()));
+                $validationRules[] = Validator::optional(Validator::stringType());
                 break;
         }
 

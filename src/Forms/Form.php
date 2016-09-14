@@ -27,6 +27,7 @@ class Form implements FormInterface
     {
         $this->_name = $_name;
         $this->_fields = $_fields;
+        return $this;
     }
 
     /**
@@ -43,6 +44,7 @@ class Form implements FormInterface
     public function setName($name)
     {
         $this->_name = $name;
+        return $this;
     }
 
     /**
@@ -59,6 +61,7 @@ class Form implements FormInterface
     public function setFields($fields)
     {
         $this->_fields = $fields;
+        return $this;
     }
 
     /**
@@ -75,10 +78,14 @@ class Form implements FormInterface
     public function setErrors($errors)
     {
         $this->_errors = $errors;
+        return $this;
     }
 
-    public function addField(fieldInterface $field, $groupName = '')
+    public function addField(fieldInterface $field = null, $groupName = '')
     {
+        if(is_null($field)){
+            return $this;
+        }
         if (!empty($groupName)) {
             /** @var FormGroup $group */
             $group = isset($this->_groups[$groupName]) ? $this->_groups[$groupName] : null;
@@ -88,6 +95,7 @@ class Form implements FormInterface
         } else {
             $this->_fields[$field->getName()] = $field;
         }
+        return $this;
     }
 
     public function getField($fieldName)
@@ -118,11 +126,13 @@ class Form implements FormInterface
     public function setGroups($groups)
     {
         $this->_groups = $groups;
+        return $this;
     }
 
     public function addGroup(FormGroup $group)
     {
         $this->_groups[$group->getName()] = $group;
+        return $this;
     }
 
     public function fill(array $data)
@@ -155,6 +165,8 @@ class Form implements FormInterface
                 }
             }
         }
+
+        return $this;
     }
 
     public function fillField(AbstractField $f, $data)
@@ -176,6 +188,7 @@ class Form implements FormInterface
             }
             $f->setValue($data);
         }
+        return $this;
     }
 
 }

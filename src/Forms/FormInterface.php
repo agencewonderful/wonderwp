@@ -45,7 +45,7 @@ interface FormInterface
      * @param fieldInterface $field
      * @return mixed
      */
-    public function addField(fieldInterface $field);
+    public function addField(fieldInterface $field = null);
 
     /**
      * @param $fieldName
