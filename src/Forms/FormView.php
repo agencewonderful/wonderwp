@@ -107,12 +107,19 @@ class FormView implements FormViewInterface
     public function renderField($fieldName)
     {
         $markup = '';
+        $f = ($fieldName instanceof AbstractField) ? $fieldName : $this->_formInstance->getField($fieldName);
+        $type = (is_object($f)) ? $f->getType() : null;
 
         $markup .= $this->fieldWrapStart($fieldName);
-        $markup .= $this->fieldLabel($fieldName);
+        if($type!=='radio' && $type!=='checkbox') {
+            $markup .= $this->fieldLabel($fieldName);
+        }
         $markup .= $this->fieldStart($fieldName);
         $markup .= $this->fieldBetween($fieldName);
         $markup .= $this->fieldEnd($fieldName);
+        if($type==='radio' || $type==='checkbox') {
+            $markup .= $this->fieldLabel($fieldName);
+        }
         $markup .= $this->fieldError($fieldName);
         $markup .= $this->fieldWrapEnd($fieldName);
 
