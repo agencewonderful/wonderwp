@@ -17,6 +17,9 @@ class WwpWpMailer implements MailerInterface
     private $_body;
     private $_headers = array();
 
+    private $_cc = array();
+    private $_bcc = array();
+
     /**
      * __construct
      *
@@ -39,6 +42,9 @@ class WwpWpMailer implements MailerInterface
         $this->_subject = null;
         $this->_body = null;
         $this->_headers = array();
+
+        $this->_cc = array();
+        $this->_bcc = array();
 
         return $this;
     }
@@ -87,21 +93,11 @@ class WwpWpMailer implements MailerInterface
         } }
     }
 
-    /**
-     * getTo
-     *
-     * Return an array of formatted To addresses.
-     *
-     * @return array
-     */
     public function getTo()
     {
         return $this->_to;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function setTo(array $tos)
     {
         $this->_to = array();
@@ -111,25 +107,75 @@ class WwpWpMailer implements MailerInterface
     /**
      * @inheritDoc
      */
-    public function addReplyTo($email, $name = "")
+    public function setReplyTo($email, $name = "")
     {
-        // TODO: Implement addReplyTo() method.
+        $this->_headers[] = sprintf('%s: %s', (string)'Reply-To', $this->formatHeader((string) $email, (string) $name));
     }
 
     /**
      * @inheritDoc
      */
-    public function addCC($email, $name = "")
+    public function addCc($email, $name = "")
     {
-        // TODO: Implement addCC() method.
+        $this->_cc[] = $this->formatHeader((string) $email, (string) $name);
+        return $this;
+    }
+
+    public function addCcs(array $ccs){
+        if(!empty($ccs)){ foreach($ccs as $cc){
+            if(is_array($cc)) {
+                $mail = $cc[0];
+                $name = !empty($cc[1]) ? $cc[1] : '';
+                $this->addCc($mail, $name);
+            } else {
+                //string so just mail
+                $this->addCc($cc, '');
+            }
+        } }
+    }
+
+    public function getCc()
+    {
+        return $this->_cc;
+    }
+
+    public function setCc(array $ccs)
+    {
+        $this->_cc = array();
+        $this->addCcs($ccs);
     }
 
     /**
      * @inheritDoc
      */
-    public function addBCC($email, $name = "")
+    public function addBcc($email, $name = "")
     {
-        // TODO: Implement addBCC() method.
+        $this->_bcc[] = $this->formatHeader((string) $email, (string) $name);
+        return $this;
+    }
+
+    public function addBccs(array $bccs){
+        if(!empty($bccs)){ foreach($bccs as $bcc){
+            if(is_array($bcc)) {
+                $mail = $bcc[0];
+                $name = !empty($bcc[1]) ? $bcc[1] : '';
+                $this->addCc($mail, $name);
+            } else {
+                //string so just mail
+                $this->addCc($bcc, '');
+            }
+        } }
+    }
+
+    public function getBcc()
+    {
+        return $this->_bcc;
+    }
+
+    public function setBcc(array $bccs)
+    {
+        $this->_bcc = array();
+        $this->addCcs($bccs);
     }
 
     /**
@@ -137,7 +183,7 @@ class WwpWpMailer implements MailerInterface
      */
     public function setBody($body)
     {
-        $this->_body = str_replace("\n.", "\n..", (string) $body);
+        $this->_body = apply_filters('wwp.mailer.setBody',str_replace("\n.", "\n..", (string) $body));
 
         if(strpos($this->_body,'<body')!==false){
             // Pour envoyer un mail HTML, l'en-tête Content-type doit être défini
@@ -168,7 +214,7 @@ class WwpWpMailer implements MailerInterface
     /**
      * @inheritDoc
      */
-    public function addAttachement($attachement)
+    public function addAttachment($path, $filename = null)
     {
         // TODO: Implement addAttachement() method.
     }
@@ -181,9 +227,9 @@ class WwpWpMailer implements MailerInterface
         $to = !(empty($this->_to)) ? join(', ', $this->_to) : '';
         $subject = $this->_subject;
         $message = $this->_body;
-        $headers = !(empty($this->_headers)) ? join(PHP_EOL, $this->_headers) : '';
+        $headers = $this->prepareHeaders();
 
-        echo'<br />To';
+        /*echo'<br />To';
         \WonderWp\trace($to);
         echo'<br /><br />Subject';
         \WonderWp\trace($subject);
@@ -191,10 +237,21 @@ class WwpWpMailer implements MailerInterface
         \WonderWp\trace($message);
         echo'<br /><br />Headers';
         \WonderWp\trace($headers);
-
-        //die();
+        return true;*/
 
         return wp_mail($to, $subject, $message, $headers);
+    }
+
+    public function prepareHeaders(){
+
+        if(!empty($this->_cc)){
+            $this->_headers[] = sprintf('%s: %s', (string)'Cc', join(',',$this->_cc));
+        }
+        if(!empty($this->_bcc)){
+            $this->_headers[] = sprintf('%s: %s', (string)'Bcc', join(',',$this->_bcc));
+        }
+
+        return !(empty($this->_headers)) ? join(PHP_EOL, $this->_headers) : '';
     }
 
     /**
@@ -204,7 +261,7 @@ class WwpWpMailer implements MailerInterface
      * @param string $email  The email to add.
      * @param string $name   The name to add.
      *
-     * @return SimpleMail
+     * @return $this
      */
     public function addMailHeader($header, $email = null, $name = null)
     {
