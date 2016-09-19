@@ -218,8 +218,8 @@ abstract class AbstractPluginBackendController
 
         if (!empty($id)) {
             $item = $em->find($entityName, $id);
-            //$em->remove($item);
-            //$em->flush();
+            $em->remove($item);
+            $em->flush();
             $request->getSession()->getFlashbag()->add('success',$container->offsetGet('wwp.element.delete.success'));
         } else {
             $request->getSession()->getFlashbag()->add('success',$container->offsetGet('wwp.element.delete.error'));
