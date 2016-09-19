@@ -8,6 +8,7 @@
 namespace WonderWp\Route;
 
 use WonderWp\AbstractDefinitions\Singleton;
+use WonderWp\HttpFoundation\Request;
 use WonderWp\Route\RouterInterface;
 
 class Router extends AbstractRouter
@@ -90,21 +91,37 @@ class Router extends AbstractRouter
         if ($matched_route instanceof Route) {
             $this->_matchedRoute = $matched_route;
         }
-        if ($matched_route instanceof \WP_Error && in_array('route_not_found', $matched_route->get_error_codes())) {
-            wp_die($matched_route, 'Route Not Found', array('response' => 404));
+        if ($matched_route instanceof \WP_Error) {
+            if(in_array('route_not_found', $matched_route->get_error_codes())){
+                wp_redirect('/404');
+            }
+            if(in_array('method_not_authorized', $matched_route->get_error_codes())){
+                wp_redirect('/503');
+            }
         }
     }
 
     public function match(array $query_variables)
     {
+        //Check Route Variable
         if (empty($query_variables[$this->_routeVariable])) {
             return new \WP_Error('missing_route_variable');
         }
+        //Check Route
         $route_name = $query_variables[$this->_routeVariable];
         if (!isset($this->_routes[$route_name])) {
             return new \WP_Error('route_not_found');
         }
-        return $this->_routes[$route_name];
+        //Check Route Method
+        /** @var Route $route */
+        $route = $this->_routes[$route_name];
+        $routeMethod = $route->getMethod();
+        $requestMethod = Request::getInstance()->getMethod();
+        if($routeMethod!='ALL' && $routeMethod!==$requestMethod){
+            return new \WP_Error('method_not_authorized');
+        }
+
+        return $route;
     }
 
     /**

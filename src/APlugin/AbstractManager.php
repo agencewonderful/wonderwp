@@ -164,7 +164,7 @@ abstract class AbstractManager implements ManagerInterface
         $routeService = $this->getService(AbstractService::$ROUTESERVICENAME);
         if (is_object($routeService)) {
             /** @var Router $router */
-            $router = $this->_container->offsetGet('wwp.Router');
+            $router = $this->_container->offsetGet('wwp.routes.router');
             $router->addService($routeService);
         }
 

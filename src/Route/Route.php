@@ -21,7 +21,7 @@ class Route
     {
         $this->_path = !empty($args[0]) ? $args[0] : null;
         $this->_callable = !empty($args[1]) ? $args[1] : null;
-        $this->_method = !empty($args[2]) ? $args[2] : null;
+        $this->_method = !empty($args[2]) ? $args[2] : 'ALL';
         return $this;
     }
 
