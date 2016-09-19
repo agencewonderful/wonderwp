@@ -56,18 +56,22 @@ class FormValidator implements FormValidatorInterface
                 $fieldErrors = array();
 
                 if (!empty($validationRules)) {
-                    foreach ($validationRules as $validationRule) {
-                        $rule = $validationRule[0];
-                        /** @var $rule AbstractRule */
-                        try {
-                            $rule->assert($fieldData);
-                        } catch (ValidationException $exception) {
-                            if (!empty($validationRule[1])) {
-                                $errorMsg = $validationRule[1];
-                            } else {
-                                $errorMsg = $exception->getFullMessage();
+                    foreach ($validationRules as $validator) {
+                        $rules = $validator->getRules();
+                        if (!empty($rules)) {
+                            foreach ($rules as $rule) {
+                                /** @var $rule AbstractRule */
+                                try {
+                                    $rule->assert($fieldData);
+                                } catch (ValidationException $exception) {
+                                    if (!empty($validationRule[1])) {
+                                        $errorMsg = $validationRule[1];
+                                    } else {
+                                        $errorMsg = $exception->getFullMessage();
+                                    }
+                                    $fieldErrors[] = $errorMsg;
+                                }
                             }
-                            $fieldErrors[] = $errorMsg;
                         }
                     }
                 }
@@ -85,25 +89,33 @@ class FormValidator implements FormValidatorInterface
 
     public static function hasRule(array $validationRules, $ruleName)
     {
-        $ruleName = 'Respect\Validation\Rules\\'.$ruleName;
+        $ruleName = 'Respect\Validation\Rules\\' . $ruleName;
 
         if (!empty($validationRules)) {
             foreach ($validationRules as $validator) {
                 /** @var Validator $validator */
                 $rules = $validator->getRules();
-                if(!empty($rules)){ foreach($rules as $r){
-                    $validationClass = get_class($r);
-                    if($validationClass==$ruleName){ return true; }
+                if (!empty($rules)) {
+                    foreach ($rules as $r) {
+                        $validationClass = get_class($r);
+                        if ($validationClass == $ruleName) {
+                            return true;
+                        }
 
-                    if($validationClass==Optional::class){
-                        /** @var Optional $r */
-                        $subRules = $r->getValidatable()->getRules();
-                        if(!empty($subRules)){ foreach($subRules as $sr){
-                            $validationClass = get_class($r);
-                            if($validationClass==$ruleName){ return true; }
-                        }}
+                        if ($validationClass == Optional::class) {
+                            /** @var Optional $r */
+                            $subRules = $r->getValidatable()->getRules();
+                            if (!empty($subRules)) {
+                                foreach ($subRules as $sr) {
+                                    $validationClass = get_class($r);
+                                    if ($validationClass == $ruleName) {
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
                     }
-                }}
+                }
             }
         }
         return false;
