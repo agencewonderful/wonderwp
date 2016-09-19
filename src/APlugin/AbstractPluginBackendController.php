@@ -172,14 +172,14 @@ abstract class AbstractPluginBackendController
             /*} else {
                 $data = array();
             }*/
-            $formValidator = $container->offsetExists($prefix . 'wwp.element.formValidator') ? $container->offsetGet($prefix . 'wwp.forms.formValidator') : $container->offsetGet('wwp.forms.formValidator');
+            $formValidator = $container->offsetExists($prefix . 'wwp.forms.formValidator') ? $container->offsetGet($prefix . 'wwp.forms.formValidator') : $container->offsetGet('wwp.forms.formValidator');
             $errors = $modelForm->handleRequest($data, $formValidator);
             if (!empty($errors)) {
                 $notifType = 'error';
-                $notifMsg = ($id > 0) ? $container->offsetGet('wwp.element.edit.error') : $container->offsetGet('wwp.forms.add.error');
+                $notifMsg = ($id > 0) ? $container->offsetGet('wwp.element.edit.error') : $container->offsetGet('wwp.element.add.error');
             } else {
                 $notifType = 'success';
-                $notifMsg = ($id > 0) ? $container->offsetGet('wwp.element.edit.success') : $container->offsetGet('wwp.forms.add.success');
+                $notifMsg = ($id > 0) ? $container->offsetGet('wwp.element.edit.success') : $container->offsetGet('wwp.element.add.success');
             }
             $notification = new AdminNotification($notifType, $notifMsg);
 
