@@ -10,6 +10,7 @@ namespace WonderWp\APlugin;
 
 use WonderWp\DI\Container;
 use WonderWp\HttpFoundation\Request;
+use WonderWp\Notification\AdminNotification;
 use WonderWp\Services\AbstractService;
 use WonderWp\Templates\VueFrag;
 
@@ -108,17 +109,17 @@ abstract class AbstractPluginBackendController
             $listTableInstance->setTextDomain($textDomain);
         }
 
-        $tabs = $this->getTabs();
+        $notifications = $this->flashesToNotifications();
 
         $prefix = $this->_manager->getConfig('prefix');
-        $vue = $container->offsetGet('wwp.basePlugin.backendView');
-        $vue->addFrag(new VueFrag($container->offsetGet($prefix . '.wwp.path.templates.frags.header'), array('title' => get_admin_page_title())));
-        if (!empty($tabs)) {
-            $vue->addFrag(new VueFrag($container->offsetGet($prefix . '.wwp.path.templates.frags.tabs'), array('tabs' => $tabs)));
-        }
-        $vue->addFrag(new VueFrag($container->offsetGet($prefix . '.wwp.path.templates.frags.list'), array('listTableInstance' => $listTableInstance)));
-        $vue->addFrag(new VueFrag($container->offsetGet($prefix . '.wwp.path.templates.frags.footer')));
-        $vue->render();
+        $vue = $container->offsetGet('wwp.views.listAdmin')
+            ->registerFrags($prefix)
+            ->render([
+                'title' => get_admin_page_title(),
+                'tabs' => $this->getTabs(),
+                'listTableInstance' => $listTableInstance,
+                'notifications'=>$notifications
+            ]);
     }
 
     public function editAction($entityName = '', $modelForm = null)
@@ -165,13 +166,23 @@ abstract class AbstractPluginBackendController
         $modelForm->setFormInstance($formInstance)->buildForm();
 
         $errors = array();
+        $notification = null;
         if ($request->getMethod() == 'POST') {
             $data = $request->request->all();
             /*} else {
                 $data = array();
             }*/
-            $formValidator = $container->offsetExists($prefix . 'wwp.forms.formValidator') ? $container->offsetGet($prefix . 'wwp.forms.formValidator') : $container->offsetGet('wwp.forms.formValidator');
+            $formValidator = $container->offsetExists($prefix . 'wwp.element.formValidator') ? $container->offsetGet($prefix . 'wwp.forms.formValidator') : $container->offsetGet('wwp.forms.formValidator');
             $errors = $modelForm->handleRequest($data, $formValidator);
+            if (!empty($errors)) {
+                $notifType = 'error';
+                $notifMsg = ($id > 0) ? $container->offsetGet('wwp.element.edit.error') : $container->offsetGet('wwp.forms.add.error');
+            } else {
+                $notifType = 'success';
+                $notifMsg = ($id > 0) ? $container->offsetGet('wwp.element.edit.success') : $container->offsetGet('wwp.forms.add.success');
+            }
+            $notification = new AdminNotification($notifType, $notifMsg);
+
         }
 
         $formInstance = $modelForm->getFormInstance();
@@ -181,16 +192,16 @@ abstract class AbstractPluginBackendController
         $formView = $container->offsetGet('wwp.forms.formView');
         $formView->setFormInstance($formInstance);
 
-        $tabs = $this->getTabs();
-
-        $vue = $container->offsetGet('wwp.basePlugin.backendView');
-        $vue->addFrag(new VueFrag($container->offsetGet($prefix . '.wwp.path.templates.frags.header'), array('title' => get_admin_page_title())));
-        if (!empty($tabs)) {
-            $vue->addFrag(new VueFrag($container->offsetGet($prefix . '.wwp.path.templates.frags.tabs'), array('tabs' => $tabs)));
-        }
-        $vue->addFrag(new VueFrag($container->offsetGet($prefix . '.wwp.path.templates.frags.edit'), array('formView' => $formView, 'formSubmitted' => ($request->getMethod() == 'POST'), 'formValid' => (empty($errors)))));
-        $vue->addFrag(new VueFrag($container->offsetGet($prefix . '.wwp.path.templates.frags.footer')));
-        $vue->render();
+        $vue = $container->offsetGet('wwp.views.editAdmin')
+            ->registerFrags($prefix)
+            ->render([
+                'title' => get_admin_page_title(),
+                'tabs' => $this->getTabs(),
+                'formView' => $formView,
+                'formSubmitted' => ($request->getMethod() == 'POST'),
+                'formValid' => (empty($errors)),
+                'notification' => $notification
+            ]);
 
     }
 
@@ -202,11 +213,16 @@ abstract class AbstractPluginBackendController
 
         //Load entity
         $id = $request->get('id', 0);
-        $entityName = $container->offsetGet($this->plugin_name . '.wwp.entityName');
+        $prefix = $this->_manager->getConfig('prefix');
+        $entityName = $this->_manager->getConfig('entityName');
+
         if (!empty($id)) {
             $item = $em->find($entityName, $id);
-            $em->remove($item);
-            $em->flush();
+            //$em->remove($item);
+            //$em->flush();
+            $request->getSession()->getFlashbag()->add('success',$container->offsetGet('wwp.element.delete.success'));
+        } else {
+            $request->getSession()->getFlashbag()->add('success',$container->offsetGet('wwp.element.delete.error'));
         }
         $request->query->remove('action');
         $request->query->remove('id');
@@ -222,5 +238,19 @@ abstract class AbstractPluginBackendController
     public function getMinCapability()
     {
         return 'read';
+    }
+
+    public function flashesToNotifications(){
+        $request = Request::getInstance();
+        $flashes = $request->getSession()->getFlashbag()->all();
+        $notifications = array();
+
+        if(!empty($flashes)){ foreach ($flashes as $type=>$messages){
+            if(!empty($messages)){ foreach ($messages as $message){
+                $notification = new AdminNotification($type,$message);
+                $notifications[] = $notification->getMarkup();
+            }}
+        }}
+        return $notifications;
     }
 }

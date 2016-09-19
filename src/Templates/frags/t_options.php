@@ -6,8 +6,9 @@
  * Time: 18:33
  */
 
+if(!empty($notification)){ echo $notification; }
 $request = \WonderWp\HttpFoundation\Request::getInstance();
-$options = !empty($values['options']) ? $values['options'] : array();
+$options = !empty($options) ? $options : array();
 
 ?>
 <?php

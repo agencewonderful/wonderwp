@@ -1,6 +1,8 @@
+<?php if(!empty($notifications)){ echo implode("\n",$notifications); } ?>
+
 <div class="list-table-wrap">
 <?php
-$wp_list_table = $values['listTableInstance'];
+$wp_list_table = $listTableInstance;
 $pagenum = $wp_list_table->get_pagenum();
 $wp_list_table->prepare_items();
 

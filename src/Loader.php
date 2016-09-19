@@ -23,9 +23,14 @@ use WonderWp\Forms\Form;
 use WonderWp\Forms\FormValidator;
 use WonderWp\Forms\ModelForm;
 use WonderWp\Forms\FormView;
+use WonderWp\Mail\WwpWpMailer;
 use WonderWp\Panel\Panel;
 use WonderWp\Panel\PanelManager;
 use WonderWp\Route\Router;
+use WonderWp\Templates\Views\AdminVue;
+use WonderWp\Templates\Views\EditAdminView;
+use WonderWp\Templates\Views\ListAdminView;
+use WonderWp\Templates\Views\OptionsAdminView;
 
 class Loader extends Singleton{
 
@@ -154,6 +159,17 @@ class Loader extends Singleton{
         $container['wwp.forms.formValidator'] = $container->factory(function($c){
             return new FormValidator();
         });
+        $container['wwp.element.edit.success'] = "Element successfully edited";
+        $container['wwp.element.add.success'] = "Element successfully added";
+        $container['wwp.element.edit.error'] = "Sorry, there's been an error while editing the element";
+        $container['wwp.element.add.error'] = "Sorry, there's been an error while adding the element";
+        $container['wwp.element.delete.success'] = "Element successfully deleted";
+        $container['wwp.element.delete.error'] = "Sorry, there's been an error while deleting the element";
+
+        //Emails
+        $container['wwp.emails.mailer'] = $container->factory(function($c){
+            return new WwpWpMailer();
+        });
 
         //FileSystem
         $container['wwp.fileSystem'] = function(){
@@ -163,6 +179,20 @@ class Loader extends Singleton{
                 WP_Filesystem();
             }
             return $wp_filesystem;
+        };
+
+        //Views
+        $container['wwp.views.baseAdmin'] = function() {
+            return new AdminVue();
+        };
+        $container['wwp.views.listAdmin'] = function() {
+            return new ListAdminView();
+        };
+        $container['wwp.views.editAdmin'] = function() {
+            return new EditAdminView();
+        };
+        $container['wwp.views.optionsAdmin'] = function() {
+            return new OptionsAdminView();
         };
 
         //Panels
