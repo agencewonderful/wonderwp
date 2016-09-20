@@ -13,7 +13,7 @@ $options = !empty($options) ? $options : array();
 ?>
 <?php
 /* @var $options array */
-if ($request->getMethod() == 'POST' && !empty($request->request->get('action') && $request->request->get('action') == 'save')) {
+if ($request->getMethod() == 'POST' && !empty($request->request->get('saveOptions'))) {
     foreach ($options as $value) {
         if (!empty($value['id'])) {
             update_option($value['id'], stripslashes($request->request->get($value['id'])));
@@ -97,7 +97,7 @@ if ($request->getMethod() == 'POST' && !empty($request->request->get('action') &
                 <?php foreach ($value['options'] as $key => $option) {
                     $radio_setting = get_option($value['id']);
                     if ($radio_setting != '') {
-                        if ($key == get_option($value['id'])) {
+                        if ($key == str_replace('\\','\\\\',get_option($value['id']))) {
                             $checked = "checked=\"checked\"";
                         } else {
                             $checked = "";
@@ -148,7 +148,7 @@ if ($request->getMethod() == 'POST' && !empty($request->request->get('action') &
 
     <p class="submit">
         <input name="save" type="submit" value="<?php _e('Sauvegarder'); ?>" class="button-primary"/>
-        <input type="hidden" name="action" value="save"/>
+        <input type="hidden" name="saveOptions" value="true"/>
     </p>
 </form>
 </div>
