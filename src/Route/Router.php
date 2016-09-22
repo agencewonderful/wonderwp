@@ -25,9 +25,10 @@ class Router extends AbstractRouter
     public function __construct()
     {
         add_action('init', array($this, 'registerRules'));
-        add_action('admin_init', array($this,'flushRules'));
+        add_action('admin_init', array($this, 'flushRules'));
         add_action('parse_request', array($this, 'match_request'));
         add_action('template_redirect', array($this, 'call_route_hook'));
+        add_filter('query_vars', array($this,'register_query_vars'));
     }
 
     public function addService(RouteServiceInterface $routeService)
@@ -44,10 +45,10 @@ class Router extends AbstractRouter
                 $serviceRoutes = $service->getRoutes();
                 if (!empty($serviceRoutes)) {
                     foreach ($serviceRoutes as $i => $r) {
-                        if(is_array($r)){
+                        if (is_array($r)) {
                             $r = new Route($r);
                         }
-                        $this->_routes[sanitize_title($serviceName .'#'. $i)] = $r;
+                        $this->_routes[sanitize_title($serviceName . '#' . $i)] = $r;
                     }
                 }
             }
@@ -57,15 +58,47 @@ class Router extends AbstractRouter
 
     public function registerRules()
     {
+        global $wp_rewrite;
         $routes = $this->getRoutes();
         if (!empty($routes)) {
-            add_rewrite_tag('%'.$this->_routeVariable.'%', '(.+)');
+            add_rewrite_tag('%' . $this->_routeVariable . '%', '(.+)');
             foreach ($routes as $name => $route) {
                 /** @var Route $route */
                 $regex = $this->generate_route_regex($route);
-                add_rewrite_rule($regex,  'index.php?'.$this->_routeVariable.'='.$name, 'top');
+                $path = $route->getPath();
+                $wildCards = array();
+                $qs = $this->_routeVariable . '=' . $name;
+                if (strpos($path, '{') !== false) {
+                    preg_match_all('/{(.*?)}/', $path, $wildCardsMatchs);
+                    $wildCards = $wildCardsMatchs[1];
+                    if (!empty($wildCards)) {
+                        $cpt = 1;
+                        foreach ($wildCards as $wildCard) {
+                            //add_rewrite_tag('%' . $wildCard . '%', '(.+)');
+                            $qs.='&'.$wildCard.'=$matches['.$cpt.']';
+                            $cpt++;
+                        }
+                    }
+                }
+                add_rewrite_rule($regex, 'index.php?' . $qs, 'top');
             }
         }
+    }
+
+    public function register_query_vars($vars){
+        $routes = $this->getRoutes();
+        if (!empty($routes)) {
+            foreach ($routes as $route) {
+                $path = $route->getPath();
+                if (strpos($path, '{') !== false) {
+                    preg_match_all('/{(.*?)}/', $path, $wildCardsMatchs);
+                    if (!empty($wildCardsMatchs[1])) {
+                        $vars = array_merge($vars,$wildCardsMatchs[1]);
+                    }
+                }
+            }
+        }
+        return $vars;
     }
 
     /**
@@ -77,7 +110,9 @@ class Router extends AbstractRouter
      */
     private function generate_route_regex(Route $route)
     {
-        return '^'.ltrim(trim($route->getPath()), '/').'$';
+        $path = preg_replace('/{(.*?)}/', '(.*)', $route->getPath());
+        return '^' . ltrim(trim($path), '/') . '$';
+        return $regex;
     }
 
     /**
@@ -92,10 +127,10 @@ class Router extends AbstractRouter
             $this->_matchedRoute = $matched_route;
         }
         if ($matched_route instanceof \WP_Error) {
-            if(in_array('route_not_found', $matched_route->get_error_codes())){
+            if (in_array('route_not_found', $matched_route->get_error_codes())) {
                 wp_redirect('/404');
             }
-            if(in_array('method_not_authorized', $matched_route->get_error_codes())){
+            if (in_array('method_not_authorized', $matched_route->get_error_codes())) {
                 wp_redirect('/503');
             }
         }
@@ -117,7 +152,7 @@ class Router extends AbstractRouter
         $route = $this->_routes[$route_name];
         $routeMethod = $route->getMethod();
         $requestMethod = Request::getInstance()->getMethod();
-        if($routeMethod!='ALL' && $routeMethod!==$requestMethod){
+        if ($routeMethod != 'ALL' && $routeMethod !== $requestMethod) {
             return new \WP_Error('method_not_authorized');
         }
 
@@ -129,8 +164,22 @@ class Router extends AbstractRouter
      */
     public function call_route_hook()
     {
-        if(!empty($this->_matchedRoute)){
-            call_user_func($this->_matchedRoute->getCallable());
+
+        if (!empty($this->_matchedRoute)) {
+            //Add query vars to request object
+            $path = $this->_matchedRoute->getPath();
+            $request = Request::getInstance();
+            $params = array();
+            if (strpos($path, '{') !== false) {
+                preg_match_all('/{(.*?)}/', $path, $wildCardsMatchs);
+                if (!empty($wildCardsMatchs[1])) {
+                    foreach ($wildCardsMatchs[1] as $wildCard){
+                        $request->query->set($wildCard,get_query_var($wildCard));
+                        $params[$wildCard] = get_query_var($wildCard);
+                    }
+                }
+            }
+            call_user_func_array($this->_matchedRoute->getCallable(),$params);
         }
     }
 
