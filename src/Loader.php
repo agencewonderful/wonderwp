@@ -125,6 +125,7 @@ class Loader extends Singleton{
                 $container['path_framework_root'].'/Templates/frags'
             ]);
             $config->setMetadataDriverImpl($anDriver);
+            $config->addCustomNumericFunction('RAND', 'WonderWp\DB\Rand');
             return EntityManager::create($conn, $config, $evm);
         };
 
