@@ -10,11 +10,11 @@ namespace WonderWp\Notification;
  */
 class AdminNotification
 {
-    private $_type;
-    private $_message;
-    private $_dismissible;
+    protected $_type;
+    protected $_message;
+    protected $_dismissible;
 
-    public static $template = '<div class="{classes}"><p>{message}</p></div>';
+    public static $template = '<div class="{classes}" role="alert"><p>{message}</p></div>';
 
     public function __construct($type,$message)
     {

@@ -44,13 +44,13 @@ abstract class AbstractApiService extends AbstractService implements ApiServiceI
         $this->_request = $request;
     }
 
-    public function respond($response,$format='json'){
+    public function respond(Result $result,$format='json'){
         if($format=='json') {
             header('Content-Type: application/json');
-            echo json_encode($response);
+            echo $result;
             die();
         }
-        return $response;
+        return $result;
     }
 
     public function requestParameter($paramName='all'){
