@@ -56,3 +56,17 @@ function redirect($url){
         echo'<script>window.location.href="'.$url.'"</script>';
     }
 }
+
+function paramsToHtml($params)
+{
+    $paramsHtml = '';
+    if (!empty($params)) {
+        foreach ($params as $key => $val) {
+            if (is_array($val)) {
+                $val = implode(' ', $val);
+            }
+            $paramsHtml .= ' ' . $key . ' = "' . $val . '"';
+        }
+    }
+    return $paramsHtml;
+}

@@ -73,7 +73,7 @@ class FormView implements FormViewInterface
             if (!empty($options['showFormTag'])) {
                 unset($options['showFormTag']);
             }
-            $markup .= '<form ' . $this->paramsToHtml($options) . '>';
+            $markup .= '<form ' . \WonderWp\paramsToHtml($options) . '>';
         }
         return $markup;
     }
@@ -93,7 +93,7 @@ class FormView implements FormViewInterface
         $markup = '';
         $fields = $group->getFields();
         if (!empty($fields)) {
-            $markup.='<fieldset '.$this->paramsToHtml($group->getDisplayRules()).'>
+            $markup.='<fieldset '.\WonderWp\paramsToHtml($group->getDisplayRules()).'>
             <legend class="hndle ui-sortable-handle">'.$group->getTitle().'</legend>            
             <div class="inside">';
             foreach ($fields as $field) {
@@ -148,7 +148,7 @@ class FormView implements FormViewInterface
         }
 
         if (!empty($f)) {
-            $markup .= '<div ' . $this->paramsToHtml($wrapAttributes) . '>';
+            $markup .= '<div ' . \WonderWp\paramsToHtml($wrapAttributes) . '>';
 
             if (!empty($displayRules['before'])) {
                 $markup .= $displayRules['before'];
@@ -170,7 +170,7 @@ class FormView implements FormViewInterface
         if (!empty($f)) {
             $displayRules = $f->getDisplayRules();
             if (!empty($displayRules['label'])) {
-                $markup = '<label ' . (!empty($displayRules['labelAttributes']) ? $this->paramsToHtml($displayRules['labelAttributes']) : '') . '>';
+                $markup = '<label ' . (!empty($displayRules['labelAttributes']) ? \WonderWp\paramsToHtml($displayRules['labelAttributes']) : '') . '>';
                     $markup.= $displayRules['label'];
                     if($formValidator::hasRule($validationRules,'NotEmpty')){
                         $markup.='<span class="required">*</span>';
@@ -220,7 +220,7 @@ class FormView implements FormViewInterface
         if($isMultiple){ $params['name'].='[]'; }
 
         //Add input parameters
-        $markup .= ' ' . $this->paramsToHtml($params) . '';
+        $markup .= ' ' . \WonderWp\paramsToHtml($params) . '';
 
         //Close opening tag
         if ($tag != 'input') {
@@ -353,17 +353,4 @@ class FormView implements FormViewInterface
         return $markup;
     }
 
-    public function paramsToHtml($params)
-    {
-        $paramsHtml = '';
-        if (!empty($params)) {
-            foreach ($params as $key => $val) {
-                if (is_array($val)) {
-                    $val = implode(' ', $val);
-                }
-                $paramsHtml .= ' ' . $key . ' = "' . $val . '"';
-            }
-        }
-        return $paramsHtml;
-    }
 }
