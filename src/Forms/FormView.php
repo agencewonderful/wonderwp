@@ -341,9 +341,11 @@ class FormView implements FormViewInterface
     {
         $markup = '';
 
+        $submitLabel = isset($optsEnd['submitLabel']) ? $optsEnd['submitLabel'] : __('submit');
+
         if (!isset($optsEnd['showSubmit']) || $optsEnd['showSubmit'] == 1) {
             $markup .= '<div class="submitFormField">
-                <input type="submit" class="btn button"/>
+                <button type="submit" class="btn button">'.$submitLabel.'</button>
             </div>';
         }
 
