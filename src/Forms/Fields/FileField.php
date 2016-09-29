@@ -7,15 +7,14 @@
  */
 namespace WonderWp\Forms\Fields;
 
-class MediaField extends InputField{
+class FileField extends InputField{
 
     /**
-     * HiddenField constructor.
+     * FileField constructor.
      * @param $name
      * @param null $value
      * @param array $displayRules
      * @param array $validationRules
-     * @return HiddenField
      */
     public function __construct($name, $value=null, $displayRules=array(), $validationRules=array()){
         parent::__construct($name, $value, $displayRules, $validationRules);
