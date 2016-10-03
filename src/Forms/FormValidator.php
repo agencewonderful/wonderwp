@@ -67,7 +67,7 @@ class FormValidator implements FormValidatorInterface
                                     if (!empty($validationRule[1])) {
                                         $errorMsg = $validationRule[1];
                                     } else {
-                                        $errorMsg = $exception->getFullMessage();
+                                        $errorMsg = $exception->getMainMessage();
                                     }
                                     $fieldErrors[] = $errorMsg;
                                 }
