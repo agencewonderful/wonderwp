@@ -9,21 +9,18 @@
 namespace WonderWp\Forms\Fields;
 
 
-class CategoryField extends SelectField
+class CategoryRadioField extends RadioField
 {
 
     public function __construct($name, $value=null, $displayRules=array(), $validationRules=array(),$parent=0)
     {
         parent::__construct($name, $value, $displayRules, $validationRules);
-        $this->tag = 'select';
 
-        $this->setCatOptions($parent);
+        $this->setCatOptions($parent)->generateRadios();
     }
 
     public function setCatOptions($parent){
-        $options = array(
-            0=>__('Category')
-        );
+        $options = array();
 
         $args = [
             'child_of'=>$parent,

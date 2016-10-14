@@ -341,15 +341,24 @@ class FormView implements FormViewInterface
     {
         $markup = '';
 
-        $submitLabel = isset($optsEnd['submitLabel']) ? $optsEnd['submitLabel'] : __('submit');
+        $defaultOptions = array(
+            'showSubmit'=>1,
+            'submitLabel'=>__('submit'),
+            'btnAttributes'=>array(
+                'type'=>'submit',
+                'class'=>'btn button'
+            )
+        );
 
-        if (!isset($optsEnd['showSubmit']) || $optsEnd['showSubmit'] == 1) {
+        $options = \WonderWp\array_merge_recursive_distinct($defaultOptions, $optsEnd);
+
+        if (!isset($options['showSubmit']) || $options['showSubmit'] == 1) {
             $markup .= '<div class="submitFormField">
-                <button type="submit" class="btn button">'.$submitLabel.'</button>
+                <button ' . \WonderWp\paramsToHtml($options['btnAttributes']) . '>'.$options['submitLabel'].'</button>
             </div>';
         }
 
-        if (empty($optsEnd['showFormTag']) || $optsEnd['showFormTag'] == 1) {
+        if (empty($options['showFormTag']) || $options['showFormTag'] == 1) {
             $markup .= '</form>';
         }
         return $markup;

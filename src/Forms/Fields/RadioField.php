@@ -30,6 +30,9 @@ class RadioField extends FieldGroup
                         'name' => $name,
                         'id'=> $name. '.' . $val,
                         'value' => $val
+                    ),
+                    'wrapAttributes'=>array(
+                        'class' => ['radio-wrap']
                     )
                 );
                 $passedOptDisplayRules = isset($passedGroupedDisplayRules[$val]) ? $passedGroupedDisplayRules[$val] : array();
