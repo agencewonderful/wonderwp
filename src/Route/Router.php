@@ -28,7 +28,7 @@ class Router extends AbstractRouter
         add_action('admin_init', array($this, 'flushRules'));
         add_action('parse_request', array($this, 'match_request'));
         add_action('template_redirect', array($this, 'call_route_hook'));
-        add_filter('query_vars', array($this,'register_query_vars'));
+        add_filter('query_vars', array($this, 'register_query_vars'));
     }
 
     public function addService(RouteServiceInterface $routeService)
@@ -66,7 +66,8 @@ class Router extends AbstractRouter
                 /** @var Route $route */
                 $regex = $this->generate_route_regex($route);
                 $path = $route->getPath();
-                $wildCards = array();
+
+
                 $qs = $this->_routeVariable . '=' . $name;
                 if (strpos($path, '{') !== false) {
                     preg_match_all('/{(.*?)}/', $path, $wildCardsMatchs);
@@ -74,18 +75,25 @@ class Router extends AbstractRouter
                     if (!empty($wildCards)) {
                         $cpt = 1;
                         foreach ($wildCards as $wildCard) {
-                            //add_rewrite_tag('%' . $wildCard . '%', '(.+)');
-                            $qs.='&'.$wildCard.'=$matches['.$cpt.']';
+                            $qs .= '&' . $wildCard . '=$matches[' . $cpt . ']';
                             $cpt++;
                         }
                     }
                 }
-                add_rewrite_rule($regex, 'index.php?' . $qs, 'top');
+                if (is_callable($route->getCallable())) {
+                    $newRewriteRule = 'index.php?' . $qs;
+                } else {
+                    $newRewriteRule = $route->getCallable();
+                }
+
+                //echo '<br />'.$regex, $newRewriteRule;
+                add_rewrite_rule($regex, $newRewriteRule, 'top');
             }
         }
     }
 
-    public function register_query_vars($vars){
+    public function register_query_vars($vars)
+    {
         $routes = $this->getRoutes();
         if (!empty($routes)) {
             foreach ($routes as $route) {
@@ -93,7 +101,7 @@ class Router extends AbstractRouter
                 if (strpos($path, '{') !== false) {
                     preg_match_all('/{(.*?)}/', $path, $wildCardsMatchs);
                     if (!empty($wildCardsMatchs[1])) {
-                        $vars = array_merge($vars,$wildCardsMatchs[1]);
+                        $vars = array_merge($vars, $wildCardsMatchs[1]);
                     }
                 }
             }
@@ -123,6 +131,7 @@ class Router extends AbstractRouter
     public function match_request(\WP $environment)
     {
         $matched_route = $this->match($environment->query_vars);
+
         if ($matched_route instanceof Route) {
             $this->_matchedRoute = $matched_route;
         }
@@ -164,7 +173,6 @@ class Router extends AbstractRouter
      */
     public function call_route_hook()
     {
-
         if (!empty($this->_matchedRoute)) {
             //Add query vars to request object
             $path = $this->_matchedRoute->getPath();
@@ -173,13 +181,15 @@ class Router extends AbstractRouter
             if (strpos($path, '{') !== false) {
                 preg_match_all('/{(.*?)}/', $path, $wildCardsMatchs);
                 if (!empty($wildCardsMatchs[1])) {
-                    foreach ($wildCardsMatchs[1] as $wildCard){
-                        $request->query->set($wildCard,get_query_var($wildCard));
+                    foreach ($wildCardsMatchs[1] as $wildCard) {
+                        $request->query->set($wildCard, get_query_var($wildCard));
                         $params[$wildCard] = get_query_var($wildCard);
                     }
                 }
             }
-            call_user_func_array($this->_matchedRoute->getCallable(),$params);
+            if (is_callable($this->_matchedRoute->getCallable())) {
+                call_user_func_array($this->_matchedRoute->getCallable(), $params);
+            }
         }
     }
 
