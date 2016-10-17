@@ -35,6 +35,9 @@ class RadioField extends FieldGroup
                         'class' => ['radio-wrap']
                     )
                 );
+                if($val==$this->value){
+                    $defaultOptDisplayRules['inputAttributes']['checked']='';
+                }
                 $passedOptDisplayRules = isset($passedGroupedDisplayRules[$val]) ? $passedGroupedDisplayRules[$val] : array();
                 $optDisplayRules =\WonderWp\array_merge_recursive_distinct($defaultOptDisplayRules,$passedOptDisplayRules);
 
