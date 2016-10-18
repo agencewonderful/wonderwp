@@ -192,6 +192,7 @@ class FormView implements FormViewInterface
         $params = !empty($displayRules['inputAttributes']) ? $displayRules['inputAttributes'] : array();
         /** @var FormValidator $formValidator */
         $formValidator = $this->_container->offsetGet('wwp.forms.formValidator');
+        $markup ='';
 
         //Classes
         if (empty($params['class'])) {
@@ -206,10 +207,12 @@ class FormView implements FormViewInterface
             $params['required'] = '';
         }
 
-
+        if ($tag == 'select') {
+            $markup.='<div class="select-style">';
+        }
 
         //Open tag
-        $markup = '<' . $tag;
+        $markup .= '<' . $tag;
 
         //Type
         if ($tag == 'input') {
@@ -303,6 +306,10 @@ class FormView implements FormViewInterface
             $markup .= ' />';
         } else {
             $markup .= '</' . $tag . '>';
+        }
+
+        if ($tag == 'select') {
+            $markup.='</div>'; // select-style
         }
 
         if (!empty($displayRules['after'])) {
