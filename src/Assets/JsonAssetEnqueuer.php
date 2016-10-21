@@ -39,7 +39,7 @@ class JsonAssetEnqueuer extends AbstractAssetEnqueuer{
 
         if(!empty($groupNames)){ foreach($groupNames as $group){
             if(array_key_exists($group,$this->_manifest->js)) {
-                if($env=='production' || $env=='preprod') {
+                if($env=='production' || $env=='staging') {
                     $src = $this->_blogurl . str_replace($this->_container['wwp.assets.folder.prefix'], '', $this->_manifest->site->assets_dest) . '/js/' . $group . $versionNum . '.js';
                     wp_enqueue_script($group, $src, array(), null, true);
                 } else {
