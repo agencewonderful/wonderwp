@@ -7,6 +7,8 @@
  */
 namespace WonderWp;
 
+use Doctrine\DBAL\Logging\DebugStack;
+use Doctrine\DBAL\Logging\EchoSQLLogger;
 use WonderWp\AbstractDefinitions\Singleton;
 use WonderWp\Assets\Asset;
 use WonderWp\Assets\AssetEnqueuer;
@@ -79,6 +81,20 @@ class Loader extends Singleton{
             return require($container['path_root'].'vendor/autoload.php');
         };
 
+        $container['doctrine.sqlLogger'] = function($container){
+            $logger = new DebugStack();
+            $loggerDumper = function() use($logger){
+                echo'<div id="doctrineQueryLog">';
+                dump($logger,5);
+                echo'</div>';
+            };
+            if(defined('SAVEQUERIES') && SAVEQUERIES) {
+                add_action('wp_footer', $loggerDumper);
+                add_action('admin_footer', $loggerDumper);
+            }
+            return $logger;
+        };
+
         //Entity Manager
         $container['entityManager'] = function($container) {
             global $wpdb;
@@ -98,13 +114,29 @@ class Loader extends Singleton{
             $isDevMode = WP_ENV=='development';
             $proxyDir=null;
             $cache=null;
-            $useSimpleAnnotationReader = true;
+            $useSimpleAnnotationReader = false; //Keep it false to use @ORM annotations
 
-            //Evm
+            //Create doctrine config
+            $config = Setup::createConfiguration($isDevMode, $proxyDir, $cache);
+
+                //Setup annotation driver
+                $anDriver = $config->newDefaultAnnotationDriver($paths, $useSimpleAnnotationReader);
+                $anDriver->addExcludePaths([
+                    $container['path_framework_root'].'/Templates/frags'
+                ]);
+
+            $config->setMetadataDriverImpl($anDriver);
+            $config->addCustomNumericFunction('RAND', 'WonderWp\DB\Rand');
+            $sqlLogger = $container->offsetGet('doctrine.sqlLogger');
+            $config->setSQLLogger($sqlLogger);
+
+            //Evm, used to add wordpress table prefix
             $evm = new \Doctrine\Common\EventManager;
+
             //Prefix
             $tablePrefix = new \WonderWp\DB\TablePrefix($wpdb->prefix);
             $evm->addEventListener(\Doctrine\ORM\Events::loadClassMetadata, $tablePrefix);
+
             //Connection configuration
             $dbParams = array(
                 'driver'   => 'pdo_mysql',
@@ -114,19 +146,9 @@ class Loader extends Singleton{
                 'host'     => DB_HOST
             );
 
-            $conn = \Doctrine\DBAL\DriverManager::getConnection($dbParams,null,$evm);
+            $em = EntityManager::create($dbParams, $config, $evm);
 
-            //$config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
-            //return EntityManager::create($conn, $config, $evm);
-
-            $config = Setup::createConfiguration($isDevMode, $proxyDir, $cache);
-            $anDriver = $config->newDefaultAnnotationDriver($paths, $useSimpleAnnotationReader);
-            $anDriver->addExcludePaths([
-                $container['path_framework_root'].'/Templates/frags'
-            ]);
-            $config->setMetadataDriverImpl($anDriver);
-            $config->addCustomNumericFunction('RAND', 'WonderWp\DB\Rand');
-            return EntityManager::create($conn, $config, $evm);
+            return $em;
         };
 
         //Routes

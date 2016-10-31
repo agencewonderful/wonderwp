@@ -135,6 +135,15 @@ class Form implements FormInterface
         return $this;
     }
 
+    public function getGroup($groupName){
+        return isset($this->_groups[$groupName]) ? $this->_groups[$groupName] : null;
+    }
+
+    public function removeGroup($groupName){
+        if(isset($this->_groups[$groupName])){ unset($this->_groups[$groupName]); }
+        return $this;
+    }
+
     public function fill(array $data)
     {
         $fields = $this->getFields();

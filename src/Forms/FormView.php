@@ -281,7 +281,7 @@ class FormView implements FormViewInterface
                 if (!empty($opts)) {
                     foreach ($opts as $key => $val) {
                         if($isMultiple){
-                            $selected = in_array($key,$f->getValue()) ? 'selected' : '';
+                            $selected = is_array($f->getValue()) && in_array($key,$f->getValue()) ? 'selected' : '';
                         } else {
                             $selected = \selected($f->getValue(), $key, false);
                         }

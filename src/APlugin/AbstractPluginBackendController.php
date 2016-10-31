@@ -154,6 +154,7 @@ abstract class AbstractPluginBackendController
             $modelForm = $container->offsetGet('wwp.forms.modelForm');
         }
 
+        //load textdomain
         $textDomain = $modelForm->getTextDomain();
         if (empty($textDomain)) {
             $textDomain = $this->_manager->getConfig('textDomain');
@@ -162,7 +163,10 @@ abstract class AbstractPluginBackendController
             $modelForm->setTextDomain($textDomain);
         }
 
+        //Set Model instance
         $modelForm->setModelInstance($item);
+
+        //Set form instance, then build form from model attributes and groups
         $modelForm->setFormInstance($formInstance)->buildForm();
 
         $errors = array();
@@ -172,6 +176,7 @@ abstract class AbstractPluginBackendController
             /*} else {
                 $data = array();
             }*/
+
             $formValidator = $container->offsetExists($prefix . 'wwp.forms.formValidator') ? $container->offsetGet($prefix . 'wwp.forms.formValidator') : $container->offsetGet('wwp.forms.formValidator');
             $errors = $modelForm->handleRequest($data, $formValidator);
             if (!empty($errors)) {
@@ -182,7 +187,6 @@ abstract class AbstractPluginBackendController
                 $notifMsg = ($id > 0) ? $container->offsetGet('wwp.element.edit.success') : $container->offsetGet('wwp.element.add.success');
             }
             $notification = new AdminNotification($notifType, $notifMsg);
-
         }
 
         $formInstance = $modelForm->getFormInstance();
