@@ -883,7 +883,7 @@ class Post
     }
 
     /**
-     * @PrePersist
+     * @ORM\PrePersist
      */
     public function onPrePersist()
     {

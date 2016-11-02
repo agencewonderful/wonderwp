@@ -461,7 +461,7 @@ class Comment
     }
 
     /**
-     * @PrePersist
+     * @ORM\PrePersist
      */
     public function onPrePersist()
     {

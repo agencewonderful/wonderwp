@@ -494,7 +494,7 @@ class User
     }
 
     /**
-     * @PrePersist
+     * @ORM\PrePersist
      */
     public function onPrePersist()
     {
