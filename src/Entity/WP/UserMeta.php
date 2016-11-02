@@ -11,25 +11,24 @@ use Symfony\Component\Validator\Constraints as Constraints;
 /**
  * WonderWp\Entity\WP\UserMeta
  *
- * @Table(name="usermeta")
- * @Entity
- * @Wordpress\WordpressTable
+ * @ORM\Table(name="usermeta")
+ * @ORM\Entity
  */
 class UserMeta
 {
     /**
      * {@inheritdoc}
      *
-     * @Column(name="umeta_id", type="bigint", length=20)
-     * @Id
-     * @GeneratedValue(strategy="IDENTITY")
+     * @ORM\Column(name="umeta_id", type="bigint", length=20)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
 
     /**
      * {@inheritdoc}
      *
-     * @Column(name="meta_key", type="string", length=255, nullable=true)
+     * @ORM\Column(name="meta_key", type="string", length=255, nullable=true)
      * @Constraints\NotBlank()
      */
     protected $key;
@@ -37,16 +36,16 @@ class UserMeta
     /**
      * {@inheritdoc}
      *
-     * @Column(name="meta_value", type="wordpressmeta", nullable=true)
+     * @ORM\Column(name="meta_value", type="wordpressmeta", nullable=true)
      */
     protected $value;
 
     /**
      * {@inheritdoc}
      *
-     * @ManyToOne(targetEntity="WonderWp\Entity\WP\User", inversedBy="metas")
-     * @JoinColumns({
-     *   @JoinColumn(name="user_id", referencedColumnName="ID")
+     * @ORM\ManyToOne(targetEntity="WonderWp\Entity\WP\User", inversedBy="metas")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="user_id", referencedColumnName="ID")
      * })
      */
     protected $user;

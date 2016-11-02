@@ -9,25 +9,24 @@ use Symfony\Component\Validator\Constraints as Constraints;
 /**
  * PostMeta
  *
- * @Table(name="postmeta")
- * @Entity(repositoryClass="Kayue\WordpressBundle\Repository\PostMetaRepository")
- * @Wordpress\WordpressTable
+ * @ORM\Table(name="postmeta")
+ * @ORM\Entity
  */
 class PostMeta
 {
     /**
      * {@inheritdoc}
      *
-     * @Column(name="meta_id", type="bigint", length=20)
-     * @Id
-     * @GeneratedValue(strategy="IDENTITY")
+     * @ORM\Column(name="meta_id", type="bigint", length=20)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
 
     /**
      * {@inheritdoc}
      *
-     * @Column(name="meta_key", type="string", length=255, nullable=true)
+     * @ORM\Column(name="meta_key", type="string", length=255, nullable=true)
      * @Constraints\NotBlank()
      */
     protected $key;
@@ -35,16 +34,16 @@ class PostMeta
     /**
      * {@inheritdoc}
      *
-     * @Column(name="meta_value", type="wordpressmeta", nullable=true)
+     * @ORM\Column(name="meta_value", type="wordpressmeta", nullable=true)
      */
     protected $value;
 
     /**
      * {@inheritdoc}
      *
-     * @ManyToOne(targetEntity="Post", inversedBy="metas")
-     * @JoinColumns({
-     *   @JoinColumn(name="post_id", referencedColumnName="ID")
+     * @ORM\ManyToOne(targetEntity="Post", inversedBy="metas")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="post_id", referencedColumnName="ID")
      * })
      */
     protected $post;

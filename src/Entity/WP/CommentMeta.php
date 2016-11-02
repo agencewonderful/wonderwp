@@ -7,40 +7,40 @@ use Kayue\WordpressBundle\Annotation as Wordpress;
 use Symfony\Component\Validator\Constraints as Constraints;
 
 /**
- * @Table(name="commentmeta")
- * @Entity
+ * @ORM\Table(name="commentmeta")
+ * @ORM\Entity
  */
 class CommentMeta
 {
     /**
      * {@inheritdoc}
      *
-     * @Column(name="meta_id", type="bigint", length=20)
-     * @Id
-     * @GeneratedValue(strategy="IDENTITY")
+     * @ORM\Column(name="meta_id", type="bigint", length=20)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
 
     /**
      * {@inheritdoc}
      *
-     * @Column(name="meta_key", type="string", length=255, nullable=true)
+     * @ORM\Column(name="meta_key", type="string", length=255, nullable=true)
      */
     protected $key;
 
     /**
      * @var string $value
      *
-     * @Column(name="meta_value", type="wordpressmeta", nullable=true)
+     * @ORM\Column(name="meta_value", type="wordpressmeta", nullable=true)
      */
     protected $value;
 
     /**
      * {@inheritdoc}
      *
-     * @ManyToOne(targetEntity="WonderWp\Entity\WP\Comment", inversedBy="metas")
-     * @JoinColumns({
-     *   @JoinColumn(name="comment_id", referencedColumnName="comment_ID")
+     * @ORM\ManyToOne(targetEntity="WonderWp\Entity\WP\Comment", inversedBy="metas")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="comment_id", referencedColumnName="comment_ID")
      * })
      */
     protected $comment;

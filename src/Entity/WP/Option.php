@@ -9,7 +9,6 @@ use Symfony\Component\Validator\Constraints as Constraints;
 /**
  * @ORM\Table(name="options")
  * @ORM\Entity
- * @Wordpress\WordpressTable
  */
 class Option
 {

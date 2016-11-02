@@ -7,94 +7,94 @@ use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Table(name="comments")
- * @Entity
+ * @ORM\Table(name="comments")
+ * @ORM\Entity
  */
 class Comment
 {
     /**
      * {@inheritdoc}
      *
-     * @Column(name="comment_ID", type="bigint", length=20)
-     * @Id
-     * @GeneratedValue(strategy="IDENTITY")
+     * @ORM\Column(name="comment_ID", type="bigint", length=20)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
 
     /**
      * {@inheritdoc}
      *
-     * @Column(name="comment_author", type="text")
+     * @ORM\Column(name="comment_author", type="text")
      */
     protected $author;
 
     /**
      * {@inheritdoc}
      *
-     * @Column(name="comment_author_email", type="string")
+     * @ORM\Column(name="comment_author_email", type="string")
      */
     protected $authorEmail = '';
 
     /**
      * {@inheritdoc}
      *
-     * @Column(name="comment_author_url", type="string")
+     * @ORM\Column(name="comment_author_url", type="string")
      */
     protected $authorUrl = '';
 
     /**
      * {@inheritdoc}
      *
-     * @Column(name="comment_author_IP", type="string")
+     * @ORM\Column(name="comment_author_IP", type="string")
      */
     protected $authorIp;
 
     /**
      * {@inheritdoc}
      *
-     * @Column(name="comment_date", type="datetime")
+     * @ORM\Column(name="comment_date", type="datetime")
      */
     protected $date;
 
     /**
      * {@inheritdoc}
      *
-     * @Column(name="comment_date_gmt", type="datetime")
+     * @ORM\Column(name="comment_date_gmt", type="datetime")
      */
     protected $dateGmt;
 
     /**
      * {@inheritdoc}
      *
-     * @Column(name="comment_content", type="text")
+     * @ORM\Column(name="comment_content", type="text")
      */
     protected $content;
 
     /**
      * {@inheritdoc}
      *
-     * @Column(name="comment_karma", type="integer")
+     * @ORM\Column(name="comment_karma", type="integer")
      */
     protected $karma = 0;
 
     /**
      * {@inheritdoc}
      *
-     * @Column(name="comment_approved", type="string")
+     * @ORM\Column(name="comment_approved", type="string")
      */
     protected $approved = 1;
 
     /**
      * {@inheritdoc}
      *
-     * @Column(name="comment_agent", type="string")
+     * @ORM\Column(name="comment_agent", type="string")
      */
     protected $agent;
 
     /**
      * {@inheritdoc}
      *
-     * @Column(name="comment_type", type="string")
+     * @ORM\Column(name="comment_type", type="string")
      */
     protected $type = '';
 
@@ -102,23 +102,23 @@ class Comment
      * {@inheritdoc}
      *
      * @OneToOne(targetEntity="Comment")
-     * @JoinColumn(name="comment_parent", referencedColumnName="comment_ID")
+     * @ORM\JoinColumn(name="comment_parent", referencedColumnName="comment_ID")
      */
     protected $parent;
 
     /**
      * {@inheritdoc}
      *
-     * @OneToMany(targetEntity="WonderWp\Entity\WP\CommentMeta", mappedBy="comment")
+     * @ORM\OneToMany(targetEntity="WonderWp\Entity\WP\CommentMeta", mappedBy="comment")
      */
     protected $metas;
 
     /**
      * {@inheritdoc}
      *
-     * @ManyToOne(targetEntity="WonderWp\Entity\WP\Post", inversedBy="comments")
-     * @JoinColumns({
-     *   @JoinColumn(name="comment_post_ID", referencedColumnName="ID", nullable=false)
+     * @ORM\ManyToOne(targetEntity="WonderWp\Entity\WP\Post", inversedBy="comments")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="comment_post_ID", referencedColumnName="ID", nullable=false)
      * })
      */
     protected $post;
@@ -126,9 +126,9 @@ class Comment
     /**
      * {@inheritdoc}
      *
-     * @ManyToOne(targetEntity="WonderWp\Entity\WP\User", inversedBy="comments")
-     * @JoinColumns({
-     *   @JoinColumn(name="user_id", referencedColumnName="ID")
+     * @ORM\ManyToOne(targetEntity="WonderWp\Entity\WP\User", inversedBy="comments")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="user_id", referencedColumnName="ID")
      * })
      */
     protected $user;

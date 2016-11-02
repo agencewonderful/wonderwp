@@ -7,26 +7,24 @@ use Kayue\WordpressBundle\Annotation as Wordpress;
 use Symfony\Component\Validator\Constraints as Constraints;
 
 /**
- * @Table(name="terms")
- * @Entity
- * @Entity(repositoryClass="Kayue\WordpressBundle\Repository\TermRepository")
- * @Wordpress\WordpressTable
+ * @ORM\Table(name="terms")
+ * @ORM\Entity
  */
 class Term
 {
     /**
      * {@inheritdoc}
      *
-     * @Column(name="term_id", type="bigint", length=20)
-     * @Id
-     * @GeneratedValue(strategy="IDENTITY")
+     * @ORM\Column(name="term_id", type="bigint", length=20)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
 
     /**
      * {@inheritdoc}
      *
-     * @Column(name="name", type="string", length=200)
+     * @ORM\Column(name="name", type="string", length=200)
      * @Constraints\NotBlank()
      */
     protected $name;
@@ -34,14 +32,14 @@ class Term
     /**
      * {@inheritdoc}
      *
-     * @Column(name="slug", type="string", length=200)
+     * @ORM\Column(name="slug", type="string", length=200)
      */
     protected $slug;
 
     /**
      * {@inheritdoc}
      *
-     * @Column(name="term_group", type="bigint", length=10)
+     * @ORM\Column(name="term_group", type="bigint", length=10)
      */
     protected $group = 0;
 

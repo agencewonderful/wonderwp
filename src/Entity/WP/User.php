@@ -9,30 +9,29 @@ use Serializable;
 /**
  * WonderWp\Entity\WP\User
  *
- * @Table(name="users")
- * @Entity
- * @UniqueEntity({"fields": "email", "message": "Sorry, that email address is already used."})
- * @UniqueEntity({"fields": "username", "message": "Sorry, that username is already used."})
- * @UniqueEntity({"fields": "nicename", "message": "Sorry, that nicename is already used."})
- * @UniqueEntity({"fields": "displayName", "message": "Sorry, that display name has already been taken."})
- * @HasLifecycleCallbacks
- * @Wordpress\WordpressTable
+ * @ORM\Table(name="users")
+ * @ORM\Entity
+ * @ORM\UniqueEntity({"fields": "email", "message": "Sorry, that email address is already used."})
+ * @ORM\UniqueEntity({"fields": "username", "message": "Sorry, that username is already used."})
+ * @ORM\UniqueEntity({"fields": "nicename", "message": "Sorry, that nicename is already used."})
+ * @ORM\UniqueEntity({"fields": "displayName", "message": "Sorry, that display name has already been taken."})
+ * @ORM\HasLifecycleCallbacks
  */
 class User
 {
     /**
      * {@inheritdoc}
      *
-     * @Column(name="ID", type="bigint", length=20)
-     * @Id
-     * @GeneratedValue(strategy="IDENTITY")
+     * @ORM\Column(name="ID", type="bigint", length=20)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
 
     /**
      * {@inheritdoc}
      *
-     * @Column(name="user_login", type="string", length=60, unique=true)
+     * @ORM\Column(name="user_login", type="string", length=60, unique=true)
      * @Constraints\NotBlank()
      */
     protected $username;
@@ -40,7 +39,7 @@ class User
     /**
      * {@inheritdoc}
      *
-     * @Column(name="user_pass", type="string", length=64)
+     * @ORM\Column(name="user_pass", type="string", length=64)
      * @Constraints\NotBlank()
      */
     protected $password;
@@ -48,7 +47,7 @@ class User
     /**
      * {@inheritdoc}
      *
-     * @Column(name="user_nicename", type="string", length=64)
+     * @ORM\Column(name="user_nicename", type="string", length=64)
      * @Constraints\NotBlank()
      */
     protected $nicename;
@@ -56,7 +55,7 @@ class User
     /**
      * {@inheritdoc}
      *
-     * @Column(name="user_email", type="string", length=100)
+     * @ORM\Column(name="user_email", type="string", length=100)
      * @Constraints\NotBlank()
      * @Constraints\Email()
      */
@@ -65,7 +64,7 @@ class User
     /**
      * {@inheritdoc}
      *
-     * @Column(name="user_url", type="string", length=100)
+     * @ORM\Column(name="user_url", type="string", length=100)
      * @Constraints\Url()
      */
     protected $url = '';
@@ -73,28 +72,28 @@ class User
     /**
      * {@inheritdoc}
      *
-     * @Column(name="user_registered", type="datetime")
+     * @ORM\Column(name="user_registered", type="datetime")
      */
     protected $registeredDate;
 
     /**
      * {@inheritdoc}
      *
-     * @Column(name="user_activation_key", type="string", length=60)
+     * @ORM\Column(name="user_activation_key", type="string", length=60)
      */
     protected $activationKey = '';
 
     /**
      * {@inheritdoc}
      *
-     * @Column(name="user_status", type="integer", length=11)
+     * @ORM\Column(name="user_status", type="integer", length=11)
      */
     protected $status = 0;
 
     /**
      * {@inheritdoc}
      *
-     * @Column(name="display_name", type="string", length=250)
+     * @ORM\Column(name="display_name", type="string", length=250)
      * @Constraints\NotBlank()
      */
     protected $displayName;
@@ -102,21 +101,21 @@ class User
     /**
      * {@inheritdoc}
      *
-     * @OneToMany(targetEntity="WonderWp\Entity\WP\UserMeta", mappedBy="user", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="WonderWp\Entity\WP\UserMeta", mappedBy="user", cascade={"persist"})
      */
     protected $metas;
 
     /**
      * {@inheritdoc}
      *
-     * @OneToMany(targetEntity="WonderWp\Entity\WP\Post", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="WonderWp\Entity\WP\Post", mappedBy="user")
      */
     protected $posts;
 
     /**
      * {@inheritdoc}
      *
-     * @OneToMany(targetEntity="WonderWp\Entity\WP\Comment", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="WonderWp\Entity\WP\Comment", mappedBy="user")
      */
     protected $comments;
 

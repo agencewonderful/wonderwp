@@ -8,7 +8,6 @@ use Kayue\WordpressBundle\Annotation as Wordpress;
 /**
  * @ORM\Table(name="blogs")
  * @ORM\Entity
- * @Wordpress\WordpressTable
  */
 class Blog
 {

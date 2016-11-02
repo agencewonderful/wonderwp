@@ -8,25 +8,24 @@ use Kayue\WordpressBundle\Annotation as Wordpress;
 use Symfony\Component\Validator\Constraints as Constraints;
 
 /**
- * @Table(name="term_taxonomy")
- * @Entity
- * @Wordpress\WordpressTable
+ * @ORM\Table(name="term_taxonomy")
+ * @ORM\Entity
  */
 class Taxonomy
 {
     /**
      * {@inheritdoc}
      *
-     * @Column(name="term_taxonomy_id", type="bigint", length=20)
-     * @Id
-     * @GeneratedValue(strategy="IDENTITY")
+     * @ORM\Column(name="term_taxonomy_id", type="bigint", length=20)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
 
     /**
      * {@inheritdoc}
      *
-     * @Column(name="taxonomy", type="string", length=32)
+     * @ORM\Column(name="taxonomy", type="string", length=32)
      * @Constraints\NotBlank()
      */
     protected $name;
@@ -34,21 +33,21 @@ class Taxonomy
     /**
      * {@inheritdoc}
      *
-     * @Column(name="description", type="text")
+     * @ORM\Column(name="description", type="text")
      */
     protected $description = '';
 
     /**
      * {@inheritdoc}
      *
-     * @Column(name="parent", type="bigint", length=20)
+     * @ORM\Column(name="parent", type="bigint", length=20)
      */
     protected $parent;
 
     /**
      * {@inheritdoc}
      *
-     * @Column(name="count", type="bigint", length=20)
+     * @ORM\Column(name="count", type="bigint", length=20)
      */
     protected $count = 0;
 
@@ -56,8 +55,8 @@ class Taxonomy
      * {@inheritdoc}
      *
      * @OneToOne(targetEntity="WonderWp\Entity\WP\Term", inversedBy="taxonomy")
-     * @JoinColumns({
-     *   @JoinColumn(name="term_id", referencedColumnName="term_id", unique=true)
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="term_id", referencedColumnName="term_id", unique=true)
      * })
      */
     protected $term;
