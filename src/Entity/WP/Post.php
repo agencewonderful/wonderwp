@@ -4,7 +4,6 @@ namespace WonderWp\Entity\WP;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityNotFoundException;
-use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Proxy\Proxy;
 
@@ -867,16 +866,7 @@ class Post
     }
 
     /**
-     * @ORM\PostLoad
-     */
-    public function onPostLoad(LifecycleEventArgs $eventArgs)
-    {
-        if ($eventArgs->getEntityManager() instanceof WordpressEntityManager) {
-            $this->blogId = $eventArgs->getEntityManager()->getBlogId();
-        }
-    }
-
-    /**
+     * @inheritdoc
      * @ORM\PrePersist
      */
     public function onPrePersist()

@@ -4,7 +4,6 @@ namespace WonderWp\Entity\WP;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Serializable;
 
 /**
  * WonderWp\Entity\WP\User
@@ -452,10 +451,11 @@ class User
      * However, you do not need to compare every attribute, but only those that
      * are relevant for assessing whether re-authentication is required.
      *
+     * @param $user User to compare
      *
      * @return Boolean
      */
-    public function equals($user)
+    public function equals(User $user)
     {
         return $this->getUsername() === $user->getUsername();
     }
