@@ -54,7 +54,7 @@ class Taxonomy
     /**
      * {@inheritdoc}
      *
-     * @OneToOne(targetEntity="WonderWp\Entity\WP\Term", inversedBy="taxonomy")
+     * @ORM\OneToOne(targetEntity="WonderWp\Entity\WP\Term", inversedBy="taxonomy")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="term_id", referencedColumnName="term_id", unique=true)
      * })

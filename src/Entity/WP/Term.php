@@ -46,7 +46,7 @@ class Term
     /**
      * {@inheritdoc}
      *
-     * @OneToOne(targetEntity="Taxonomy", mappedBy="term")
+     * @ORM\OneToOne(targetEntity="Taxonomy", mappedBy="term")
      */
     protected $taxonomy;
 
