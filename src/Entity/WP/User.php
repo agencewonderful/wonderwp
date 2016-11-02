@@ -27,7 +27,6 @@ class User
      * {@inheritdoc}
      *
      * @ORM\Column(name="user_login", type="string", length=60, unique=true)
-     * @Constraints\NotBlank()
      */
     protected $username;
 
@@ -35,7 +34,6 @@ class User
      * {@inheritdoc}
      *
      * @ORM\Column(name="user_pass", type="string", length=64)
-     * @Constraints\NotBlank()
      */
     protected $password;
 
@@ -43,7 +41,6 @@ class User
      * {@inheritdoc}
      *
      * @ORM\Column(name="user_nicename", type="string", length=64)
-     * @Constraints\NotBlank()
      */
     protected $nicename;
 
@@ -51,8 +48,6 @@ class User
      * {@inheritdoc}
      *
      * @ORM\Column(name="user_email", type="string", length=100)
-     * @Constraints\NotBlank()
-     * @Constraints\Email()
      */
     protected $email;
 
@@ -60,7 +55,6 @@ class User
      * {@inheritdoc}
      *
      * @ORM\Column(name="user_url", type="string", length=100)
-     * @Constraints\Url()
      */
     protected $url = '';
 
@@ -89,7 +83,6 @@ class User
      * {@inheritdoc}
      *
      * @ORM\Column(name="display_name", type="string", length=250)
-     * @Constraints\NotBlank()
      */
     protected $displayName;
 
