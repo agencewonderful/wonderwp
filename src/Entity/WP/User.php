@@ -10,10 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="users")
  * @ORM\Entity
- * @ORM\UniqueEntity({"fields": "email", "message": "Sorry, that email address is already used."})
- * @ORM\UniqueEntity({"fields": "username", "message": "Sorry, that username is already used."})
- * @ORM\UniqueEntity({"fields": "nicename", "message": "Sorry, that nicename is already used."})
- * @ORM\UniqueEntity({"fields": "displayName", "message": "Sorry, that display name has already been taken."})
  * @ORM\HasLifecycleCallbacks
  */
 class User
