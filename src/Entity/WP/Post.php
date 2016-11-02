@@ -7,9 +7,6 @@ use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Proxy\Proxy;
-use Kayue\WordpressBundle\Annotation as Wordpress;
-use Kayue\WordpressBundle\Doctrine\WordpressEntityManager;
-use Symfony\Component\Validator\Constraints as Constraints;
 
 /**
  * @ORM\Table(name="posts")
@@ -45,7 +42,6 @@ class Post
      * {@inheritdoc}
      *
      * @ORM\Column(name="post_content", type="text", nullable=false)
-     * @Constraints\NotBlank()
      */
     protected $content;
 
@@ -53,7 +49,6 @@ class Post
      * {@inheritdoc}
      *
      * @ORM\Column(name="post_title", type="text", nullable=false)
-     * @Constraints\NotBlank()
      */
     protected $title;
 
@@ -61,7 +56,6 @@ class Post
      * {@inheritdoc}
      *
      * @ORM\Column(name="post_excerpt", type="text", nullable=false)
-     * @Constraints\NotBlank()
      */
     protected $excerpt;
 
@@ -217,8 +211,8 @@ class Post
     /**
      * {@inheritdoc}
      *
-     * @ManyToMany(targetEntity="WonderWp\Entity\WP\Taxonomy", inversedBy="posts")
-     * @JoinTable(name="term_relationships",
+     * @ORM\ManyToMany(targetEntity="WonderWp\Entity\WP\Taxonomy", inversedBy="posts")
+     * @ORM\JoinTable(name="term_relationships",
      *   joinColumns={
      *     @ORM\JoinColumn(name="object_id", referencedColumnName="ID")
      *   },
@@ -873,7 +867,7 @@ class Post
     }
 
     /**
-     * @PostLoad
+     * @ORM\PostLoad
      */
     public function onPostLoad(LifecycleEventArgs $eventArgs)
     {
@@ -894,7 +888,7 @@ class Post
     }
 
     /**
-     * @PreUpdate
+     * @ORM\PreUpdate
      */
     public function onPreUpdate()
     {

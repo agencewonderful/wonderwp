@@ -4,8 +4,6 @@ namespace WonderWp\Entity\WP;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Kayue\WordpressBundle\Annotation as Wordpress;
-use Symfony\Component\Validator\Constraints as Constraints;
 
 /**
  * @ORM\Table(name="term_taxonomy")
@@ -26,7 +24,6 @@ class Taxonomy
      * {@inheritdoc}
      *
      * @ORM\Column(name="taxonomy", type="string", length=32)
-     * @Constraints\NotBlank()
      */
     protected $name;
 
@@ -64,7 +61,7 @@ class Taxonomy
     /**
      * {@inheritdoc}
      *
-     * @ManyToMany(targetEntity="Post", mappedBy="taxonomies")
+     * @ORM\ManyToMany(targetEntity="Post", mappedBy="taxonomies")
      */
     protected $posts;
 

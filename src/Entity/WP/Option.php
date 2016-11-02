@@ -3,8 +3,6 @@
 namespace WonderWp\Entity\WP;
 
 use Doctrine\ORM\Mapping as ORM;
-use Kayue\WordpressBundle\Annotation as Wordpress;
-use Symfony\Component\Validator\Constraints as Constraints;
 
 /**
  * @ORM\Table(name="options")
@@ -25,7 +23,6 @@ class Option
      * @var string $name
      *
      * @ORM\Column(name="option_name", type="string", length=64, nullable=false, unique=true)
-     * @Constraints\NotBlank()
      */
     protected $name;
 
@@ -40,7 +37,6 @@ class Option
      * @var string $autoload
      *
      * @ORM\Column(name="autoload", type="string", length=20, nullable=false)
-     * @Constraints\NotBlank()
      */
     protected $autoload = 'yes';
 

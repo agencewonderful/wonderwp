@@ -5,8 +5,6 @@ namespace WonderWp\Entity\WP;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Proxy\Proxy;
-use Kayue\WordpressBundle\Annotation as Wordpress;
-use Symfony\Component\Validator\Constraints as Constraints;
 
 /**
  * WonderWp\Entity\WP\UserMeta
@@ -29,7 +27,6 @@ class UserMeta
      * {@inheritdoc}
      *
      * @ORM\Column(name="meta_key", type="string", length=255, nullable=true)
-     * @Constraints\NotBlank()
      */
     protected $key;
 

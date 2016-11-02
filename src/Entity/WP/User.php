@@ -392,7 +392,7 @@ class User
      * and populated in any number of different ways when the user object
      * is created.
      *
-     * @return \Symfony\Component\Security\Core\Role\Role[] The user roles
+     * @return array The user roles
      */
     public function getRoles()
     {

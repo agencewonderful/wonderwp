@@ -3,8 +3,6 @@
 namespace WonderWp\Entity\WP;
 
 use Doctrine\ORM\Mapping as ORM;
-use Kayue\WordpressBundle\Annotation as Wordpress;
-use Symfony\Component\Validator\Constraints as Constraints;
 
 /**
  * @ORM\Table(name="terms")
@@ -25,7 +23,6 @@ class Term
      * {@inheritdoc}
      *
      * @ORM\Column(name="name", type="string", length=200)
-     * @Constraints\NotBlank()
      */
     protected $name;
 
