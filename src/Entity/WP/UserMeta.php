@@ -64,10 +64,12 @@ class UserMeta
      * Set key
      *
      * @param string $key
+     * @return UserMeta
      */
     public function setKey($key)
     {
         $this->key = $key;
+        return $this;
     }
 
     /**
@@ -84,10 +86,12 @@ class UserMeta
      * Set value
      *
      * @param string $value
+     * @return UserMeta
      */
     public function setValue($value)
     {
         $this->value = $value;
+        return $this;
     }
 
     /**
@@ -104,10 +108,12 @@ class UserMeta
      * Set user
      *
      * @param User $user
+     * @return UserMeta
      */
     public function setUser(User $user)
     {
         $this->user = $user;
+        return $this;
     }
 
     /**

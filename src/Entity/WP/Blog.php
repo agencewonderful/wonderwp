@@ -97,62 +97,6 @@ class Blog
     protected $langId;
 
     /**
-     * @param string $domain
-     */
-    public function setDomain($domain)
-    {
-        $this->domain = $domain;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDomain()
-    {
-        return $this->domain;
-    }
-
-    /**
-     * @param int $archived
-     */
-    public function setArchived($archived)
-    {
-        $this->archived = $archived;
-    }
-
-    /**
-     * @return int
-     */
-    public function getArchived()
-    {
-        return $this->archived;
-    }
-
-    /**
-     * @param int $deleted
-     */
-    public function setDeleted($deleted)
-    {
-        $this->deleted = $deleted;
-    }
-
-    /**
-     * @return int
-     */
-    public function getDeleted()
-    {
-        return $this->deleted;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
      * @return int
      */
     public function getId()
@@ -161,107 +105,13 @@ class Blog
     }
 
     /**
-     * @param int $langId
+     * @param int $id
+     * @return Blog
      */
-    public function setLangId($langId)
+    public function setId($id)
     {
-        $this->langId = $langId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getLangId()
-    {
-        return $this->langId;
-    }
-
-    /**
-     * @param \DateTime $lastUpdatedDate
-     */
-    public function setLastUpdatedDate($lastUpdatedDate)
-    {
-        $this->lastUpdatedDate = $lastUpdatedDate;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getLastUpdatedDate()
-    {
-        return $this->lastUpdatedDate;
-    }
-
-    /**
-     * @param int $mature
-     */
-    public function setMature($mature)
-    {
-        $this->mature = $mature;
-    }
-
-    /**
-     * @return int
-     */
-    public function getMature()
-    {
-        return $this->mature;
-    }
-
-    /**
-     * @param string $path
-     */
-    public function setPath($path)
-    {
-        $this->path = $path;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPath()
-    {
-        return $this->path;
-    }
-
-    /**
-     * @param int $public
-     */
-    public function setPublic($public)
-    {
-        $this->public = $public;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPublic()
-    {
-        return $this->public;
-    }
-
-    /**
-     * @param \DateTime $registeredDate
-     */
-    public function setRegisteredDate($registeredDate)
-    {
-        $this->registeredDate = $registeredDate;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getRegisteredDate()
-    {
-        return $this->registeredDate;
-    }
-
-    /**
-     * @param int $siteId
-     */
-    public function setSiteId($siteId)
-    {
-        $this->siteId = $siteId;
+        $this->id = $id;
+        return $this;
     }
 
     /**
@@ -273,11 +123,139 @@ class Blog
     }
 
     /**
-     * @param int $spam
+     * @param int $siteId
+     * @return Blog
      */
-    public function setSpam($spam)
+    public function setSiteId($siteId)
     {
-        $this->spam = $spam;
+        $this->siteId = $siteId;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDomain()
+    {
+        return $this->domain;
+    }
+
+    /**
+     * @param string $domain
+     * @return Blog
+     */
+    public function setDomain($domain)
+    {
+        $this->domain = $domain;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    /**
+     * @param string $path
+     * @return Blog
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getRegisteredDate()
+    {
+        return $this->registeredDate;
+    }
+
+    /**
+     * @param \DateTime $registeredDate
+     * @return Blog
+     */
+    public function setRegisteredDate($registeredDate)
+    {
+        $this->registeredDate = $registeredDate;
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getLastUpdatedDate()
+    {
+        return $this->lastUpdatedDate;
+    }
+
+    /**
+     * @param \DateTime $lastUpdatedDate
+     * @return Blog
+     */
+    public function setLastUpdatedDate($lastUpdatedDate)
+    {
+        $this->lastUpdatedDate = $lastUpdatedDate;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPublic()
+    {
+        return $this->public;
+    }
+
+    /**
+     * @param int $public
+     * @return Blog
+     */
+    public function setPublic($public)
+    {
+        $this->public = $public;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getArchived()
+    {
+        return $this->archived;
+    }
+
+    /**
+     * @param int $archived
+     * @return Blog
+     */
+    public function setArchived($archived)
+    {
+        $this->archived = $archived;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMature()
+    {
+        return $this->mature;
+    }
+
+    /**
+     * @param int $mature
+     * @return Blog
+     */
+    public function setMature($mature)
+    {
+        $this->mature = $mature;
+        return $this;
     }
 
     /**
@@ -287,4 +265,51 @@ class Blog
     {
         return $this->spam;
     }
+
+    /**
+     * @param int $spam
+     * @return Blog
+     */
+    public function setSpam($spam)
+    {
+        $this->spam = $spam;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
+
+    /**
+     * @param int $deleted
+     * @return Blog
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLangId()
+    {
+        return $this->langId;
+    }
+
+    /**
+     * @param int $langId
+     * @return Blog
+     */
+    public function setLangId($langId)
+    {
+        $this->langId = $langId;
+        return $this;
+    }
+
 }

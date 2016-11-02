@@ -55,13 +55,13 @@ class Option
     }
 
     /**
-     * Set name
-     *
      * @param string $name
+     * @return Option
      */
     public function setName($name)
     {
         $this->name = $name;
+        return $this;
     }
 
     /**
@@ -75,13 +75,13 @@ class Option
     }
 
     /**
-     * Set value
-     *
-     * @param string $value
+     * @param int $id
+     * @return Option
      */
-    public function setValue($value)
+    public function setId($id)
     {
-        $this->value = $value;
+        $this->id = $id;
+        return $this;
     }
 
     /**
@@ -95,13 +95,13 @@ class Option
     }
 
     /**
-     * Set autoload
-     *
-     * @param string $autoload Yes or no
+     * @param string $autoload
+     * @return Option
      */
     public function setAutoload($autoload)
     {
         $this->autoload = $autoload;
+        return $this;
     }
 
     /**

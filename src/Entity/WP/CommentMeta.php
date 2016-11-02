@@ -56,13 +56,13 @@ class CommentMeta
     }
 
     /**
-     * Set key
-     *
-     * @param string $key
+     * @param mixed $key
+     * @return CommentMeta
      */
     public function setKey($key)
     {
         $this->key = $key;
+        return $this;
     }
 
     /**
@@ -76,13 +76,13 @@ class CommentMeta
     }
 
     /**
-     * Set value
-     *
      * @param string $value
+     * @return CommentMeta
      */
     public function setValue($value)
     {
         $this->value = $value;
+        return $this;
     }
 
     /**
@@ -99,10 +99,12 @@ class CommentMeta
      * Set comment
      *
      * @param Comment $comment
+     * @return CommentMeta
      */
     public function setComment(Comment $comment)
     {
         $this->comment = $comment;
+        return $this;
     }
 
     /**

@@ -64,10 +64,12 @@ class Term
      * Set name
      *
      * @param string $name
+     * @return Term
      */
     public function setName($name)
     {
         $this->name = $name;
+        return $this;
     }
 
     /**
@@ -84,10 +86,12 @@ class Term
      * Set slug
      *
      * @param string $slug
+     * @return Term
      */
     public function setSlug($slug)
     {
         $this->slug = $slug;
+        return $this;
     }
 
     /**
@@ -104,10 +108,12 @@ class Term
      * Set group
      *
      * @param int $group
+     * @return Term
      */
     public function setGroup($group)
     {
         $this->group = $group;
+        return $this;
     }
 
     /**
@@ -124,10 +130,12 @@ class Term
      * Set taxonomy
      *
      * @param Taxonomy $taxonomy
+     * @return Term
      */
     public function setTaxonomy(Taxonomy $taxonomy)
     {
         $this->taxonomy = $taxonomy;
+        return $this;
     }
 
     /**

@@ -87,10 +87,12 @@ class Taxonomy
      * Set name
      *
      * @param string $name
+     * @return Taxonomy
      */
     public function setName($name)
     {
         $this->name = $name;
+        return $this;
     }
 
     /**
@@ -107,10 +109,12 @@ class Taxonomy
      * Set description
      *
      * @param string $description
+     * @return Taxonomy
      */
     public function setDescription($description)
     {
         $this->description = $description;
+        return $this;
     }
 
     /**
@@ -127,10 +131,12 @@ class Taxonomy
      * Set parent
      *
      * @param int $parent
+     * @return Taxonomy
      */
     public function setParent($parent)
     {
         $this->parent = $parent;
+        return $this;
     }
 
     /**
@@ -147,10 +153,12 @@ class Taxonomy
      * Set count
      *
      * @param int $count
+     * @return Taxonomy
      */
     public function setCount($count)
     {
         $this->count = $count;
+        return $this;
     }
 
     /**
@@ -167,10 +175,12 @@ class Taxonomy
      * Set term
      *
      * @param Term $term
+     * @return Taxonomy
      */
     public function setTerm(Term $term)
     {
         $this->term = $term;
+        return $this;
     }
 
     /**
@@ -187,10 +197,12 @@ class Taxonomy
      * Add post
      *
      * @param Post $post
+     * @return Taxonomy
      */
     public function addPosts(Post $post)
     {
         $this->posts[] = $post;
+        return $this;
     }
 
     /**

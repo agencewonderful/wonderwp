@@ -154,13 +154,13 @@ class Comment
     }
 
     /**
-     * Set author
-     *
-     * @param string $author
+     * @param mixed $author
+     * @return Comment
      */
     public function setAuthor($author)
     {
         $this->author = $author;
+        return $this;
     }
 
     /**
@@ -174,13 +174,13 @@ class Comment
     }
 
     /**
-     * Set authorEmail
-     *
-     * @param string $authorEmail
+     * @param mixed $authorEmail
+     * @return Comment
      */
     public function setAuthorEmail($authorEmail)
     {
         $this->authorEmail = $authorEmail;
+        return $this;
     }
 
     /**
@@ -194,13 +194,13 @@ class Comment
     }
 
     /**
-     * Set authorUrl
-     *
-     * @param string $authorUrl
+     * @param mixed $authorUrl
+     * @return Comment
      */
     public function setAuthorUrl($authorUrl)
     {
         $this->authorUrl = $authorUrl;
+        return $this;
     }
 
     /**
@@ -214,13 +214,13 @@ class Comment
     }
 
     /**
-     * Set authorIp
-     *
-     * @param string $authorIp
+     * @param mixed $authorIp
+     * @return Comment
      */
     public function setAuthorIp($authorIp)
     {
         $this->authorIp = $authorIp;
+        return $this;
     }
 
     /**
@@ -234,13 +234,13 @@ class Comment
     }
 
     /**
-     * Set date
-     *
-     * @param \DateTime $date
+     * @param mixed $date
+     * @return Comment
      */
     public function setDate($date)
     {
         $this->date = $date;
+        return $this;
     }
 
     /**
@@ -254,13 +254,13 @@ class Comment
     }
 
     /**
-     * Set date_gmt
-     *
-     * @param \DateTime $dateGmt
+     * @param mixed $dateGmt
+     * @return Comment
      */
     public function setDateGmt($dateGmt)
     {
         $this->dateGmt = $dateGmt;
+        return $this;
     }
 
     /**
@@ -274,13 +274,13 @@ class Comment
     }
 
     /**
-     * Set content
-     *
-     * @param string $commentContent
+     * @param mixed $content
+     * @return Comment
      */
-    public function setContent($commentContent)
+    public function setContent($content)
     {
-        $this->content = $commentContent;
+        $this->content = $content;
+        return $this;
     }
 
     /**
@@ -294,13 +294,13 @@ class Comment
     }
 
     /**
-     * Set karma
-     *
-     * @param integer $karma
+     * @param mixed $karma
+     * @return Comment
      */
     public function setKarma($karma)
     {
         $this->karma = $karma;
+        return $this;
     }
 
     /**
@@ -317,6 +317,7 @@ class Comment
      * Set approved
      *
      * @param string $approved
+     * @return $this
      */
     public function setApproved($approved)
     {
@@ -325,6 +326,7 @@ class Comment
         }
 
         $this->approved = $approved;
+        return $this;
     }
 
     /**
@@ -338,13 +340,13 @@ class Comment
     }
 
     /**
-     * Set agent
-     *
-     * @param string $agent
+     * @param mixed $agent
+     * @return Comment
      */
     public function setAgent($agent)
     {
         $this->agent = $agent;
+        return $this;
     }
 
     /**
@@ -358,13 +360,13 @@ class Comment
     }
 
     /**
-     * Set type
-     *
-     * @param string $commentType
+     * @param mixed $type
+     * @return Comment
      */
-    public function setType($commentType)
+    public function setType($type)
     {
-        $this->type = $commentType;
+        $this->type = $type;
+        return $this;
     }
 
     /**
@@ -381,10 +383,12 @@ class Comment
      * Set parent
      *
      * @param Comment $comment
+     * @return Comment
      */
     public function setParent(Comment $comment)
     {
         $this->parent = $comment;
+        return $this;
     }
 
     /**
@@ -401,10 +405,12 @@ class Comment
      * Add meta
      *
      * @param CommentMeta $meta
+     * @return Comment
      */
     public function addMeta(CommentMeta $meta)
     {
         $this->metas[] = $meta;
+        return $this;
     }
 
     /**
@@ -421,10 +427,12 @@ class Comment
      * Set post
      *
      * @param Post $post
+     * @return Comment
      */
     public function setPost(Post $post)
     {
         $this->post = $post;
+        return $this;
     }
 
     /**
@@ -441,6 +449,7 @@ class Comment
      * Set user
      *
      * @param User $user
+     * @return Comment
      */
     public function setUser(User $user)
     {
@@ -448,6 +457,7 @@ class Comment
         $this->author      = $user->getDisplayName();
         $this->authorUrl   = $user->getUrl();
         $this->authorEmail = $user->getEmail();
+        return $this;
     }
 
     /**

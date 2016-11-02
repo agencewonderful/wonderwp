@@ -253,10 +253,12 @@ class Post
      * Set date
      *
      * @param \DateTime $date
+     * @return Post
      */
     public function setDate($date)
     {
         $this->date = $date;
+        return $this;
     }
 
     /**
@@ -273,10 +275,12 @@ class Post
      * Set dateGmt
      *
      * @param \DateTime $dateGmt
+     * @return Post
      */
     public function setDateGmt($dateGmt)
     {
         $this->dateGmt = $dateGmt;
+        return $this;
     }
 
     /**
@@ -293,11 +297,13 @@ class Post
      * Set content
      *
      * @param string $content
+     * @return Post
      */
     public function setContent($content)
     {
         $this->content = $content;
         $this->excerpt = $this->trimContent($content);
+        return $this;
     }
 
     /**
@@ -340,10 +346,12 @@ class Post
      * Set title
      *
      * @param string $title
+     * @return Post
      */
     public function setTitle($title)
     {
         $this->title = $title;
+        return $this;
     }
 
     /**
@@ -360,10 +368,12 @@ class Post
      * Set excerpt
      *
      * @param string $excerpt
+     * @return Post
      */
     public function setExcerpt($excerpt)
     {
         $this->excerpt = $excerpt;
+        return $this;
     }
 
     /**
@@ -380,10 +390,12 @@ class Post
      * Set excerpt length
      *
      * @param int $excerptLength
+     * @return Post
      */
     public function setExcerptLength($excerptLength)
     {
         $this->excerptLength = (int) $excerptLength;
+        return $this;
     }
 
     /**
@@ -400,10 +412,12 @@ class Post
      * Set status
      *
      * @param string $status
+     * @return Post
      */
     public function setStatus($status)
     {
         $this->status = $status;
+        return $this;
     }
 
     /**
@@ -420,10 +434,12 @@ class Post
      * Set commentStatus
      *
      * @param string $commentStatus
+     * @return Post
      */
     public function setCommentStatus($commentStatus)
     {
         $this->commentStatus = $commentStatus;
+        return $this;
     }
 
     /**
@@ -440,10 +456,12 @@ class Post
      * Set pingStatus
      *
      * @param string $pingStatus
+     * @return Post
      */
     public function setPingStatus($pingStatus)
     {
         $this->pingStatus = $pingStatus;
+        return $this;
     }
 
     /**
@@ -460,10 +478,12 @@ class Post
      * Set password
      *
      * @param string $password
+     * @return Post
      */
     public function setPassword($password)
     {
         $this->password = $password;
+        return $this;
     }
 
     /**
@@ -480,10 +500,12 @@ class Post
      * Set post slug
      *
      * @param string $slug
+     * @return Post
      */
     public function setSlug($slug)
     {
         $this->slug = $slug;
+        return $this;
     }
 
     /**
@@ -500,10 +522,12 @@ class Post
      * Set toPing
      *
      * @param string $toPing
+     * @return Post
      */
     public function setToPing($toPing)
     {
         $this->toPing = $toPing;
+        return $this;
     }
 
     /**
@@ -520,10 +544,12 @@ class Post
      * Set pinged
      *
      * @param string $pinged
+     * @return Post
      */
     public function setPinged($pinged)
     {
         $this->pinged = $pinged;
+        return $this;
     }
 
     /**
@@ -540,10 +566,12 @@ class Post
      * Set modifiedDate
      *
      * @param \DateTime $modifiedDate
+     * @return Post
      */
     public function setModifiedDate($modifiedDate)
     {
         $this->modifiedDate = $modifiedDate;
+        return $this;
     }
 
     /**
@@ -560,10 +588,12 @@ class Post
      * Set modifiedDateGmt
      *
      * @param \DateTime $modifiedDateGmt
+     * @return Post;
      */
     public function setModifiedDateGmt($modifiedDateGmt)
     {
         $this->modifiedDateGmt = $modifiedDateGmt;
+        return $this;
     }
 
     /**
@@ -580,10 +610,12 @@ class Post
      * Set contentFiltered
      *
      * @param string $contentFiltered
+     * @return Post
      */
     public function setContentFiltered($contentFiltered)
     {
         $this->contentFiltered = $contentFiltered;
+        return $this;
     }
 
     /**
@@ -600,10 +632,12 @@ class Post
      * Set parent
      *
      * @param \WonderWp\Entity\WP\Post $parent
+     * @return Post
      */
     public function setParent($parent)
     {
         $this->parent = $parent;
+        return $this;
     }
 
     /**
@@ -630,21 +664,25 @@ class Post
      * Set parent
      *
      * @param Post $child
+     * @return Post
      */
     public function addChild(Post $child)
     {
         $child->setParent($this);
         $this->children[] = $child;
+        return $this;
     }
 
     /**
      * Set guid
      *
      * @param string $guid
+     * @return Post
      */
     public function setGuid($guid)
     {
         $this->guid = $guid;
+        return $this;
     }
 
     /**
@@ -661,10 +699,12 @@ class Post
      * Set menuOrder
      *
      * @param integer $menuOrder
+     * @return Post
      */
     public function setMenuOrder($menuOrder)
     {
         $this->menuOrder = $menuOrder;
+        return $this;
     }
 
     /**
@@ -681,10 +721,12 @@ class Post
      * Set type
      *
      * @param string $type
+     * @return Post
      */
     public function setType($type)
     {
         $this->type = $type;
+        return $this;
     }
 
     /**
@@ -701,10 +743,12 @@ class Post
      * Set mimeType
      *
      * @param string $mimeType
+     * @return Post
      */
     public function setMimeType($mimeType)
     {
         $this->mimeType = $mimeType;
+        return $this;
     }
 
     /**
@@ -721,10 +765,12 @@ class Post
      * Set commentCount
      *
      * @param int $commentCount
+     * @return Post
      */
     public function setCommentCount($commentCount)
     {
         $this->commentCount = $commentCount;
+        return $this;
     }
 
     /**
@@ -741,11 +787,13 @@ class Post
      * Add metas
      *
      * @param PostMeta $meta
+     * @return Post
      */
     public function addMeta(PostMeta $meta)
     {
         $meta->setPost($this);
         $this->metas[] = $meta;
+        return $this;
     }
 
     /**
@@ -762,12 +810,14 @@ class Post
      * Add comment
      *
      * @param Comment $comment
+     * @return Post
      */
     public function addComment(Comment $comment)
     {
         $comment->setPost($this);
         $this->comments[] = $comment;
         $this->commentCount = $this->getComments()->count();
+        return $this;
     }
 
     /**
@@ -784,20 +834,24 @@ class Post
      * Set user
      *
      * @param User $user
+     * @return Post
      */
     public function setUser(User $user)
     {
         $this->user = $user;
+        return $this;
     }
 
     /**
      * Add taxonomies
      *
      * @param Taxonomy $taxonomy
+     * @return Post
      */
     public function addTaxonomy(Taxonomy $taxonomy)
     {
         $this->taxonomies[] = $taxonomy;
+        return $this;
     }
 
     /**

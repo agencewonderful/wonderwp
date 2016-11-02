@@ -62,10 +62,12 @@ class PostMeta
      * Set key
      *
      * @param string $key
+     * @return PostMeta
      */
     public function setKey($key)
     {
         $this->key = $key;
+        return $this;
     }
 
     /**
@@ -82,10 +84,12 @@ class PostMeta
      * Set value
      *
      * @param string $value
+     * @return PostMeta
      */
     public function setValue($value)
     {
         $this->value = $value;
+        return $this;
     }
 
     /**
@@ -102,10 +106,12 @@ class PostMeta
      * Set post
      *
      * @param Post $post
+     * @return PostMeta
      */
     public function setPost(Post $post)
     {
         $this->post = $post;
+        return $this;
     }
 
     /**

@@ -140,10 +140,12 @@ class User
      * Set username
      *
      * @param $username
+     * @return User
      */
     public function setUsername($username)
     {
         $this->username = $username;
+        return $this;
     }
 
     /**
@@ -160,10 +162,12 @@ class User
      * Set password
      *
      * @param string $password
+     * @return User
      */
     public function setPassword($password)
     {
         $this->password = $password;
+        return $this;
     }
 
     /**
@@ -180,10 +184,12 @@ class User
      * Set nicename
      *
      * @param string $nicename
+     * @return User
      */
     public function setNicename($nicename)
     {
         $this->nicename = $nicename;
+        return $this;
     }
 
     /**
@@ -200,10 +206,12 @@ class User
      * Set email
      *
      * @param $email
+     * @return User
      */
     public function setEmail($email)
     {
         $this->email = $email;
+        return $this;
     }
 
     /**
@@ -220,10 +228,12 @@ class User
      * Set url
      *
      * @param string $url
+     * @return User
      */
     public function setUrl($url)
     {
         $this->url = $url;
+        return $this;
     }
 
     /**
@@ -240,10 +250,12 @@ class User
      * Set registeredDate
      *
      * @param $registeredDate
+     * @return User
      */
     public function setRegisteredDate($registeredDate)
     {
         $this->registeredDate = $registeredDate;
+        return $this;
     }
 
     /**
@@ -260,10 +272,12 @@ class User
      * Set activationKey
      *
      * @param string $activationKey
+     * @return User
      */
     public function setActivationKey($activationKey)
     {
         $this->activationKey = $activationKey;
+        return $this;
     }
 
     /**
@@ -280,10 +294,12 @@ class User
      * Set status
      *
      * @param integer $status
+     * @return User
      */
     public function setStatus($status)
     {
         $this->status = $status;
+        return $this;
     }
 
     /**
@@ -300,10 +316,12 @@ class User
      * Set displayName
      *
      * @param string $displayName
+     * @return User
      */
     public function setDisplayName($displayName)
     {
         $this->displayName = $displayName;
+        return $this;
     }
 
     /**
@@ -320,12 +338,14 @@ class User
      * Add meta
      *
      * @param UserMeta $meta
+     * @return User
      */
     public function addMeta(UserMeta $meta)
     {
         $this->metas[] = $meta;
 
         $meta->setUser($this);
+        return $this;
     }
 
     /**
