@@ -11,6 +11,7 @@ use Doctrine\Common\EventManager;
 use Doctrine\Common\Persistence\Mapping\Driver\AnnotationDriver;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\DBAL\Logging\DebugStack;
+use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 use Gedmo\Mapping\MappedEventSubscriber;
 use WonderWp\AbstractDefinitions\Singleton;
 use WonderWp\Assets\Asset;
@@ -133,6 +134,7 @@ class Loader extends Singleton{
             $config->addCustomNumericFunction('RAND', 'WonderWp\DB\Rand');
             $sqlLogger = $container->offsetGet('doctrine.sqlLogger');
             $config->setSQLLogger($sqlLogger);
+            $config->setNamingStrategy(new UnderscoreNamingStrategy());
 
             //Evm, used to add wordpress table prefix
             $evm = new \Doctrine\Common\EventManager;
