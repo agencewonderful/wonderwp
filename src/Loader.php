@@ -7,15 +7,15 @@
  */
 namespace WonderWp;
 
+use Doctrine\Common\EventManager;
+use Doctrine\Common\Persistence\Mapping\Driver\AnnotationDriver;
+use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\DBAL\Logging\DebugStack;
-use Doctrine\DBAL\Logging\EchoSQLLogger;
+use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
+use Gedmo\Mapping\MappedEventSubscriber;
 use WonderWp\AbstractDefinitions\Singleton;
 use WonderWp\Assets\Asset;
-use WonderWp\Assets\AssetEnqueuer;
 use WonderWp\Assets\AssetManager;
-use WonderWp\Assets\AssetExporter;
-use WonderWp\Assets\AssetRenderer;
-use WonderWp\Assets\DirectAssetEnqueuer;
 use WonderWp\Assets\JsonAssetEnqueuer;
 use WonderWp\Assets\JsonAssetExporter;
 use WonderWp\DI\Container;
@@ -41,6 +41,11 @@ class Loader extends Singleton{
      * @var Loader
      */
     private static $_instance;
+
+    /**
+     * @var bool
+     */
+    private $gedmoLoaded = false;
 
     /**
      * Get instance and init if empty
@@ -77,11 +82,11 @@ class Loader extends Singleton{
          */
 
         //Autoloader
-        $container['wwp.autoLoader'] = function ($container) {
+        $container['wwp.autoLoader'] = function (\Pimple\Container $container) {
             return require($container['path_root'].'vendor/autoload.php');
         };
 
-        $container['doctrine.sqlLogger'] = function($container){
+        $container['doctrine.sqlLogger'] = function(\Pimple\Container $container){
             $logger = new DebugStack();
             $loggerDumper = function() use($logger){
                 echo'<div id="doctrineQueryLog">';
@@ -96,7 +101,7 @@ class Loader extends Singleton{
         };
 
         //Entity Manager
-        $container['entityManager'] = function($container) {
+        $container['entityManager'] = function(\Pimple\Container $container) {
             global $wpdb;
 
             //Paths
@@ -129,6 +134,7 @@ class Loader extends Singleton{
             $config->addCustomNumericFunction('RAND', 'WonderWp\DB\Rand');
             $sqlLogger = $container->offsetGet('doctrine.sqlLogger');
             $config->setSQLLogger($sqlLogger);
+            $config->setNamingStrategy(new UnderscoreNamingStrategy());
 
             //Evm, used to add wordpress table prefix
             $evm = new \Doctrine\Common\EventManager;
@@ -136,6 +142,85 @@ class Loader extends Singleton{
             //Prefix
             $tablePrefix = new \WonderWp\DB\TablePrefix($wpdb->prefix);
             $evm->addEventListener(\Doctrine\ORM\Events::loadClassMetadata, $tablePrefix);
+
+            if (defined('USE_GEDMO_SLUGGABLE') && USE_GEDMO_SLUGGABLE === true) {
+                // Gedmo Sluggable
+                $this->loadGedmoExtension(new \Gedmo\Sluggable\SluggableListener(), $anDriver, $evm);
+            }
+
+            if (defined('USE_GEDMO_TREE') && USE_GEDMO_TREE === true) {
+                // Gedmo Tree
+                $this->loadGedmoExtension(new \Gedmo\Tree\TreeListener(), $anDriver, $evm);
+            }
+
+            if (defined('USE_GEDMO_TIMESTAMPABLE') && USE_GEDMO_TIMESTAMPABLE === true) {
+                // Gedmo Timestampable
+                $this->loadGedmoExtension(new \Gedmo\Timestampable\TimestampableListener(), $anDriver, $evm);
+            }
+
+            if (defined('USE_GEDMO_SORTABLE') && USE_GEDMO_SORTABLE === true) {
+                // Gedmo Sortable
+                $this->loadGedmoExtension(new \Gedmo\Sortable\SortableListener(), $anDriver, $evm);
+            }
+
+            if (defined('USE_GEDMO_SOFT_DELETEABLE') && USE_GEDMO_SOFT_DELETEABLE === true) {
+                // Gedmo SoftDeleteable
+                $this->loadGedmoExtension(new \Gedmo\SoftDeleteable\SoftDeleteableListener(), $anDriver, $evm);
+            }
+
+            if (defined('USE_GEDMO_UPLOADABLE') && USE_GEDMO_UPLOADABLE === true) {
+                // Gedmo Uploadable
+                $listener = new \Gedmo\Uploadable\UploadableListener();
+
+                if (defined('GEDMO_UPLOADABLE_DIRECTORY')) {
+                    $listener->setDefaultPath(GEDMO_UPLOADABLE_DIRECTORY);
+                }
+
+                $this->loadGedmoExtension($listener, $anDriver, $evm);
+            }
+
+            if (defined('USE_GEDMO_REFERENCES') && USE_GEDMO_REFERENCES === true) {
+                // Gedmo References
+                $this->loadGedmoExtension(new \Gedmo\References\ReferencesListener(), $anDriver, $evm);
+            }
+
+            if (defined('USE_GEDMO_REFERENCE_INTEGRITY') && USE_GEDMO_REFERENCE_INTEGRITY === true) {
+                // Gedmo Reference Integrity
+                $this->loadGedmoExtension(new \Gedmo\ReferenceIntegrity\ReferenceIntegrityListener(), $anDriver, $evm);
+            }
+
+            if (defined('USE_GEDMO_IP_TRACEABLE') && USE_GEDMO_IP_TRACEABLE === true) {
+                // Gedmo IpTraceable
+                $this->loadGedmoExtension(new \Gedmo\IpTraceable\IpTraceableListener(), $anDriver, $evm);
+            }
+
+            /* TODO Get $username value
+            if (defined('USE_GEDMO_LOGGABLE') && USE_GEDMO_LOGGABLE === true) {
+                // Gedmo Loggable
+                $listener = new \Gedmo\Loggable\LoggableListener();
+                $listener->setUsername($username);
+                $this->loadGedmoExtension($listener, $anDriver, $evm);
+            }
+            */
+
+            /* TODO Get $defaultLocale value
+            if (defined('USE_GEDMO_TRANSLATABLE') && USE_GEDMO_TRANSLATABLE === true) {
+                // Gedmo Translatable
+                $listener = new \Gedmo\Translatable\TranslatableListener();
+                $listener->setTranslatableLocale($defaultLocale);
+                $listener->setDefaultLocale($defaultLocale);
+                $this->loadGedmoExtension($listener, $anDriver, $evm);
+            }
+            */
+
+            /* TODO Get $connectedUser value
+            if (defined('USE_GEDMO_BLAMEABLE') && USE_GEDMO_BLAMEABLE === true) {
+                // Gedmo Blameable
+                $listener = new \Gedmo\Blameable\BlameableListener();
+                $listener->setUserValue($connectedUser);
+                $this->loadGedmoExtension($listener, $anDriver, $evm);
+            }
+            */
 
             //Connection configuration
             $dbParams = array(
@@ -235,4 +320,20 @@ class Loader extends Singleton{
         require_once(__DIR__.'/functions.php');
     }
 
+    /**
+     * @param MappedEventSubscriber $listener
+     * @param AnnotationDriver      $annotationDriver
+     * @param EventManager          $eventManager
+     *
+     * @return void
+     */
+    protected function loadGedmoExtension(MappedEventSubscriber $listener, AnnotationDriver $annotationDriver, EventManager $eventManager)
+    {
+        if (!$this->gedmoLoaded) {
+            \Gedmo\DoctrineExtensions::registerAbstractMappingIntoDriverChainORM(new MappingDriverChain(), $annotationDriver->getReader());
+        }
+
+        $listener->setAnnotationReader($annotationDriver->getReader());
+        $eventManager->addEventSubscriber($listener);
+    }
 }
