@@ -14,6 +14,7 @@ abstract class AbstractMailer implements MailerInterface
 
     protected $_subject;
     protected $_body;
+    protected $_alt_body;
 
     protected $_to = array();
     protected $_cc = array();
@@ -86,6 +87,26 @@ abstract class AbstractMailer implements MailerInterface
         $this->_body = $body;
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getAltBody()
+    {
+        return $this->_alt_body;
+    }
+
+    /**
+     * @param mixed $altBody
+     * @return AbstractMailer
+     */
+    public function setAltBody($altBody)
+    {
+        $this->_alt_body = $altBody;
+        return $this;
+    }
+
+
 
     /**
      * @return array
@@ -185,14 +206,6 @@ abstract class AbstractMailer implements MailerInterface
     {
         $this->_bcc = array();
         $this->addCcs($bccs);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setAltBody($alternativeBody)
-    {
-        // TODO: Implement setAltBody() method.
     }
 
     /**
