@@ -261,6 +261,7 @@ class FormView implements FormViewInterface
 
             //Value
             if ($tag == 'input') {
+                if(is_array($val) || is_object($val)){ $val = json_encode($val); }
                 $markup .= ' value="' . $val . '" ';
                 if ($type == 'checkbox') {
                     $cbValue = $displayRules['inputAttributes']['value'];
