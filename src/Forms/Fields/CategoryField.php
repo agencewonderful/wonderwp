@@ -15,7 +15,6 @@ class CategoryField extends SelectField
     public function __construct($name, $value=null, $displayRules=array(), $validationRules=array(),$parent=0)
     {
         parent::__construct($name, $value, $displayRules, $validationRules);
-        $this->tag = 'select';
 
         $this->setCatOptions($parent);
     }

@@ -9,53 +9,10 @@
 namespace WonderWp\Mail;
 
 
-class WwpWpMailer implements MailerInterface
+class WpMailer extends AbstractMailer
 {
 
-    private $_to = array();
-    private $_subject;
-    private $_body;
-    private $_headers = array();
-
-    private $_cc = array();
-    private $_bcc = array();
-
-    /**
-     * __construct
-     *
-     * Resets the class properties.
-     */
-    public function __construct()
-    {
-        $this->reset();
-    }
-    /**
-     * reset
-     *
-     * Resets all properties to initial state.
-     *
-     * @return $this
-     */
-    public function reset()
-    {
-        $this->_to = array();
-        $this->_subject = null;
-        $this->_body = null;
-        $this->_headers = array();
-
-        $this->_cc = array();
-        $this->_bcc = array();
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setSubject($subject)
-    {
-        $this->_subject = $subject;
-    }
+    protected $_headers = array();
 
     /**
      * setFrom
@@ -80,30 +37,6 @@ class WwpWpMailer implements MailerInterface
         return $this;
     }
 
-    public function addTos(array $tos){
-        if(!empty($tos)){ foreach($tos as $to){
-            if(is_array($to)) {
-                $mail = $to[0];
-                $name = !empty($to[1]) ? $to[1] : '';
-                $this->addTo($mail, $name);
-            } else {
-                //string so just mail
-                $this->addTo($to, '');
-            }
-        } }
-    }
-
-    public function getTo()
-    {
-        return $this->_to;
-    }
-
-    public function setTo(array $tos)
-    {
-        $this->_to = array();
-        $this->addTos($tos);
-    }
-
     /**
      * @inheritDoc
      */
@@ -121,30 +54,6 @@ class WwpWpMailer implements MailerInterface
         return $this;
     }
 
-    public function addCcs(array $ccs){
-        if(!empty($ccs)){ foreach($ccs as $cc){
-            if(is_array($cc)) {
-                $mail = $cc[0];
-                $name = !empty($cc[1]) ? $cc[1] : '';
-                $this->addCc($mail, $name);
-            } else {
-                //string so just mail
-                $this->addCc($cc, '');
-            }
-        } }
-    }
-
-    public function getCc()
-    {
-        return $this->_cc;
-    }
-
-    public function setCc(array $ccs)
-    {
-        $this->_cc = array();
-        $this->addCcs($ccs);
-    }
-
     /**
      * @inheritDoc
      */
@@ -152,30 +61,6 @@ class WwpWpMailer implements MailerInterface
     {
         $this->_bcc[] = $this->formatHeader((string) $email, (string) $name);
         return $this;
-    }
-
-    public function addBccs(array $bccs){
-        if(!empty($bccs)){ foreach($bccs as $bcc){
-            if(is_array($bcc)) {
-                $mail = $bcc[0];
-                $name = !empty($bcc[1]) ? $bcc[1] : '';
-                $this->addCc($mail, $name);
-            } else {
-                //string so just mail
-                $this->addCc($bcc, '');
-            }
-        } }
-    }
-
-    public function getBcc()
-    {
-        return $this->_bcc;
-    }
-
-    public function setBcc(array $bccs)
-    {
-        $this->_bcc = array();
-        $this->addCcs($bccs);
     }
 
     /**
@@ -192,31 +77,6 @@ class WwpWpMailer implements MailerInterface
         }
 
         return $this;
-    }
-    /**
-     * getMessage
-     *
-     * @return string
-     */
-    public function getBody()
-    {
-        return $this->_body;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setAltBody($alternativeBody)
-    {
-        // TODO: Implement setAltBody() method.
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function addAttachment($path, $filename = null)
-    {
-        // TODO: Implement addAttachement() method.
     }
 
     /**

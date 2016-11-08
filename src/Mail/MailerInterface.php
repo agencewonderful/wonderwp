@@ -48,6 +48,8 @@ interface MailerInterface
      */
     public function setReplyTo($email, $name = "");
 
+    public function getReplyTo();
+
     //Ccs
     public function addCc($email, $name = "");
 

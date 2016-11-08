@@ -121,6 +121,7 @@ class FormView implements FormViewInterface
             $markup .= $this->fieldLabel($fieldName);
         }
         $markup .= $this->fieldError($fieldName);
+        $markup .= $this->fieldHelp($fieldName);
         $markup .= $this->fieldWrapEnd($fieldName);
 
         return $markup;
@@ -328,6 +329,19 @@ class FormView implements FormViewInterface
         $fieldId = !empty($displayRules) && !empty($displayRules['inputAttributes']) && !empty($displayRules['inputAttributes']['id']) ? $displayRules['inputAttributes']['id'] : '';
         if (!empty($errors)) {
             $markup .= '<label class="label-error" ' . ($fieldId ? 'for="' . $fieldId . '"' : '') . '>' . implode(', ', $errors) . '</label>';
+        }
+        return $markup;
+    }
+
+    public function fieldHelp($fieldName)
+    {
+        $markup = '';
+        $f = ($fieldName instanceof AbstractField) ? $fieldName : $this->_formInstance->getField($fieldName);
+
+        $displayRules = $f->getDisplayRules();
+        $help = !empty($displayRules) && !empty($displayRules['help']) ? $displayRules['help'] : '';
+        if (!empty($help)) {
+            $markup .= '<span class="help">' . $help . '</span>';
         }
         return $markup;
     }
