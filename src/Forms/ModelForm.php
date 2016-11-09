@@ -89,7 +89,10 @@ class ModelForm
                 $f = $this->newField($attr);
                 if ($f === null) continue;
                 $f->computeDisplayRules($this->specifyDisplayRules($attr));
-                $f->computeValidationRules($this->specifyValidationRules($attr));
+                if (count($f->getValidationRules()) < 1) {
+                    //Add default validation rules if not manually specified
+                    $f->computeValidationRules($this->specifyValidationRules($attr));
+                }
                 //Add field
                 $this->addField($f);
             }
@@ -210,7 +213,7 @@ class ModelForm
 
         //Form Validation
         $formValidator->setFormInstance($this->_formInstance);
-        $errors = $formValidator->validate($data);
+        $errors = $formValidator->validate($data, $this->_textDomain);
 
         if (empty($errors)) {
             $container = Container::getInstance();

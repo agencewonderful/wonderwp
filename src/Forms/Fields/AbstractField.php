@@ -171,8 +171,6 @@ abstract class AbstractField implements FieldInterface{
     }
 
     public function computeValidationRules($passedRules){
-        $defaultRules = array();
-        $this->validationRules = array_merge($this->validationRules, $defaultRules);
         $this->validationRules = array_merge($this->validationRules,$passedRules);
         return $this;
     }
