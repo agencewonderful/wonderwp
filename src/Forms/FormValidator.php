@@ -40,15 +40,16 @@ class FormValidator implements FormValidatorInterface
         return $this->_formInstance;
     }
 
-    public function validate(array $data)
+    public function validate(array $data, $translationDomain = 'default')
     {
+        /** @var FieldInterface[] $fields */
         $fields = $this->_formInstance->getFields();
 
         $errors = array();
 
         if (!empty($fields)) {
             foreach ($fields as $f) {
-                /* @var $f fieldInterface */
+                /** @var Validator[] $validationRules */
                 $validationRules = $f->getValidationRules();
 
                 $fieldData = !empty($data[$f->getName()]) ? $data[$f->getName()] : null;
@@ -57,7 +58,9 @@ class FormValidator implements FormValidatorInterface
 
                 if (!empty($validationRules)) {
                     foreach ($validationRules as $validator) {
-                        $rules = $validator->getRules();
+                        $displayRules = $f->getDisplayRules();
+                        $name = array_key_exists('label', $displayRules) ? $displayRules['label'] : $f->getName();
+                        $rules = $validator->setName($name)->getRules();
                         if (!empty($rules)) {
                             foreach ($rules as $rule) {
                                 /** @var $rule AbstractRule */
@@ -67,7 +70,10 @@ class FormValidator implements FormValidatorInterface
                                     if (!empty($validationRule[1])) {
                                         $errorMsg = $validationRule[1];
                                     } else {
-                                        $errorMsg = $exception->getMainMessage();
+                                        $errorMsg = $exception
+                                            ->setTemplate(__($exception->getTemplate(), $translationDomain))
+                                            ->getMainMessage()
+                                        ;
                                     }
                                     $fieldErrors[] = $errorMsg;
                                 }

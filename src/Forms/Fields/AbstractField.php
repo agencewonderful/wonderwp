@@ -171,9 +171,7 @@ abstract class AbstractField implements FieldInterface{
     }
 
     public function computeValidationRules($passedRules){
-        $defaultRules = array();
-        $this->validationRules = \WonderWp\array_merge_recursive_distinct($this->validationRules, $defaultRules);
-        $this->validationRules = \WonderWp\array_merge_recursive_distinct($this->validationRules,$passedRules);
+        $this->validationRules = array_merge($this->validationRules,$passedRules);
         return $this;
     }
 }

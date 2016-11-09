@@ -14,7 +14,7 @@ interface FormValidatorInterface {
 
     public function getFormInstance();
 
-    public function validate(array $data);
+    public function validate(array $data, $translationDomain = 'default');
 
     public static function hasRule(array $validationRules, $ruleName);
 
