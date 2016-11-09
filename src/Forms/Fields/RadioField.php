@@ -57,9 +57,18 @@ class RadioField extends FieldGroup
             foreach ($this->group as $cbField){
                 /** @var CheckBoxField $cbField */
                 $displayRules = $cbField->getDisplayRules();
-                $value = !empty($displayRules['inputAttributes']['value']) ? $displayRules['inputAttributes']['value'] : null;
-                if(!empty($value) && isset($this->value[$value])){
-                    $cbField->setValue($this->value[$value]);
+                $cbValue = !empty($displayRules['inputAttributes']['value']) ? $displayRules['inputAttributes']['value'] : null;
+
+                if(!empty($cbValue) && isset($this->value[$cbValue])){
+                    $cbField->setValue($this->value[$cbValue]);
+                }
+
+                if ($cbValue == $value) {
+                    $displayRules['inputAttributes']['checked'] = '';
+                    $cbField->setDisplayRules($displayRules);
+                } elseif (array_key_exists('checked', $displayRules['inputAttributes'])) {
+                    unset($displayRules['inputAttributes']['checked']);
+                    $cbField->setDisplayRules($displayRules);
                 }
             }
         }
