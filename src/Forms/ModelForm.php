@@ -87,6 +87,7 @@ class ModelForm
             foreach ($attributes as $attr) {
                 /** @var $attr EntityAttribute */
                 $f = $this->newField($attr);
+                if ($f === null) continue;
                 $f->computeDisplayRules($this->specifyDisplayRules($attr));
                 $f->computeValidationRules($this->specifyValidationRules($attr));
                 //Add field
