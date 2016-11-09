@@ -8,7 +8,7 @@
         "doctrine/orm": "2.4.*",
         "gedmo/doctrine-extensions": "2.4.*",
         "symfony/yaml": "2.*",
-        "wp-cli/wp-cli": "0.23.*",
+        "wp-cli/wp-cli": "0.25.*",
         "respect/validation": "^1.1"
     },
     "license": "MIT",
