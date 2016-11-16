@@ -165,7 +165,7 @@ class ListTable extends \WP_List_Table
         echo $this->_formatVal($val);
     }
 
-    private function _getItemVal($item, $column_name)
+    protected function _getItemVal($item, $column_name)
     {
         $val = '';
         if (is_object($item)) {
@@ -180,7 +180,7 @@ class ListTable extends \WP_List_Table
         return $val;
     }
 
-    private function _formatVal($val)
+    protected function _formatVal($val)
     {
         $valType = gettype($val);
         if ($valType === 'object') {

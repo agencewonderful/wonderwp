@@ -118,4 +118,21 @@ abstract class AbstractEntity
         $this->_relations = $relations;
     }
 
+    public function addRelatedEntity($fieldName,$entity,$callable){
+        if (!$this->$fieldName->contains($entity)) {
+            $this->$fieldName->add($entity);
+            $entity->$callable($this);
+        }
+        return $this;
+    }
+
+    public function removeRelatedEntity($fieldName,$entity,$callable)
+    {
+        if ($this->$fieldName->contains($entity)) {
+            $this->$fieldName->removeElement($entity);
+            $entity->$callable(null);
+        }
+        return $this;
+    }
+
 }
