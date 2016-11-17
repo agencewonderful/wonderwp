@@ -18,6 +18,10 @@ class MandrillMailer extends AbstractMailer
     /** @var  \Mandrill  */
     private $_mandrill;
 
+    /**
+     * @param array $opts
+     * @return Result
+     */
     public function send($opts=array())
     {
         $container = Container::getInstance();
@@ -37,8 +41,25 @@ class MandrillMailer extends AbstractMailer
 
         $res = $this->_mandrill->call($endPointUrl,$jsonPayLoad);
 
-        $result = new Result(200,$res);
+        $successes = array();
+        $failures = array();
 
+        if(!empty($res)){
+            foreach($res as $sentTo){
+                if(!empty($sentTo['status']) && in_array($sentTo['status'],array("sent", "queued", "scheduled"))){
+                    $successes[] = $sentTo;
+                } else {
+                    $failures[] = $sentTo;
+                }
+            }
+        }
+
+        $code = 500;
+        if(!empty($successes)){
+            $code = 200;
+        }
+
+        $result = new Result($code,array('res'=>$res,'successes'=>$successes,'failures'=>$failures));
         return $result;
     }
 

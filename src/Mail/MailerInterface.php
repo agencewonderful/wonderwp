@@ -7,6 +7,7 @@
  */
 
 namespace WonderWp\Mail;
+use WonderWp\API\Result;
 
 /**
  * Interface MailInterface
@@ -87,7 +88,7 @@ interface MailerInterface
     public function addAttachment($path, $filename = null);
 
     /**
-     * @return bool
+     * @return Result
      */
     public function send();
 }

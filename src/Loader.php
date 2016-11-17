@@ -25,6 +25,7 @@ use WonderWp\Forms\Form;
 use WonderWp\Forms\FormValidator;
 use WonderWp\Forms\ModelForm;
 use WonderWp\Forms\FormView;
+use WonderWp\Mail\WpMailer;
 use WonderWp\Mail\WwpWpMailer;
 use WonderWp\Panel\Panel;
 use WonderWp\Panel\PanelManager;
@@ -276,7 +277,7 @@ class Loader extends Singleton{
 
         //Emails
         $container['wwp.emails.mailer'] = $container->factory(function($c){
-            return new WwpWpMailer();
+            return new WpMailer();
         });
 
         //FileSystem

@@ -9,6 +9,8 @@
 namespace WonderWp\Mail;
 
 
+use WonderWp\API\Result;
+
 class WpMailer extends AbstractMailer
 {
 
@@ -99,7 +101,10 @@ class WpMailer extends AbstractMailer
         \WonderWp\trace($headers);
         return true;*/
 
-        return wp_mail($to, $subject, $message, $headers);
+        $sent = wp_mail($to, $subject, $message, $headers);
+        $code = $sent ? 200 : 500;
+
+        return new Result($code);
     }
 
     public function prepareHeaders(){
