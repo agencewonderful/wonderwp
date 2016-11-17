@@ -76,13 +76,34 @@ class ListTable extends \WP_List_Table
         $this->_textDomain = $textDomain;
     }
 
-    public function prepare_items()
+    public function prepare_items($filters=array(),$orderBy=array('id'=>'DESC'))
     {
         $items = array();
+
         if (!empty($this->_entityName)) {
             $repository = $this->_em->getRepository($this->_entityName);
-            $this->items = $repository->findAll();
+
+            $qb = $this->_em->createQueryBuilder();
+
+            //total count
+            $qb->select($qb->expr()->count('e'))
+                ->from($this->_entityName, 'e');
+
+            $totalItems = $qb->getQuery()->getSingleScalarResult();	//Number of elements
+            $perPage = 20;		//How many to display per page
+            $paged = Request::getInstance()->get('paged',1); if(empty($paged) || !is_numeric($paged) || $paged<=0 ){ $paged=1; }	//Page Number
+            $totalPages = ceil($totalItems/$perPage); //Total number of pages
+            $offset=($paged-1)*$perPage;
+
+            $this->items = $repository->findBy($filters,$orderBy,$perPage,$offset);
         }
+
+        //Register the pagination
+        $this->set_pagination_args( array(
+            "total_items" => $totalItems,
+            "total_pages" => $totalPages,
+            "per_page" => $perPage,
+        ) );
 
         $this->_defineColumnHeaders();
 
