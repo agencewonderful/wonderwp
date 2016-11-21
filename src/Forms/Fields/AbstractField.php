@@ -23,6 +23,8 @@ abstract class AbstractField implements FieldInterface{
 
     protected $validationRules = array();
 
+    protected $rendered = false;
+
     public function __construct($name, $value=null, $displayRules=array(), $validationRules=array())
     {
         $this
@@ -151,6 +153,24 @@ abstract class AbstractField implements FieldInterface{
     public function setErrors($errors)
     {
         $this->errors = $errors;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getRendered()
+    {
+        return $this->rendered;
+    }
+
+    /**
+     * @param boolean $rendered
+     * @return AbstractField
+     */
+    public function setRendered($rendered)
+    {
+        $this->rendered = $rendered;
+        return $this;
     }
 
     public function computeDisplayRules($passedRules){

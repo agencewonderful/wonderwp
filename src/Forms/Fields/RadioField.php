@@ -9,6 +9,9 @@
 namespace WonderWp\Forms\Fields;
 
 
+use WonderWp\DI\Container;
+use WonderWp\Forms\Validation\Validator;
+
 class RadioField extends FieldGroup
 {
     public function __construct($name, $value = null, $displayRules = array(), $validationRules = array())
@@ -22,6 +25,7 @@ class RadioField extends FieldGroup
     {
         $name = $this->getName();
         if (!empty($this->options)) {
+            $i=0;
             foreach ($this->options as $val => $label) {
                 $optFieldName = $name . '.' . $val . '';
                 $defaultOptDisplayRules = array(
@@ -41,7 +45,15 @@ class RadioField extends FieldGroup
                 $passedOptDisplayRules = isset($passedGroupedDisplayRules[$val]) ? $passedGroupedDisplayRules[$val] : array();
                 $optDisplayRules =\WonderWp\array_merge_recursive_distinct($defaultOptDisplayRules,$passedOptDisplayRules);
 
-                $optField = new InputField($optFieldName, isset($this->value[$val]) ? $this->value[$val] : null, $optDisplayRules);
+                $validationRules = [];
+                if($i===0) {
+                    $formValidator = Container::getInstance()->offsetGet('wwp.forms.formValidator');
+                    if ($formValidator::hasRule($this->getValidationRules(), 'NotEmpty')) {
+                        $validationRules[] = Validator::notEmpty();
+                    }
+                }
+
+                $optField = new InputField($optFieldName, isset($this->value[$val]) ? $this->value[$val] : null, $optDisplayRules,$validationRules);
                 $optField->setType('radio');
                 $this->addFieldToGroup($optField);
             }

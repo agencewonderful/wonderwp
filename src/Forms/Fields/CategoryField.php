@@ -21,7 +21,7 @@ class CategoryField extends SelectField
 
     public function setCatOptions($parent){
         $options = array(
-            0=>__('Category')
+            ''=>__('Category')
         );
 
         $args = [

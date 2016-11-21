@@ -41,14 +41,14 @@ class FormView implements FormViewInterface
         $optsEnd = !empty($opts['formEnd']) ? $opts['formEnd'] : array();
         $markup .= $this->formStart($optsStart);
         $markup .= $this->formErrors();
-        $fields = $this->_formInstance->getFields();
+        $fields = $this->getFormInstance()->getFields();
         if (!empty($fields)) {
             foreach ($fields as $f) {
                 /* @var $f fieldInterface */
                 $markup .= $this->renderField($f->getName());
             }
         }
-        $groups = $this->_formInstance->getGroups();
+        $groups = $this->getFormInstance()->getGroups();
         if (!empty($groups)) {
             foreach ($groups as $group) {
                 $markup .= $this->renderGroup($group);
@@ -108,6 +108,9 @@ class FormView implements FormViewInterface
     {
         $markup = '';
         $f = ($fieldName instanceof AbstractField) ? $fieldName : $this->_formInstance->getField($fieldName);
+
+        if($f->getRendered()){ return $markup; }
+
         $type = (is_object($f)) ? $f->getType() : null;
 
         $markup .= $this->fieldWrapStart($fieldName);
@@ -123,6 +126,8 @@ class FormView implements FormViewInterface
         $markup .= $this->fieldError($fieldName);
         $markup .= $this->fieldHelp($fieldName);
         $markup .= $this->fieldWrapEnd($fieldName);
+
+        $f->setRendered(true);
 
         return $markup;
     }
@@ -173,7 +178,7 @@ class FormView implements FormViewInterface
             if (!empty($displayRules['label'])) {
                 $markup = '<label ' . (!empty($displayRules['labelAttributes']) ? \WonderWp\paramsToHtml($displayRules['labelAttributes']) : '') . '>';
                     $markup.= $displayRules['label'];
-                    if($formValidator::hasRule($validationRules,'NotEmpty')){
+                    if($formValidator::hasRule($validationRules,'NotEmpty') && $f->getType()!=='radio'){
                         $markup.='<span class="required">*</span>';
                     }
                 $markup.= '</label>';
@@ -211,6 +216,11 @@ class FormView implements FormViewInterface
         if ($tag == 'select') {
             $markup.='<div class="select-style">';
         }
+
+        if (method_exists($f, 'getGroup') && !empty($params) && !empty($params['name'])) {
+            unset($params['name']);
+        }
+
 
         //Open tag
         $markup .= '<' . $tag;
