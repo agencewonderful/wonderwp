@@ -31,7 +31,7 @@ class CategoryRadioField extends RadioField
         if(!empty($cats)){
             foreach($cats as $cat){
                 /** @var $cat \WP_Term */
-                $options[$cat->term_id] = __('term_'.$cat->slug,'WWP_THEME_TEXTDOMAIN');
+                $options[$cat->term_id] = __('term_'.$cat->slug,WWP_THEME_TEXTDOMAIN);
             }
         }
 

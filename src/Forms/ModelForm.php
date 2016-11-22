@@ -150,7 +150,7 @@ class ModelForm
                 $f = new TextAreaField($fieldName, $val, ['label' => $label]);
                 break;
             case'datetime':
-                $f = new DateField($fieldName, $val, ['label' => $label]);
+                $f = new DateField($fieldName, $val->format('Y-m-d'), ['label' => $label]);
                 break;
             default:
                 $f = new InputField($fieldName, $val, ['label' => $label]);
