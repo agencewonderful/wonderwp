@@ -138,6 +138,14 @@ class ModelForm
         $label = __($fieldName . '.trad', $this->_textDomain);
 
         //Field
+        switch($fieldName){
+            case 'createdAt':
+            case 'updatedAt':
+                $f=null;
+                return $f;
+                break;
+        }
+
         switch ($type) {
             case 'integer':
                 if ($attr->getIsId()) {

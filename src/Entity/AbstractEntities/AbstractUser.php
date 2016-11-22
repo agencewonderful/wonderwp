@@ -9,11 +9,14 @@ namespace WonderWp\Entity\AbstractEntities;
  * Time: 17:16
  */
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\Timestampable;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 use WonderWp\Entity\AbstractEntity;
 
 /** @ORM\MappedSuperclass() */
 class AbstractUser extends AbstractEntity
 {
+    use TimestampableEntity;
 
     /**
      * @var integer

@@ -77,3 +77,19 @@ function paramsToHtml($params)
     }
     return $paramsHtml;
 }
+
+function implode_recursive($glue,$array) {
+    $ret = '';
+
+    foreach ($array as $item) {
+        if (is_array($item)) {
+            $ret .= implode_recursive($glue,$item) . $glue;
+        } else {
+            $ret .= $item . $glue;
+        }
+    }
+
+    $ret = substr($ret, 0, 0-strlen($glue));
+
+    return $ret;
+}
