@@ -20,8 +20,10 @@ class CategoryField extends SelectField
     }
 
     public function setCatOptions($parent){
+        $displayRules = $this->getDisplayRules();
+        $firstLabel = (!empty($displayRules) && !empty($displayRules['label'])) ? $displayRules['label'] : __('Category',WWP_THEME_TEXTDOMAIN);
         $options = array(
-            ''=>__('Category')
+            ''=>$firstLabel
         );
 
         $args = [
