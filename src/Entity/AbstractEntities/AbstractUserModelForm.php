@@ -14,6 +14,8 @@ use WonderWp\Forms\Fields\BooleanField;
 use WonderWp\Forms\Fields\CategoryField;
 use WonderWp\Forms\Fields\DateField;
 use WonderWp\Forms\Fields\EmailField;
+use WonderWp\Forms\Fields\FieldGroup;
+use WonderWp\Forms\Fields\NumericField;
 use WonderWp\Forms\Fields\PasswordField;
 use WonderWp\Forms\Fields\RadioField;
 use WonderWp\Forms\Fields\SelectField;
@@ -33,7 +35,37 @@ class AbstractUserModelForm extends ModelForm
         switch($fieldName){
 
             case 'dob':
-                $f = new DateField($fieldName,$val,['label' => $label]);
+                $f = new FieldGroup($fieldName,$val,['label' => $label,'inputAttributes'=>['class'=>['form-inline']]]);
+
+                $d = new NumericField($fieldName.'_day',null,[
+                    'label'=>__('day',$this->_textDomain),
+                    'inputAttributes'=>[
+                        'name'=>'dob[day]',
+                        'maxlength'=>2,
+                        'placeholder'=>__('jj',$this->_textDomain)
+                    ]
+                ]);
+                $f->addFieldToGroup($d);
+
+                $m = new NumericField($fieldName.'_month',null,[
+                    'label'=>__('month',$this->_textDomain),
+                    'inputAttributes'=>[
+                        'name'=>'dob[month]',
+                        'maxlength'=>2,
+                        'placeholder'=>__('mm',$this->_textDomain)
+                    ]
+                ]);
+                $f->addFieldToGroup($m);
+
+                $y = new NumericField($fieldName.'_year',null,[
+                    'label'=>__('year',$this->_textDomain),
+                    'inputAttributes'=>[
+                        'name'=>'dob[year]',
+                        'maxlength'=>4,
+                        'placeholder'=>__('aaaa',$this->_textDomain)
+                    ]
+                ]);
+                $f->addFieldToGroup($y);
                 break;
 
             case 'email':
