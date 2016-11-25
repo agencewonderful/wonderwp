@@ -12,11 +12,11 @@ namespace WonderWp\Forms\Fields;
 class PageField extends SelectField
 {
 
-    public function __construct($name, $value=null, $displayRules=array(), $validationRules=array(),$parent=0)
+    public function __construct($name, $value=null, $displayRules=array(), $validationRules=array(),$args=array())
     {
         parent::__construct($name, $value, $displayRules, $validationRules);
 
-        $this->setPageOptions($parent);
+        $this->setPageOptions($args);
     }
 
     public function setPageOptions($args){
@@ -36,12 +36,12 @@ class PageField extends SelectField
             0=>__('Page')
         );
 
-        $pages = get_pages($defaults);
+        $pages = get_pages($r);
 
         if(!empty($pages)){
             foreach($pages as $page){
                 /** @var $page \WP_Term */
-                $options[$page->ID] = $page->post_name;
+                $options[$page->ID] = $page->post_title;
             }
         }
 
