@@ -25,7 +25,7 @@ abstract class AbstractEntity
     public function __set($propertyName, $value)
     {
         if (method_exists($this, 'set' . ucfirst($propertyName))) {
-            return call_user_func(array($this, 'set' . ucfirst($propertyName)), $value);
+            call_user_func(array($this, 'set' . ucfirst($propertyName)), $value);
         } else if (property_exists($this, $propertyName)) {
             $this->{$propertyName} = $value;
         }
@@ -57,7 +57,7 @@ abstract class AbstractEntity
         $container = Container::getInstance();
         $entityManager = $container->offsetGet('entityManager');
         /** @var EntityManager $entityManager*/
-        $metas = $entityManager->getClassMetaData($entityName);
+        $metas = $entityManager->getClassMetadata($entityName);
 
         //Fields
         $fields = !empty($metas->fieldMappings) ? $metas->fieldMappings : array();

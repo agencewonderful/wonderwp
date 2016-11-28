@@ -2,8 +2,6 @@
 
 namespace WonderWp\Forms\Fields;
 
-use WonderWp\Forms\Fields\FieldLabel;
-
 interface FieldInterface{
 
     /**
@@ -52,7 +50,7 @@ interface FieldInterface{
     public function getDisplayRules();
 
     /**
-     * @param array $display
+     * @param array $displayRules
      */
     public function setDisplayRules($displayRules);
 
@@ -62,7 +60,7 @@ interface FieldInterface{
     public function getValidationRules();
 
     /**
-     * @param array $validation
+     * @param array $validationRules
      */
     public function setValidationRules($validationRules);
 
@@ -72,7 +70,7 @@ interface FieldInterface{
     public function getErrors();
 
     /**
-     * @param array $validation
+     * @param array $validationRules
      */
     public function setErrors($validationRules);
 

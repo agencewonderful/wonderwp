@@ -5,10 +5,9 @@ namespace WonderWp\APlugin;
 use WonderWp\Assets\AssetManager;
 use WonderWp\Assets\AssetServiceInterface;
 use WonderWp\DI\Container;
-use WonderWp\APlugin\loader;
+use WonderWp\APlugin\Loader;
 use Pimple\Container as PContainer;
 use WonderWp\Services\AbstractService;
-use WonderWp\Services\HookServiceInterface;
 
 abstract class AbstractPluginManager extends AbstractManager
 {
@@ -40,8 +39,8 @@ abstract class AbstractPluginManager extends AbstractManager
      *
      * @since    1.0.0
      *
-     * @param Container $plugin_name
-     * @param $plugin_version
+     * @param string $plugin_name
+     * @param string $plugin_version
      */
     public function __construct($plugin_name, $plugin_version)
     {
@@ -55,6 +54,7 @@ abstract class AbstractPluginManager extends AbstractManager
     /**
      * Registers config, controllers, services etc usable by the plugin components
      * @param PContainer $container
+     * @return $this
      */
     public function register(PContainer $container)
     {
@@ -64,7 +64,7 @@ abstract class AbstractPluginManager extends AbstractManager
         $this->setConfig('version', $this->get_version());
 
         //Services
-        $this->addService(AbstractService::$LISTTABLESERVICENAME, function ($container) {
+        $this->addService(AbstractService::$LISTTABLESERVICENAME, function () {
             return new \WP_List_Table();
         });
 

@@ -3,10 +3,14 @@
 namespace WonderWp\Assets;
 
 use WonderWp\DI\Container;
+use Pimple\Container as PContainer;
 use WP_CLI;
 
 abstract class AbstractAssetExporter implements AssetExporterInterface{
 
+    /**
+     * @var PContainer
+     */
     protected $_container;
 
     public function __invoke($args)

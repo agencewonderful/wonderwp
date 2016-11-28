@@ -104,7 +104,7 @@ class AbstractUser extends AbstractEntity
      * Set civilite
      *
      * @param integer $civilite
-     * @return MembreEntity
+     * @return $this
      */
     public function setCivilite($civilite)
     {
@@ -127,7 +127,7 @@ class AbstractUser extends AbstractEntity
      * Set firstName
      *
      * @param string $firstName
-     * @return MembreEntity
+     * @return $this
      */
     public function setFirstName($firstName)
     {
@@ -150,7 +150,7 @@ class AbstractUser extends AbstractEntity
      * Set lastName
      *
      * @param string $lastName
-     * @return MembreEntity
+     * @return $this
      */
     public function setLastName($lastName)
     {
@@ -173,7 +173,7 @@ class AbstractUser extends AbstractEntity
      * Set dob
      *
      * @param \DateTime $dob
-     * @return MembreEntity
+     * @return $this
      */
     public function setDob($dob)
     {
@@ -196,7 +196,7 @@ class AbstractUser extends AbstractEntity
      * Set adress
      *
      * @param string $adress
-     * @return MembreEntity
+     * @return $this
      */
     public function setAdress($adress)
     {
@@ -219,7 +219,7 @@ class AbstractUser extends AbstractEntity
      * Set cp
      *
      * @param string $cp
-     * @return MembreEntity
+     * @return $this
      */
     public function setCp($cp)
     {
@@ -242,7 +242,7 @@ class AbstractUser extends AbstractEntity
      * Set city
      *
      * @param string $city
-     * @return MembreEntity
+     * @return $this
      */
     public function setCity($city)
     {
@@ -265,7 +265,7 @@ class AbstractUser extends AbstractEntity
      * Set country
      *
      * @param integer $country
-     * @return MembreEntity
+     * @return $this
      */
     public function setCountry($country)
     {
@@ -288,7 +288,7 @@ class AbstractUser extends AbstractEntity
      * Set email
      *
      * @param string $email
-     * @return MembreEntity
+     * @return $this
      */
     public function setEmail($email)
     {

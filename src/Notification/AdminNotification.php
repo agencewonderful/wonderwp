@@ -10,10 +10,22 @@ namespace WonderWp\Notification;
  */
 class AdminNotification
 {
+    /**
+     * @var string : notification type
+     */
     protected $_type;
+    /**
+     * @var string : notification message
+     */
     protected $_message;
+    /**
+     * @var boolean : is notification dismissible
+     */
     protected $_dismissible;
 
+    /**
+     * @var string : notification template
+     */
     public static $template = '<div class="{classes}" role="alert"><p>{message}</p></div>';
 
     public function __construct($type,$message)
@@ -24,7 +36,7 @@ class AdminNotification
     }
 
     /**
-     * @return AdminNotification
+     * @return string
      */
     public function getType()
     {
@@ -33,6 +45,7 @@ class AdminNotification
 
     /**
      * @param AdminNotification $type
+     * @return $this
      */
     public function setType($type)
     {
@@ -49,7 +62,8 @@ class AdminNotification
     }
 
     /**
-     * @param mixed $message
+     * @param string $message
+     * @return $this
      */
     public function setMessage($message)
     {
@@ -66,7 +80,8 @@ class AdminNotification
     }
 
     /**
-     * @param mixed $dismissible
+     * @param boolean $dismissible
+     * @return $this
      */
     public function setDismissible($dismissible)
     {

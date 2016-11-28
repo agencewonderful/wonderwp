@@ -9,18 +9,32 @@
 namespace WonderWp\Forms;
 
 use WonderWp\Forms\Fields\AbstractField;
+use WonderWp\Forms\Fields\FieldInterface;
 
 class FormGroup{
 
+    /**
+     * @var string
+     */
     private $_name;
+    /**
+     * @var string
+     */
     private $_title;
+    /**
+     * @var AbstractField[]
+     */
     private $_fields;
+    /**
+     * @var array
+     */
     protected $displayRules = array();
 
     /**
      * FormGroup constructor.
      * @param $_name
      * @param $_title
+     * @param array $displayRules
      */
     public function __construct($_name, $_title, $displayRules=array())
     {
@@ -84,7 +98,10 @@ class FormGroup{
         $this->_fields = $fields;
     }
 
-    public function addField(AbstractField $field){
+    /**
+     * @param FieldInterface $field
+     */
+    public function addField(FieldInterface $field){
         $this->_fields[$field->getName()] = $field;
     }
 

@@ -12,7 +12,7 @@ class AssetManager {
 
     /**
      * Instance
-     * @var AssetsManager
+     * @var AssetManager
      */
     private static $_instance;
     /**
@@ -50,7 +50,7 @@ class AssetManager {
 
     /**
      * Get singleton instance
-     * @return AssetsManager
+     * @return AssetManager
      */
     public static function getInstance () {
         $called = \get_called_class();
@@ -88,7 +88,7 @@ class AssetManager {
      * $assetsManager->registerAsset('js',new Asset('jquery','https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js',null,null,1,0));
      * $assetsManager->registerAsset('js',new Asset('flexsliderCore',WP_THEME_URL.'/js/registered/flexslider/jquery.flexslider-min.js',array('jquery'),null,1,1));
      * </code>
-     * @return AssetsManager
+     * @return $this
      */
     public function registerAsset($type,$dependency){
         $dependencies = $this->_dependencies;
@@ -141,9 +141,9 @@ class AssetManager {
      * @param array $groups array of groups to load
      * @return array
      */
-    public function getFlatDependencies($toRender=array(),$type='js', $groups = false){
+    public function getFlatDependencies($toRender=array(),$type='js', $groups = array()){
 
-        if($groups) {
+        if(!empty($groups)) {
             $filesToRender = array();
             foreach($groups as $group) {
                 $groupFiles = $this->getDependenciesFromGroup($group);
@@ -191,7 +191,7 @@ class AssetManager {
             if(!empty($jsIndex[$handle])){
                 $s = $jsIndex[$handle];
                 $deps = $s->deps;
-                if(!empty($deps)){ $this->orderDependencies($deps,$type,false); }
+                if(!empty($deps)){ $this->orderDependencies($deps,$type); }
                 //echo'<br />Ordering '.$s->name;
                 array_push($this->_queue[$type],$s->handle);
             } else if(strpos($handle, 'group:') !== false) {
@@ -228,7 +228,7 @@ class AssetManager {
         $return = array();
         foreach($deps as $dep) {
             /* @var $dep Asset */
-            if($dep->group == $group) $return[] = $dep;
+            if($dep->concatGroup == $group) $return[] = $dep;
         }
         return $return;
     }

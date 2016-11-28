@@ -2,6 +2,7 @@
 
 <div class="list-table-wrap">
 <?php
+/** @var \WonderWp\APlugin\ListTable $listTableInstance */
 $wp_list_table = $listTableInstance;
 $pagenum = $wp_list_table->get_pagenum();
 $wp_list_table->prepare_items();

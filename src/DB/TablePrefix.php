@@ -2,6 +2,8 @@
 
 namespace WonderWp\DB;
 use \Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
 
 class TablePrefix
 {
@@ -14,14 +16,15 @@ class TablePrefix
 
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
     {
+        /** @var ClassMetadata $classMetadata */
         $classMetadata = $eventArgs->getClassMetadata();
 
         if (!$classMetadata->isInheritanceTypeSingleTable() || $classMetadata->getName() === $classMetadata->rootEntityName) {
-            $classMetadata->setTableName($this->prefix . $classMetadata->getTableName());
+            $classMetadata->setPrimaryTable(['name'=>$this->prefix . $classMetadata->getTableName()]);
         }
 
         foreach ($classMetadata->getAssociationMappings() as $fieldName => $mapping) {
-            if ($mapping['type'] == \Doctrine\ORM\Mapping\ClassMetadataInfo::MANY_TO_MANY && $mapping['isOwningSide']) {
+            if ($mapping['type'] == ClassMetadataInfo::MANY_TO_MANY && $mapping['isOwningSide']) {
                 $mappedTableName = $mapping['joinTable']['name'];
                 $classMetadata->associationMappings[$fieldName]['joinTable']['name'] = $this->prefix . $mappedTableName;
             }

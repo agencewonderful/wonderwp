@@ -11,14 +11,27 @@ use Doctrine\Common\EventManager;
 use Doctrine\Common\Persistence\Mapping\Driver\AnnotationDriver;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\DBAL\Logging\DebugStack;
+use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
+use Gedmo\DoctrineExtensions;
+use Gedmo\IpTraceable\IpTraceableListener;
 use Gedmo\Mapping\MappedEventSubscriber;
+use Gedmo\ReferenceIntegrity\ReferenceIntegrityListener;
+use Gedmo\References\ReferencesListener;
+use Gedmo\SoftDeleteable\SoftDeleteableListener;
+use Gedmo\Sortable\SortableListener;
+use Gedmo\Timestampable\TimestampableListener;
+use Gedmo\Tree\TreeListener;
+use Gedmo\Uploadable\UploadableListener;
+use Sluggable\Fixture\Issue939\SluggableListener;
 use WonderWp\AbstractDefinitions\Singleton;
 use WonderWp\Assets\Asset;
 use WonderWp\Assets\AssetManager;
 use WonderWp\Assets\JsonAssetEnqueuer;
 use WonderWp\Assets\JsonAssetExporter;
+use WonderWp\DB\TablePrefix;
 use WonderWp\DI\Container;
+use Pimple\Container as PContainer;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
 use WonderWp\Forms\Form;
@@ -26,7 +39,6 @@ use WonderWp\Forms\FormValidator;
 use WonderWp\Forms\ModelForm;
 use WonderWp\Forms\FormView;
 use WonderWp\Mail\WpMailer;
-use WonderWp\Mail\WwpWpMailer;
 use WonderWp\Panel\Panel;
 use WonderWp\Panel\PanelManager;
 use WonderWp\Route\Router;
@@ -83,11 +95,15 @@ class Loader extends Singleton{
          */
 
         //Autoloader
-        $container['wwp.autoLoader'] = function (\Pimple\Container $container) {
+        /**
+         * @param PContainer $container
+         * @return mixed
+         */
+        $container['wwp.autoLoader'] = function (PContainer $container) {
             return require($container['path_root'].'vendor/autoload.php');
         };
 
-        $container['doctrine.sqlLogger'] = function(\Pimple\Container $container){
+        $container['doctrine.sqlLogger'] = function(){
             $logger = new DebugStack();
             $loggerDumper = function() use($logger){
                 echo'<div id="doctrineQueryLog">';
@@ -102,7 +118,11 @@ class Loader extends Singleton{
         };
 
         //Entity Manager
-        $container['entityManager'] = function(\Pimple\Container $container) {
+        /**
+         * @param PContainer $container
+         * @return EntityManager
+         */
+        $container['entityManager'] = function(PContainer $container) {
             global $wpdb;
 
             //Paths
@@ -138,40 +158,40 @@ class Loader extends Singleton{
             $config->setNamingStrategy(new UnderscoreNamingStrategy());
 
             //Evm, used to add wordpress table prefix
-            $evm = new \Doctrine\Common\EventManager;
+            $evm = new EventManager();
 
             //Prefix
-            $tablePrefix = new \WonderWp\DB\TablePrefix($wpdb->prefix);
-            $evm->addEventListener(\Doctrine\ORM\Events::loadClassMetadata, $tablePrefix);
+            $tablePrefix = new TablePrefix($wpdb->prefix);
+            $evm->addEventListener(Events::loadClassMetadata, $tablePrefix);
 
             if (defined('USE_GEDMO_SLUGGABLE') && USE_GEDMO_SLUGGABLE === true) {
                 // Gedmo Sluggable
-                $this->loadGedmoExtension(new \Gedmo\Sluggable\SluggableListener(), $anDriver, $evm);
+                $this->loadGedmoExtension(new SluggableListener(), $anDriver, $evm);
             }
 
             if (defined('USE_GEDMO_TREE') && USE_GEDMO_TREE === true) {
                 // Gedmo Tree
-                $this->loadGedmoExtension(new \Gedmo\Tree\TreeListener(), $anDriver, $evm);
+                $this->loadGedmoExtension(new TreeListener(), $anDriver, $evm);
             }
 
             if (defined('USE_GEDMO_TIMESTAMPABLE') && USE_GEDMO_TIMESTAMPABLE === true) {
                 // Gedmo Timestampable
-                $this->loadGedmoExtension(new \Gedmo\Timestampable\TimestampableListener(), $anDriver, $evm);
+                $this->loadGedmoExtension(new TimestampableListener(), $anDriver, $evm);
             }
 
             if (defined('USE_GEDMO_SORTABLE') && USE_GEDMO_SORTABLE === true) {
                 // Gedmo Sortable
-                $this->loadGedmoExtension(new \Gedmo\Sortable\SortableListener(), $anDriver, $evm);
+                $this->loadGedmoExtension(new SortableListener(), $anDriver, $evm);
             }
 
             if (defined('USE_GEDMO_SOFT_DELETEABLE') && USE_GEDMO_SOFT_DELETEABLE === true) {
                 // Gedmo SoftDeleteable
-                $this->loadGedmoExtension(new \Gedmo\SoftDeleteable\SoftDeleteableListener(), $anDriver, $evm);
+                $this->loadGedmoExtension(new SoftDeleteableListener(), $anDriver, $evm);
             }
 
             if (defined('USE_GEDMO_UPLOADABLE') && USE_GEDMO_UPLOADABLE === true) {
                 // Gedmo Uploadable
-                $listener = new \Gedmo\Uploadable\UploadableListener();
+                $listener = new UploadableListener();
 
                 if (defined('GEDMO_UPLOADABLE_DIRECTORY')) {
                     $listener->setDefaultPath(GEDMO_UPLOADABLE_DIRECTORY);
@@ -182,17 +202,17 @@ class Loader extends Singleton{
 
             if (defined('USE_GEDMO_REFERENCES') && USE_GEDMO_REFERENCES === true) {
                 // Gedmo References
-                $this->loadGedmoExtension(new \Gedmo\References\ReferencesListener(), $anDriver, $evm);
+                $this->loadGedmoExtension(new ReferencesListener(), $anDriver, $evm);
             }
 
             if (defined('USE_GEDMO_REFERENCE_INTEGRITY') && USE_GEDMO_REFERENCE_INTEGRITY === true) {
                 // Gedmo Reference Integrity
-                $this->loadGedmoExtension(new \Gedmo\ReferenceIntegrity\ReferenceIntegrityListener(), $anDriver, $evm);
+                $this->loadGedmoExtension(new ReferenceIntegrityListener(), $anDriver, $evm);
             }
 
             if (defined('USE_GEDMO_IP_TRACEABLE') && USE_GEDMO_IP_TRACEABLE === true) {
                 // Gedmo IpTraceable
-                $this->loadGedmoExtension(new \Gedmo\IpTraceable\IpTraceableListener(), $anDriver, $evm);
+                $this->loadGedmoExtension(new IpTraceableListener(), $anDriver, $evm);
             }
 
             /* TODO Get $username value
@@ -256,16 +276,16 @@ class Loader extends Singleton{
         $container['wwp.assets.folder.path'] = str_replace(get_bloginfo('url'),'',get_stylesheet_directory_uri());
 
         //Forms
-        $container['wwp.forms.modelForm'] = $container->factory(function($c){
+        $container['wwp.forms.modelForm'] = $container->factory(function(){
             return new ModelForm();
         });
-        $container['wwp.forms.form'] = $container->factory(function($c){
+        $container['wwp.forms.form'] = $container->factory(function(){
             return new Form();
         });
-        $container['wwp.forms.formView'] = $container->factory(function($c){
+        $container['wwp.forms.formView'] = $container->factory(function(){
             return new FormView();
         });
-        $container['wwp.forms.formValidator'] = $container->factory(function($c){
+        $container['wwp.forms.formValidator'] = $container->factory(function(){
             return new FormValidator();
         });
         $container['wwp.element.edit.success'] = "Element successfully edited";
@@ -276,7 +296,7 @@ class Loader extends Singleton{
         $container['wwp.element.delete.error'] = "Sorry, there's been an error while deleting the element";
 
         //Emails
-        $container['wwp.emails.mailer'] = $container->factory(function($c){
+        $container['wwp.emails.mailer'] = $container->factory(function(){
             return new WpMailer();
         });
 
@@ -308,7 +328,7 @@ class Loader extends Singleton{
         $container['wwp.panel.Manager'] = function(){
             return new PanelManager();
         };
-        $container['wwp.panel.Panel'] = $container->factory(function($c){
+        $container['wwp.panel.Panel'] = $container->factory(function(){
             return new Panel();
         });
 
@@ -331,7 +351,7 @@ class Loader extends Singleton{
     protected function loadGedmoExtension(MappedEventSubscriber $listener, AnnotationDriver $annotationDriver, EventManager $eventManager)
     {
         if (!$this->gedmoLoaded) {
-            \Gedmo\DoctrineExtensions::registerAbstractMappingIntoDriverChainORM(new MappingDriverChain(), $annotationDriver->getReader());
+            DoctrineExtensions::registerAbstractMappingIntoDriverChainORM(new MappingDriverChain(), $annotationDriver->getReader());
         }
 
         $listener->setAnnotationReader($annotationDriver->getReader());

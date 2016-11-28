@@ -15,7 +15,6 @@ class BtnField extends AbstractField{
      * @param null $value
      * @param array $displayRules
      * @param array $validationRules
-     * @return HiddenField
      */
     public function __construct($name, $value=null, $displayRules=array(), $validationRules=array()){
         parent::__construct($name, $value, $displayRules, $validationRules);

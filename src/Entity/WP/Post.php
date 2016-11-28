@@ -142,7 +142,7 @@ class Post
     protected $parent;
 
     /**
-     * {@inheritdoc}
+     * @var Post[]
      *
      * @ORM\OneToMany(targetEntity="Post", mappedBy="parent")
      */
@@ -198,7 +198,7 @@ class Post
     protected $comments;
 
     /**
-     * {@inheritdoc}
+     * @var User
      *
      * @ORM\ManyToOne(targetEntity="WonderWp\Entity\WP\User", inversedBy="posts")
      * @ORM\JoinColumns({
@@ -646,7 +646,7 @@ class Post
     /**
      * Get parent
      *
-     * @return \WonderWp\Entity\WP\Post
+     * @return Post[]
      */
     public function getChildren()
     {

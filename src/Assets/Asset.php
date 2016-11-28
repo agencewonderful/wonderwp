@@ -16,21 +16,17 @@ class Asset extends \_WP_Dependency{
     public $concatGroup;
 
     /**
-     * Constructor
+     * Asset constructor.
      * @param string $handle
      * @param string $src
      * @param array $deps
      * @param string $ver
      * @param bool $inFooter
-     * @param string $group
+     * @param string $groupName
      * @param array $args
-     * @return AssetsDependency
      */
     public function __construct($handle='',$src='',$deps=array(),$ver='',$inFooter=false,$groupName='app',$args=array()) {
-        if(!empty($handle)){ $this->handle = $handle; }
-        if(!empty($src)){ $this->src = $src; }
-        if(!empty($deps) && is_array($deps)){ $this->deps = $deps; } else { $this->deps=array(); }
-        if(!empty($ver)){ $this->ver = $ver; }
+        parent::__construct();
 
         if($inFooter){
             $this->add_data('group', 1);

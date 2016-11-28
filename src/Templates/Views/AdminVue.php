@@ -7,10 +7,10 @@ class AdminVue {
     protected $_frags = array();
 
     /**
-     * @param vueFrag $frag
+     * @param VueFrag $frag
      * @return $this
      */
-    public function addFrag(vueFrag $frag){
+    public function addFrag(VueFrag $frag){
         $this->_frags[] = $frag;
         return $this;
     }

@@ -108,9 +108,9 @@ class Comment
     protected $parent;
 
     /**
-     * {@inheritdoc}
+     * @var CommentMeta[]
      *
-     * @ORM\OneToMany(targetEntity="WonderWp\Entity\WP\CommentMeta", mappedBy="comment")
+     * @ORM\OneToMany(targetEntity="CommentMeta", mappedBy="comment")
      */
     protected $metas;
 
@@ -125,7 +125,7 @@ class Comment
     protected $post;
 
     /**
-     * {@inheritdoc}
+     * @var User
      *
      * @ORM\ManyToOne(targetEntity="WonderWp\Entity\WP\User", inversedBy="comments")
      * @ORM\JoinColumns({
@@ -473,7 +473,7 @@ class Comment
     /**
      * Get user
      *
-     * @return User|null
+     * @return User
      */
     public function getUser()
     {

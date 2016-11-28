@@ -2,8 +2,6 @@
 
 namespace WonderWp\Forms\Fields;
 
-use WonderWp\Forms\Fields\FieldLabel;
-
 abstract class AbstractField implements FieldInterface{
 
     /**
@@ -47,6 +45,7 @@ abstract class AbstractField implements FieldInterface{
 
     /**
      * @param string $name
+     * @return $this
      */
     public function setName($name)
     {
@@ -64,6 +63,7 @@ abstract class AbstractField implements FieldInterface{
 
     /**
      * @param mixed $tag
+     * @return $this
      */
     public function setTag($tag)
     {
@@ -81,6 +81,7 @@ abstract class AbstractField implements FieldInterface{
 
     /**
      * @param mixed $type
+     * @return $this
      */
     public function setType($type)
     {
@@ -98,6 +99,7 @@ abstract class AbstractField implements FieldInterface{
 
     /**
      * @param mixed $value
+     * @return $this
      */
     public function setValue($value)
     {
@@ -115,6 +117,7 @@ abstract class AbstractField implements FieldInterface{
 
     /**
      * @param array $displayRules
+     * @return $this
      */
     public function setDisplayRules($displayRules)
     {
@@ -132,6 +135,7 @@ abstract class AbstractField implements FieldInterface{
 
     /**
      * @param array $validationRules
+     * @return $this
      */
     public function setValidationRules($validationRules)
     {

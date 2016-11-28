@@ -40,7 +40,7 @@ class PageField extends SelectField
 
         if(!empty($pages)){
             foreach($pages as $page){
-                /** @var $page \WP_Term */
+                /** @var $page \WP_Post */
                 $options[$page->ID] = $page->post_title;
             }
         }

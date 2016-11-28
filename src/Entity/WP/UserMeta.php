@@ -38,7 +38,7 @@ class UserMeta
     protected $value;
 
     /**
-     * {@inheritdoc}
+     * @var User
      *
      * @ORM\ManyToOne(targetEntity="WonderWp\Entity\WP\User", inversedBy="metas")
      * @ORM\JoinColumns({

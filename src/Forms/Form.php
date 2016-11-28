@@ -5,7 +5,7 @@ namespace WonderWp\Forms;
 use WonderWp\DI\Container;
 use WonderWp\Forms\Fields\AbstractField;
 use WonderWp\Forms\Fields\FieldGroup;
-use WonderWp\Forms\Fields\fieldInterface;
+use WonderWp\Forms\Fields\FieldInterface;
 
 class Form implements FormInterface
 {
@@ -40,6 +40,7 @@ class Form implements FormInterface
 
     /**
      * @param string $name
+     * @return $this
      */
     public function setName($name)
     {
@@ -57,6 +58,7 @@ class Form implements FormInterface
 
     /**
      * @param mixed $fields
+     * @return $this
      */
     public function setFields($fields)
     {
@@ -74,6 +76,7 @@ class Form implements FormInterface
 
     /**
      * @param mixed $errors
+     * @return $this
      */
     public function setErrors($errors)
     {
@@ -81,7 +84,7 @@ class Form implements FormInterface
         return $this;
     }
 
-    public function addField(fieldInterface $field = null, $groupName = '')
+    public function addField(FieldInterface $field = null, $groupName = '')
     {
         if(is_null($field)){
             return $this;
@@ -122,6 +125,7 @@ class Form implements FormInterface
 
     /**
      * @param mixed $groups
+     * @return $this
      */
     public function setGroups($groups)
     {

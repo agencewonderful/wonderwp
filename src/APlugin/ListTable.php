@@ -3,6 +3,7 @@
 namespace WonderWp\APlugin;
 
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Nette\Utils\DateTime;
 use WonderWp\DI\Container;
 use WonderWp\HttpFoundation\Request;
 
@@ -78,7 +79,7 @@ class ListTable extends \WP_List_Table
 
     public function prepare_items($filters=array(),$orderBy=array('id'=>'DESC'))
     {
-        $items = array();
+        $this->items = array();
 
         if (!empty($this->_entityName)) {
             $repository = $this->_em->getRepository($this->_entityName);
@@ -96,14 +97,14 @@ class ListTable extends \WP_List_Table
             $offset=($paged-1)*$perPage;
 
             $this->items = $repository->findBy($filters,$orderBy,$perPage,$offset);
-        }
 
-        //Register the pagination
-        $this->set_pagination_args( array(
-            "total_items" => $totalItems,
-            "total_pages" => $totalPages,
-            "per_page" => $perPage,
-        ) );
+            //Register the pagination
+            $this->set_pagination_args( array(
+                "total_items" => $totalItems,
+                "total_pages" => $totalPages,
+                "per_page" => $perPage,
+            ) );
+        }
 
         $this->_defineColumnHeaders();
 
@@ -128,7 +129,7 @@ class ListTable extends \WP_List_Table
                 $this->_columns['cb'] = '<input type="checkbox" />';
             }
 
-            $this->_entityMetas = $this->_em->getClassMetaData($this->_entityName);
+            $this->_entityMetas = $this->_em->getClassMetadata($this->_entityName);
             if (!empty($this->_entityMetas->fieldNames)) {
                 foreach ($this->_entityMetas->fieldNames as $fieldName) {
                     $this->_columns[$fieldName] = __($fieldName . '.trad', $this->_textDomain);
@@ -207,6 +208,7 @@ class ListTable extends \WP_List_Table
         if ($valType === 'object') {
             $calledClass = get_class($val);
             if ($calledClass == 'DateTime') {
+                /** @var DateTime $val */
                 $val = $val->format('d/m/Y H:i');
             }
         }
@@ -215,8 +217,10 @@ class ListTable extends \WP_List_Table
 
     /**
      * Get the default noewp row actions (edit, delete, duplicate...)
-     * @param object $item
-     * @param array $allowedActions , you can narrow down the things to return
+     * @param $item
+     * @param array $allowedActions
+     * @param array $givenEditParams
+     * @param array $givenDeleteParams
      */
     function column_action($item, $allowedActions = array('edit', 'delete'), $givenEditParams = array(), $givenDeleteParams = array())
     {

@@ -2,22 +2,34 @@
 
 namespace WonderWp\APlugin;
 
+use Pimple\Tests\Fixtures\Service;
 use WonderWp\API\ApiServiceInterface;
+use WonderWp\Assets\AssetManager;
+use WonderWp\Assets\AssetServiceInterface;
 use WonderWp\DI\Container;
 use Pimple\Container as PContainer;
+use WonderWp\Hooks\HookServiceInterface;
 use WonderWp\HttpFoundation\Request;
 use WonderWp\Route\Router;
+use WonderWp\Route\RouteServiceInterface;
 use WonderWp\Services\AbstractService;
+use WonderWp\Services\ServiceInterface;
 use WonderWp\Shortcode\ShortcodeServiceInterface;
 
 abstract class AbstractManager implements ManagerInterface
 {
 
+    /**
+     * @var PContainer|Container
+     */
     protected $_container;
 
-    protected $_config;
-    protected $_controllers;
-    protected $_services;
+    /** @var  \Symfony\Component\HttpFoundation\Request */
+    protected $_request;
+
+    protected $_config = [];
+    protected $_controllers = [];
+    protected $_services = [];
 
     public static $ADMINCONTROLLERTYPE = 'admin';
     public static $PUBLICCONTROLLERTYPE = 'public';
@@ -25,6 +37,7 @@ abstract class AbstractManager implements ManagerInterface
     public function __construct(Container $container = null)
     {
         $this->_container = $container instanceof Container ? $container : Container::getInstance();
+        $this->_config=array();
 
         $autoLoader = $this->_container->offsetGet('wwp.autoLoader');
         $this->autoLoad($autoLoader);
@@ -33,6 +46,7 @@ abstract class AbstractManager implements ManagerInterface
     }
 
     /**
+     * @param string $index
      * @return mixed
      */
     public function getConfig($index='')
@@ -48,15 +62,18 @@ abstract class AbstractManager implements ManagerInterface
     }
 
     /**
-     * @param mixed $config
+     * @param string $key
+     * @param mixed $val : new val for key index
+     * @return $this
      */
     public function setConfig($key,$val='')
     {
         $this->_config[$key] = $val;
+        return $this;
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getControllers()
     {
@@ -64,17 +81,27 @@ abstract class AbstractManager implements ManagerInterface
     }
 
     /**
-     * @param mixed $controllers
+     * @param array $controllers
+     * @return $this
      */
     public function setControllers($controllers)
     {
         $this->_controllers = $controllers;
+        return $this;
     }
 
+    /**
+     * @param string $controllerType
+     * @param $controller
+     */
     public function addController($controllerType,$controller){
         $this->_controllers[$controllerType] = $controller;
     }
 
+    /**
+     * @param $controllerType
+     * @return mixed|null
+     */
     public function getController($controllerType){
         if(!isset($this->_controllers[$controllerType])){ return null; }
 
@@ -100,18 +127,27 @@ abstract class AbstractManager implements ManagerInterface
 
     /**
      * @param mixed $services
+     * @return $this
      */
     public function setServices($services)
     {
         $this->_services = $services;
+        return $this;
     }
 
+    /**
+     * @param string $serviceType
+     * @param callable $service
+     * @return $this
+     */
     public function addService($serviceType,$service){
         $this->_services[$serviceType] = $service;
+        return $this;
     }
 
     /**
      * @param $serviceType
+     * @return ServiceInterface|null
      */
     public function getService($serviceType){
 
@@ -129,6 +165,9 @@ abstract class AbstractManager implements ManagerInterface
         return $service;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function register(PContainer $container)
     {
         //Register Controllers
@@ -136,6 +175,9 @@ abstract class AbstractManager implements ManagerInterface
         //Register Configs
     }
 
+    /**
+     * @inheritdoc
+     */
     public function run()
     {
         $this->_request = Request::getInstance();

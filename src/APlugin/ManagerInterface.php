@@ -16,10 +16,15 @@ interface ManagerInterface{
     /**
      * Interact with the dependency injection container,
      * to add services, factories, parameters...
-     * @return mixed
+     * @param PContainer $container
+     * @return $this
      */
     public function register(PContainer $container);
-    
+
+    /**
+     * Run manager
+     * @return $this
+     */
     public function run();
 
 }

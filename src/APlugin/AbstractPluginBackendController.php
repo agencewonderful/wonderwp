@@ -12,7 +12,6 @@ use WonderWp\DI\Container;
 use WonderWp\HttpFoundation\Request;
 use WonderWp\Notification\AdminNotification;
 use WonderWp\Services\AbstractService;
-use WonderWp\Templates\VueFrag;
 
 abstract class AbstractPluginBackendController
 {
@@ -112,7 +111,7 @@ abstract class AbstractPluginBackendController
         $notifications = $this->flashesToNotifications();
 
         $prefix = $this->_manager->getConfig('prefix');
-        $vue = $container->offsetGet('wwp.views.listAdmin')
+        $container->offsetGet('wwp.views.listAdmin')
             ->registerFrags($prefix)
             ->render([
                 'title' => get_admin_page_title(),
@@ -196,7 +195,7 @@ abstract class AbstractPluginBackendController
         $formView = $container->offsetGet('wwp.forms.formView');
         $formView->setFormInstance($formInstance);
 
-        $vue = $container->offsetGet('wwp.views.editAdmin')
+        $container->offsetGet('wwp.views.editAdmin')
             ->registerFrags($prefix)
             ->render([
                 'title' => get_admin_page_title(),
@@ -217,7 +216,7 @@ abstract class AbstractPluginBackendController
 
         //Load entity
         $id = $request->get('id', 0);
-        $prefix = $this->_manager->getConfig('prefix');
+        //$prefix = $this->_manager->getConfig('prefix');
         $entityName = $this->_manager->getConfig('entityName');
 
         if (!empty($id)) {
@@ -234,9 +233,10 @@ abstract class AbstractPluginBackendController
         \WonderWp\redirect($request->getBaseUrl() . '?' . http_build_query($request->query->all()));
     }
 
+
     public function getTabs()
     {
-
+        return [];
     }
 
     public function getMinCapability()

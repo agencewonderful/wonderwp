@@ -25,7 +25,7 @@ abstract class AbstractApiService extends AbstractService implements ApiServiceI
 
         if(!empty($methods)){ foreach ($methods as $method){
 
-            $callable = new \StdClass();
+            $callable = new \stdClass();
             $callable->instance=$this;
             $callable->method=$method;
 

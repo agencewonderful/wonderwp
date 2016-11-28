@@ -6,6 +6,7 @@ use WonderWp\DI\Container;
 use WonderWp\Forms\Fields\AbstractField;
 use WonderWp\Forms\Fields\FieldInterface;
 use WonderWp\Forms\Fields\SelectField;
+use Pimple\Container as PContainer;
 
 class FormView implements FormViewInterface
 {
@@ -13,7 +14,12 @@ class FormView implements FormViewInterface
     /**
      * @var FormInterface
      */
-    private $_formInstance;
+    protected $_formInstance;
+
+    /**
+     * @var PContainer
+     */
+    protected $_container;
 
     /**
      * @param FormInterface $form
@@ -167,6 +173,7 @@ class FormView implements FormViewInterface
     {
         $markup = '';
         $f = ($fieldName instanceof AbstractField) ? $fieldName : $this->_formInstance->getField($fieldName);
+        /** @var FormValidatorInterface $formValidator */
         $formValidator = $this->_container->offsetGet('wwp.forms.formValidator');
         $validationRules = !empty($f) ? $f->getValidationRules() : array();
 

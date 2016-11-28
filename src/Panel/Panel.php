@@ -60,7 +60,7 @@ class Panel implements PanelInterface{
     }
 
     /**
-     * @param mixed $params
+     * @param mixed $fields
      * @return $this
      */
     public function setFields($fields)
@@ -78,7 +78,7 @@ class Panel implements PanelInterface{
     }
 
     /**
-     * @param mixed $postType
+     * @param array $postTypes
      * @return $this
      */
     public function setPostTypes(array $postTypes)

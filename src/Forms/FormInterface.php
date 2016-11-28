@@ -2,7 +2,7 @@
 
 namespace WonderWp\Forms;
 
-use WonderWp\Forms\Fields\fieldInterface;
+use WonderWp\Forms\Fields\FieldInterface;
 
 /**
  * Interface FormInterface
@@ -11,12 +11,12 @@ use WonderWp\Forms\Fields\fieldInterface;
 interface FormInterface
 {
     /**
-     * @param $name
      * @return mixed
      */
     public function getName();
 
     /**
+     * @param string $name
      * @return mixed
      */
     public function setName($name);
@@ -45,7 +45,7 @@ interface FormInterface
      * @param fieldInterface $field
      * @return mixed
      */
-    public function addField(fieldInterface $field = null);
+    public function addField(FieldInterface $field = null);
 
     /**
      * @param $fieldName

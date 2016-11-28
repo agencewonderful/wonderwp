@@ -5,7 +5,7 @@
     "require": {
         "symfony/http-foundation": "~2.8|^3.0",
         "pimple/pimple": "~3.0",
-        "doctrine/orm": "2.4.*",
+        "doctrine/orm": "^2.4",
         "gedmo/doctrine-extensions": "2.4.*",
         "symfony/yaml": "2.*",
         "wp-cli/wp-cli": "0.25.*",

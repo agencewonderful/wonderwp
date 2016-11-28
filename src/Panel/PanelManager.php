@@ -25,27 +25,12 @@ class PanelManager
      * The list of panels
      * @var array
      */
-    private $_panelList;
-
-    /**
-     * NoewpSitraListe Constructor
-     * @since 08/07/2011
-     * @return object NoewpPageBOParameterPanelManager
-     */
-    public function __construct()
-    {
-        return $this;
-    }
+    private $_panelList = array();
 
     /**
      * Ajout d'un panneau d'administration à la page
-     * Le panneau est un array composé d'un id alphanum, un titre et un array de parametres.
-     * Les parametres sont des objets NoewpFormTag
-     * @since 08/07/2011
-     * @param string $id , l'id du panneau, par ex mycustombox c'est sous ce nom que l'on retrouve les données de ce panneau
-     * @param string $title , le titre du panneau, par ex "Paramètres"
-     * @param array $params , le tableau de paramètres à ajouter dans ce panneau
-     * @param type $postType , you can specify a post type to add a panel to pages or posts
+     * @param PanelInterface $panel
+     * @return $this
      */
     public function registerPanel(PanelInterface $panel)
     {
@@ -64,6 +49,8 @@ class PanelManager
 
         $panelList[$id] = $panel;
         $this->_panelList = $panelList;
+
+        return $this;
     }
 
     /**
@@ -180,6 +167,6 @@ class PanelManager
                 add_post_meta($post_id, $metakey, serialize($metaval));
             }
         }
+        return $post_id;
     }
-
 }

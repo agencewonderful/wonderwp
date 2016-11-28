@@ -20,7 +20,7 @@ namespace WonderWp\API;
         /**
          * Result constructor.
          * @param int $code
-         * @param string $data
+         * @param array $data
          */
         public function __construct($code, $data=array())
         {
@@ -45,7 +45,8 @@ namespace WonderWp\API;
         }
 
         /**
-         * @return mixed
+         * @param string $key
+         * @return array|mixed|null|string
          */
         public function getData($key='')
         {

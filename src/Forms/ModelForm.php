@@ -54,6 +54,7 @@ class ModelForm
 
     /**
      * @param FormInterface $formInstance
+     * @return $this
      */
     public function setFormInstance(FormInterface $formInstance)
     {

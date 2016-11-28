@@ -66,6 +66,7 @@ interface FormViewInterface {
     public function fieldEnd($fieldName);
 
     /**
+     * @param $fieldName
      * @return mixed
      */
     public function fieldWrapEnd($fieldName);

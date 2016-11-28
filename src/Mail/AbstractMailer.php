@@ -21,6 +21,7 @@ abstract class AbstractMailer implements MailerInterface
     protected $_bcc = array();
     protected $_from = array();
     protected $_reply_to = array();
+    protected $_headers = array();
 
     /**
      * __construct
@@ -53,7 +54,7 @@ abstract class AbstractMailer implements MailerInterface
     }
 
     /**
-     * @return mixed
+     * @inheritdoc
      */
     public function getSubject()
     {
@@ -61,8 +62,7 @@ abstract class AbstractMailer implements MailerInterface
     }
 
     /**
-     * @param mixed $subject
-     * @return AbstractMailer
+     * @inheritdoc
      */
     public function setSubject($subject)
     {
@@ -71,7 +71,7 @@ abstract class AbstractMailer implements MailerInterface
     }
 
     /**
-     * @return mixed
+     * @inheritdoc
      */
     public function getBody()
     {
@@ -79,8 +79,7 @@ abstract class AbstractMailer implements MailerInterface
     }
 
     /**
-     * @param mixed $body
-     * @return AbstractMailer
+     * @inheritdoc
      */
     public function setBody($body)
     {
@@ -89,7 +88,7 @@ abstract class AbstractMailer implements MailerInterface
     }
 
     /**
-     * @return mixed
+     * @inheritdoc
      */
     public function getAltBody()
     {
@@ -97,8 +96,7 @@ abstract class AbstractMailer implements MailerInterface
     }
 
     /**
-     * @param mixed $altBody
-     * @return AbstractMailer
+     * @inheritdoc
      */
     public function setAltBody($altBody)
     {
@@ -109,7 +107,7 @@ abstract class AbstractMailer implements MailerInterface
 
 
     /**
-     * @return array
+     * @inheritdoc
      */
     public function getFrom()
     {
@@ -117,8 +115,7 @@ abstract class AbstractMailer implements MailerInterface
     }
 
     /**
-     * @param array $from
-     * @return AbstractMailer
+     * @inheritdoc
      */
     public function setFrom($email, $name = "")
     {
@@ -127,7 +124,7 @@ abstract class AbstractMailer implements MailerInterface
     }
 
     /**
-     * @return array
+     * @inheritdoc
      */
     public function getReplyTo()
     {
@@ -135,8 +132,7 @@ abstract class AbstractMailer implements MailerInterface
     }
 
     /**
-     * @param array $reply_to
-     * @return AbstractMailer
+     * @inheritdoc
      */
     public function setReplyTo($email, $name = "")
     {
@@ -144,6 +140,9 @@ abstract class AbstractMailer implements MailerInterface
         return $this;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function addTos(array $tos){
         if(!empty($tos)){ foreach($tos as $to){
             if(is_array($to)) {
@@ -157,7 +156,9 @@ abstract class AbstractMailer implements MailerInterface
         } }
     }
 
-
+    /**
+     * @inheritdoc
+     */
     public function setTo(array $tos)
     {
         $this->_to = array();
@@ -165,7 +166,9 @@ abstract class AbstractMailer implements MailerInterface
     }
 
 
-
+    /**
+     * @inheritdoc
+     */
     public function addCcs(array $ccs){
         if(!empty($ccs)){ foreach($ccs as $cc){
             if(is_array($cc)) {
@@ -179,14 +182,18 @@ abstract class AbstractMailer implements MailerInterface
         } }
     }
 
-
-
+    /**
+     * @inheritdoc
+     */
     public function setCc(array $ccs)
     {
         $this->_cc = array();
         $this->addCcs($ccs);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function addBccs(array $bccs){
         if(!empty($bccs)){ foreach($bccs as $bcc){
             if(is_array($bcc)) {
@@ -200,8 +207,9 @@ abstract class AbstractMailer implements MailerInterface
         } }
     }
 
-
-
+    /**
+     * @inheritdoc
+     */
     public function setBcc(array $bccs)
     {
         $this->_bcc = array();
@@ -216,31 +224,49 @@ abstract class AbstractMailer implements MailerInterface
         // TODO: Implement addAttachement() method.
     }
 
+    /**
+     * @inheritdoc
+     */
     public function addTo($email, $name = "")
     {
         $this->_to[$email] = array($email,$name);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getTo()
     {
         return $this->_to;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function addCc($email, $name = "")
     {
         $this->_cc[$email] = array($email,$name);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getCc()
     {
         return $this->_cc;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function addBcc($email, $name = "")
     {
         $this->_bcc[$email] = array($email,$name);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getBcc()
     {
         return $this->_bcc;

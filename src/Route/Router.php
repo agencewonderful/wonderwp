@@ -58,7 +58,7 @@ class Router extends AbstractRouter
 
     public function registerRules()
     {
-        global $wp_rewrite;
+
         $routes = $this->getRoutes();
         if (!empty($routes)) {
             add_rewrite_tag('%' . $this->_routeVariable . '%', '(.+)');
@@ -120,13 +120,12 @@ class Router extends AbstractRouter
     {
         $path = preg_replace('/{(.*?)}/', '(.*)', $route->getPath());
         return '^' . ltrim(trim($path), '/') . '$';
-        return $regex;
     }
 
     /**
      * Attempts to match the current request to a route.
      *
-     * @param WP $environment
+     * @param \WP $environment
      */
     public function match_request(\WP $environment)
     {
