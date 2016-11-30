@@ -7,10 +7,30 @@
  */
 namespace WonderWp\Route;
 
+/**
+ * Class Route
+ * With a route service, you can define two kinds of routes:
+ * - Routes that map a url to a certain file
+ * - Routes that map a url to a certain callable
+ * You can also restrict the authorized HTTP methods that can call this route
+ * @package WonderWp\Route
+ */
 class Route
 {
+    /**
+     * regex that specifies the route condition
+     * @var string
+     */
     private $_path;
+    /**
+     * Callable that will be executed upon route validation
+     * @var callable
+     */
     private $_callable;
+    /**
+     * The HTTP method authorized to call this route
+     * @var string
+     */
     private $_method = 'ALL';
 
     /**
@@ -26,7 +46,7 @@ class Route
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getPath()
     {
@@ -34,7 +54,7 @@ class Route
     }
 
     /**
-     * @param mixed $path
+     * @param string $path
      */
     public function setPath($path)
     {
@@ -42,7 +62,7 @@ class Route
     }
 
     /**
-     * @return mixed
+     * @return callable
      */
     public function getCallable()
     {
@@ -50,7 +70,7 @@ class Route
     }
 
     /**
-     * @param mixed $callable
+     * @param callable $callable
      */
     public function setCallable($callable)
     {
