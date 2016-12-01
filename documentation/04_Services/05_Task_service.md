@@ -1,8 +1,8 @@
-#Task Service (WP-CLI)
+# Task Service (WP-CLI)
 
 Sometimes in plugins, you could want to create some specific WP-CLI command.
 
-##How to create a task service
+## How to create a task service
 
 Create a class that implements the `TaskServiceInterface`, which requires you to implement a `registerCommands` method.
 

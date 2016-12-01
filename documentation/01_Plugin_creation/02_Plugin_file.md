@@ -1,5 +1,5 @@
 
-## The Main Plugin File
+# The Main Plugin File
 
 Here's an example of a plugin main file that we'll comment right after:
 

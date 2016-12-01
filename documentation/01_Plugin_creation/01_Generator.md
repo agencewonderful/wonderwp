@@ -1,4 +1,4 @@
-##Generator
+# Generator
 
 If you just want to get started quickly, you can use the generator plugin. It will ask you a few questions and will generate for you the folder structure as well as the required files to get started.
 

@@ -1,4 +1,4 @@
-#Route Service
+# Route Service
 
 Manipulating the WP_Rewrite API is not an easy task in WordPress. We've tried to abstract the complexity of creating custom routes for your plugin thanks to the use of route service.
 
@@ -7,7 +7,7 @@ With a route service, you can define two kinds of routes:
 - Routes that map a url to a certain file
 - Routes that map a url to a certain callable
 
-##How to create a route service
+## How to create a route service
 Create a class that extends the `AbstractRouteService` class. The `AbstractRouteService` class implements the `RouteServiceInterface`, therefore it requires that your route service implements a `getRoutes()` method.
 
 ```
@@ -26,7 +26,7 @@ class MyPluginRouteService extends AbstractRouteService
 }
 ```
 
-##Registering the route service
+## Registering the route service
 Add these few lines inside your plugin manager.
 
 ```
@@ -36,5 +36,5 @@ $this->addService(AbstractService::$ROUTESERVICENAME,$container->factory(functio
 }));
 ```
 
-##More on routes
+## More on routes
 See the dedicated doc section : wonderwp framework > Routing > Routing;

@@ -1,4 +1,4 @@
-##Plugin Activator 
+# Plugin Activator 
 
 Create a class that extends `AbstractPluginActivator` or implements the `ActivatorInterface`
 

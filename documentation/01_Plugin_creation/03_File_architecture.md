@@ -1,4 +1,4 @@
-##Plugin file architecture
+# Plugin file architecture
 
 This is a complete definition. Your plugin could have much less files (juste the includes and admin folders for example)
 

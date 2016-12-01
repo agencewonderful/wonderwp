@@ -8,7 +8,7 @@
 
 # Proposal
 
-## Request ##
+## Request
 
 Should we introduce a Symfony like Request object?
 
@@ -37,7 +37,7 @@ $test = $request->get('test'); //as you would do in symfony`
 
 It seems the vendor version is a bit too heavy for what we want, it would be interesting to create a smaller middleware, part of the framework that only does what we need.
 
-## Response ##
+## Response
 
 Should we introduce a Symfony like Response object?
 

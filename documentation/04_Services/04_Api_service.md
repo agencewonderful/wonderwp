@@ -1,10 +1,10 @@
-#Api Service
+# Api Service
 
 Defining ajax entry points for your plugin can feel a bit messy in a sense that it works with hooks. Those hooks could be defined at multiple places (unless you create a hook service), and for each hook define, you associate a callable that can be a function, an object method somewhere, or somewhere else.
 
 The idea behind the Api Service is to provide a class that will act as an API controller to gather all the API logic, and that can be used to abstract and ease ajax endpoints registration.
 
-##How to create an Api Service
+## How to create an Api Service
 Create a class that extends the `AbstractApiService` class. The `AbstractApiService` class implements the `ApiServiceInterface`.
 
 ```
@@ -15,7 +15,7 @@ class MyPluginApiService extends AbstractApiService
 ```
 All the public methods defined in this service can be used as an ajax endpoint! No more hook definition, you just create the API service, and then declare public methods in it. Those methods can now be accessed via JavaScript calls.
 
-##Registering the Api Service
+## Registering the Api Service
 Add these few lines inside your plugin manager.
 
 ```
@@ -25,7 +25,7 @@ $this->addService(AbstractService::$APISERVICENAME, function(){
 });
 ```
 
-##How to access my ApiService method from the JavaScript
+## How to access my ApiService method from the JavaScript
 
 Make an ajax call to the ajaxurl global variable
 
@@ -44,7 +44,7 @@ In this call, pass some object paramaters. This object should contain an action 
 
 You can also defined som more parameters that will be passed to the service's method.
 
-##Result
+## Result
 
 In an attempt to standardize api call responses, we've created a Result object that takes two arguments, an http response code, and an array of data.
 

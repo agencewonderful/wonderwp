@@ -1,4 +1,4 @@
-##Plugin Deactivator
+# Plugin Deactivator
 
 Create a class that implements the `DeactivatorInterface`.
 
