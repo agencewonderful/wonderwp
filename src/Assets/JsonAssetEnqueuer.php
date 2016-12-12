@@ -12,12 +12,14 @@ class JsonAssetEnqueuer extends AbstractAssetEnqueuer{
 
     protected $_manifest;
     protected $_blogurl;
+    protected $version;
 
     public function __construct($manifestPath)
     {
         parent::__construct();
         $this->_manifest = json_decode(file_get_contents($manifestPath));
         $this->_blogurl = get_bloginfo('url');
+        $this->version = 0;
     }
 
     public function enqueueStyles($groupNames)
@@ -53,9 +55,44 @@ class JsonAssetEnqueuer extends AbstractAssetEnqueuer{
         }}
     }
 
+    public function enqueueCritical($groupNames)
+    {
+        $versionNum = $this->getVersion();
+        if(!empty($groupNames)) {
+            foreach ($groupNames as $group) {
+                if (array_key_exists($group, $this->_manifest->js)) {
+                    $src = $_SERVER['DOCUMENT_ROOT'].str_replace($this->_container['wwp.assets.folder.prefix'], '', $this->_manifest->site->assets_dest) . '/js/' . $group . $versionNum . '.js';
+                    if(file_exists($src)){
+                        $content = file_get_contents($src);
+                        if(!empty($content)){
+                            echo'<script id="critical-js">
+                                '.$content.'
+                            </script>';
+                        }
+                    }
+                }
+
+                if (array_key_exists($group, $this->_manifest->css)) {
+                    $src = $_SERVER['DOCUMENT_ROOT'] . str_replace($this->_container['wwp.assets.folder.prefix'], '', $this->_manifest->site->assets_dest) . '/css/' . $group . $versionNum . '.css';
+                    if(file_exists($src)){
+                        $content = file_get_contents($src);
+                        if(!empty($content)){
+                            echo'<style id="critical-css">
+                                '.$content.'
+                            </style>';
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public function getVersion(){
-        $fileVersion = $_SERVER['DOCUMENT_ROOT'].$this->_container['wwp.assets.folder.dest'].'/version.php';
-        return file_exists($fileVersion) ? include($fileVersion) : null;
+        if(empty($this->version)) {
+            $fileVersion = $_SERVER['DOCUMENT_ROOT'] . $this->_container['wwp.assets.folder.dest'] . '/version.php';
+            $this->version = file_exists($fileVersion) ? include($fileVersion) : null;
+        }
+        return $this->version;
     }
 
 }

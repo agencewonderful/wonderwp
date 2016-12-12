@@ -14,4 +14,6 @@ interface AssetEnqueuerInterface{
 
     public function enqueueScripts($groupNames);
 
+    public function enqueueCritical($groupNames);
+
 }
