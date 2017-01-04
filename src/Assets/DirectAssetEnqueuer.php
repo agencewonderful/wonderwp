@@ -39,4 +39,9 @@ class DirectAssetEnqueuer extends AbstractAssetEnqueuer
         // TODO: Implement enqueueScripts() method.
     }
 
+    public function enqueueCritical($groupNames)
+    {
+        // TODO: Implement enqueueScripts() method.
+    }
+
 }

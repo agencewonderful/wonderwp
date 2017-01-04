@@ -299,12 +299,7 @@ class FormView implements FormViewInterface
                 $isMultiple = !empty($displayRules['inputAttributes']['multiple']);
                 if (!empty($opts)) {
                     foreach ($opts as $key => $val) {
-                        if($isMultiple){
-                            $selected = is_array($f->getValue()) && in_array($key,$f->getValue()) ? 'selected' : '';
-                        } else {
-                            $selected = \selected($f->getValue(), $key, false);
-                        }
-                        $markup .= '<option value="' . $key . '" ' . $selected . ' >' . $val . '</option>';
+                        $markup .= $this->buildSelectOption($f, $val, $key, $isMultiple);
                     }
                 }
             }
@@ -312,6 +307,28 @@ class FormView implements FormViewInterface
         return $markup;
     }
 
+    public function buildSelectOption(SelectField $field, $label, $value, $isMultiple)
+    {
+        if (is_array($label)) {
+            $markup = '<optgroup label="'.$value.'">';
+
+            foreach ($label as $value => $realLabel) {
+                $markup .= $this->buildSelectOption($field, $realLabel, $value, $isMultiple);
+            }
+
+            $markup .= '</optgroup>';
+
+            return $markup;
+        }
+
+        if ($isMultiple) {
+            $selected = is_array($field->getValue()) && in_array($value, $field->getValue()) ? 'selected' : '';
+        } else {
+            $selected = \selected($field->getValue(), $value, false);
+        }
+
+        return '<option value="' . $value . '" ' . $selected . ' >' . $label . '</option>';
+    }
 
     public function fieldEnd($fieldName)
     {
