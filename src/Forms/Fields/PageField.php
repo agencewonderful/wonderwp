@@ -28,7 +28,7 @@ class PageField extends SelectField
             'class' => '',
             'show_option_none' => '', 'show_option_no_change' => '',
             'option_none_value' => '',
-            'value_field' => 'ID',
+            'value_field' => 'ID','sort_column'=>'menu_order'
         );
         $r = wp_parse_args( $args, $defaults );
 

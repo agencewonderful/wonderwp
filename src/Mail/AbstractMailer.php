@@ -154,6 +154,7 @@ abstract class AbstractMailer implements MailerInterface
                 $this->addTo($to, '');
             }
         } }
+        return $this;
     }
 
     /**
@@ -163,6 +164,7 @@ abstract class AbstractMailer implements MailerInterface
     {
         $this->_to = array();
         $this->addTos($tos);
+        return $this;
     }
 
 
@@ -180,6 +182,7 @@ abstract class AbstractMailer implements MailerInterface
                 $this->addCc($cc, '');
             }
         } }
+        return $this;
     }
 
     /**
@@ -189,6 +192,7 @@ abstract class AbstractMailer implements MailerInterface
     {
         $this->_cc = array();
         $this->addCcs($ccs);
+        return $this;
     }
 
     /**
@@ -205,6 +209,7 @@ abstract class AbstractMailer implements MailerInterface
                 $this->addCc($bcc, '');
             }
         } }
+        return $this;
     }
 
     /**
@@ -213,7 +218,8 @@ abstract class AbstractMailer implements MailerInterface
     public function setBcc(array $bccs)
     {
         $this->_bcc = array();
-        $this->addCcs($bccs);
+        $this->addBccs($bccs);
+        return $this;
     }
 
     /**
@@ -222,6 +228,7 @@ abstract class AbstractMailer implements MailerInterface
     public function addAttachment($path, $filename = null)
     {
         // TODO: Implement addAttachement() method.
+        return $this;
     }
 
     /**
@@ -230,6 +237,7 @@ abstract class AbstractMailer implements MailerInterface
     public function addTo($email, $name = "")
     {
         $this->_to[$email] = array($email,$name);
+        return $this;
     }
 
     /**
@@ -246,6 +254,7 @@ abstract class AbstractMailer implements MailerInterface
     public function addCc($email, $name = "")
     {
         $this->_cc[$email] = array($email,$name);
+        return $this;
     }
 
     /**
@@ -262,6 +271,7 @@ abstract class AbstractMailer implements MailerInterface
     public function addBcc($email, $name = "")
     {
         $this->_bcc[$email] = array($email,$name);
+        return $this;
     }
 
     /**
