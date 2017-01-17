@@ -9,6 +9,7 @@ use WonderWp\Entity\AbstractEntity;
 use WonderWp\Entity\EntityAttribute;
 use WonderWp\Entity\EntityRelation;
 use WonderWp\Forms\Fields\AbstractField;
+use WonderWp\Forms\Fields\BooleanField;
 use WonderWp\Forms\Fields\DateField;
 use WonderWp\Forms\Fields\HiddenField;
 use WonderWp\Forms\Fields\InputField;
@@ -146,7 +147,6 @@ class ModelForm
                 return $f;
                 break;
         }
-
         switch ($type) {
             case 'integer':
                 if ($attr->getIsId()) {
@@ -158,8 +158,13 @@ class ModelForm
             case'text':
                 $f = new TextAreaField($fieldName, $val, ['label' => $label]);
                 break;
+            case'date':
             case'datetime':
                 $f = new DateField($fieldName, (!empty($val) && $val instanceof \DateTime) ? $val->format('Y-m-d') : null, ['label' => $label]);
+                break;
+            case'boolean':
+            case'bool':
+                $f = new BooleanField($fieldName,$val, ['label'=>$label]);
                 break;
             default:
                 $f = new InputField($fieldName, $val, ['label' => $label]);
