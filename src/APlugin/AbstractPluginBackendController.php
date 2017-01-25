@@ -61,10 +61,18 @@ abstract class AbstractPluginBackendController
                 $action = $tabs[$tabIndex]['action'];
             }
             if (empty($action)) {
-                $action = 'list';
+                $action = $this->getDefaultRoute();
             }
         }
         return $action;
+    }
+
+    public function getDefaultRoute(){
+        return 'default';
+    }
+
+    public function defaultAction(){
+        $this->listAction();
     }
 
     public function route()

@@ -18,7 +18,7 @@ class JsonAssetEnqueuer extends AbstractAssetEnqueuer{
     {
         parent::__construct();
         $this->_manifest = json_decode(file_get_contents($manifestPath));
-        $this->_blogurl = get_bloginfo('url');
+        $this->_blogurl = rtrim("//{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}",'/');
         $this->version = 0;
     }
 
