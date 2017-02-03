@@ -88,8 +88,8 @@ class JsonAssetEnqueuer extends AbstractAssetEnqueuer{
     }
 
     public function getVersion(){
-        if(empty($this->version)) {
-            $fileVersion = $_SERVER['DOCUMENT_ROOT'] . $this->_container['wwp.assets.folder.dest'] . '/version.php';
+        if(empty($this->version) && $this->_container->offsetExists('wwp.assets.folder.dest')) {
+            $fileVersion = $_SERVER['DOCUMENT_ROOT'] .'/'. $this->_container['wwp.assets.folder.dest'] . '/version.php';
             $this->version = file_exists($fileVersion) ? include($fileVersion) : null;
         }
         return $this->version;
