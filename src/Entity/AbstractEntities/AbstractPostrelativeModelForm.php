@@ -21,7 +21,6 @@ class AbstractPostrelativeModelForm extends ModelForm
         $fieldName = $attr->getFieldName();
         $entity = $this->getModelInstance();
         $val = $entity->$fieldName;
-        //$label = __($fieldName . '.trad', $this->_textDomain);
 
         //Add here particular cases for your different fields
         switch($fieldName){

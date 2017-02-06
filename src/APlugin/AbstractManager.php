@@ -160,6 +160,7 @@ abstract class AbstractManager implements ManagerInterface
         }
 
         $raw = $this->_services[$serviceType];
+        /** @var ServiceInterface $service */
         $service = $this->_services[$serviceType] = $raw($this);
         return $service;
     }
