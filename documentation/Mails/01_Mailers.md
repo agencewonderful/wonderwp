@@ -21,6 +21,3 @@ $container['wwp.emails.mailer'] = $container->factory(function(){
 - Override the methods you'd like to change.
 - Register the class as the mailer in the dependency injection
 - Et voilà
-
-
-
