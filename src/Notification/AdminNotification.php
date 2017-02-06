@@ -106,5 +106,4 @@ class AdminNotification
         return $this->getMarkup();
     }
 
-
 }

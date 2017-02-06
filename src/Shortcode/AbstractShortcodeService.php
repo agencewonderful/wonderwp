@@ -12,4 +12,6 @@ use WonderWp\Services\AbstractService;
 
 abstract class AbstractShortcodeService extends AbstractService implements ShortcodeServiceInterface{
 
+
+
 }

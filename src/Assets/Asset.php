@@ -36,5 +36,3 @@ class Asset extends \_WP_Dependency{
         return $this;
     }
 }
-
-?>

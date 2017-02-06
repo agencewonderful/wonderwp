@@ -30,6 +30,4 @@ trait AbstractOptionsField {
         return $this;
     }
 
-
-
 }

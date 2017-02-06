@@ -93,6 +93,4 @@ class Route
         $this->_method = $method;
     }
 
-
-
 }

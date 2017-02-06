@@ -170,4 +170,5 @@ class PanelManager
         }
         return $post_id;
     }
+
 }

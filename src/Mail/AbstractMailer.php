@@ -282,5 +282,4 @@ abstract class AbstractMailer implements MailerInterface
         return $this->_bcc;
     }
 
-
 }

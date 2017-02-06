@@ -138,4 +138,5 @@ interface MailerInterface
      * @return Result
      */
     public function send();
+
 }

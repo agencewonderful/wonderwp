@@ -307,5 +307,4 @@ class AbstractUser extends AbstractEntity
         return $this->email;
     }
 
-
 }
