@@ -15,7 +15,7 @@ abstract class AbstractPluginActivator implements ActivatorInterface{
         $this->_version = $version;
     }
 
-    protected function _createTable($entityName)
+    protected function createTable($entityName)
     {
         $installed_ver = get_option( $entityName."_table_version" );
 

@@ -225,7 +225,6 @@ abstract class AbstractManager implements ManagerInterface
         }
 
         //Commands
-        /** @var ShortcodeServiceInterface $shortcodeService */
         $commandService = $this->getService(AbstractService::$COMMANDSERVICENAME);
         if (is_object($commandService)) {
             $commandService->registerCommands();
