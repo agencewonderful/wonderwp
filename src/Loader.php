@@ -215,7 +215,7 @@ class Loader extends Singleton{
                 $this->loadGedmoExtension(new IpTraceableListener(), $anDriver, $evm);
             }
 
-            /* TODO Get $username value
+            /* TO DO Get $username value
             if (defined('USE_GEDMO_LOGGABLE') && USE_GEDMO_LOGGABLE === true) {
                 // Gedmo Loggable
                 $listener = new \Gedmo\Loggable\LoggableListener();
@@ -224,7 +224,7 @@ class Loader extends Singleton{
             }
             */
 
-            /* TODO Get $defaultLocale value
+            /* TO DO Get $defaultLocale value
             if (defined('USE_GEDMO_TRANSLATABLE') && USE_GEDMO_TRANSLATABLE === true) {
                 // Gedmo Translatable
                 $listener = new \Gedmo\Translatable\TranslatableListener();
@@ -234,7 +234,7 @@ class Loader extends Singleton{
             }
             */
 
-            /* TODO Get $connectedUser value
+            /* TO DO Get $connectedUser value
             if (defined('USE_GEDMO_BLAMEABLE') && USE_GEDMO_BLAMEABLE === true) {
                 // Gedmo Blameable
                 $listener = new \Gedmo\Blameable\BlameableListener();
@@ -273,7 +273,7 @@ class Loader extends Singleton{
             return new JsonAssetEnqueuer($container['wwp.assets.manifest.path']);
         };
         $container['wwp.assets.folder.prefix'] = './';
-        $container['wwp.assets.folder.path'] = str_replace(get_bloginfo('url'),'',str_replace(network_site_url(),'',get_stylesheet_directory_uri()));
+        $container['wwp.assets.folder.path'] = str_replace(get_bloginfo('url'),'',get_stylesheet_directory_uri());
 
         //Forms
         $container['wwp.forms.modelForm'] = $container->factory(function(){

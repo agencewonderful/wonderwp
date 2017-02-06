@@ -10,15 +10,9 @@ namespace WonderWp\Entity\AbstractEntities;
 
 
 use WonderWp\Entity\EntityAttribute;
-use WonderWp\Forms\Fields\BooleanField;
-use WonderWp\Forms\Fields\CategoryField;
-use WonderWp\Forms\Fields\DateField;
 use WonderWp\Forms\Fields\EmailField;
 use WonderWp\Forms\Fields\FieldGroup;
 use WonderWp\Forms\Fields\NumericField;
-use WonderWp\Forms\Fields\PasswordField;
-use WonderWp\Forms\Fields\RadioField;
-use WonderWp\Forms\Fields\SelectField;
 use WonderWp\Forms\ModelForm;
 
 class AbstractUserModelForm extends ModelForm

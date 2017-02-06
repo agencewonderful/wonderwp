@@ -30,7 +30,6 @@ class MandrillMailer extends AbstractMailer
         }
 
         $jsonPayLoad = $this->computeJsonPayload($opts);
-        //\WonderWp\trace($jsonPayLoad);
 
         $endPointUrl = '/messages/send';
 

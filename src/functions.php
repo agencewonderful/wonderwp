@@ -24,7 +24,7 @@ function trace()
     $args = func_get_args();
     foreach ($args as $obj) {
         if (is_null($obj)) {
-            var_dump($obj);
+            echo'<code>null</code>';
         } else {
             highlight_string(print_r($obj, true));
         }

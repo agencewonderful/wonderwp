@@ -7,9 +7,7 @@
  */
 namespace WonderWp\Route;
 
-use WonderWp\AbstractDefinitions\Singleton;
 use WonderWp\HttpFoundation\Request;
-use WonderWp\Route\RouterInterface;
 
 class Router extends AbstractRouter
 {
@@ -26,9 +24,9 @@ class Router extends AbstractRouter
     {
         add_action('init', array($this, 'registerRules'));
         add_action('admin_init', array($this, 'flushRules'));
-        add_action('parse_request', array($this, 'match_request'));
-        add_action('template_redirect', array($this, 'call_route_hook'));
-        add_filter('query_vars', array($this, 'register_query_vars'));
+        add_action('parse_request', array($this, 'matchRequest'));
+        add_action('template_redirect', array($this, 'callRouteHook'));
+        add_filter('query_vars', array($this, 'registerQueryVars'));
     }
 
     public function addService(RouteServiceInterface $routeService)
@@ -64,7 +62,7 @@ class Router extends AbstractRouter
             add_rewrite_tag('%' . $this->_routeVariable . '%', '(.+)');
             foreach ($routes as $name => $route) {
                 /** @var Route $route */
-                $regex = $this->generate_route_regex($route);
+                $regex = $this->generateRouteRegex($route);
                 $path = $route->getPath();
 
 
@@ -86,13 +84,12 @@ class Router extends AbstractRouter
                     $newRewriteRule = $route->getCallable();
                 }
 
-                //echo '<br />'.$regex, $newRewriteRule;
                 add_rewrite_rule($regex, $newRewriteRule, 'top');
             }
         }
     }
 
-    public function register_query_vars($vars)
+    public function registerQueryVars($vars)
     {
         $routes = $this->getRoutes();
         if (!empty($routes)) {
@@ -116,7 +113,7 @@ class Router extends AbstractRouter
      *
      * @return string
      */
-    private function generate_route_regex(Route $route)
+    private function generateRouteRegex(Route $route)
     {
         $path = preg_replace('/{(.*?)}/', '(.*)', $route->getPath());
         return '^' . ltrim(trim($path), '/') . '$';
@@ -127,7 +124,7 @@ class Router extends AbstractRouter
      *
      * @param \WP $environment
      */
-    public function match_request(\WP $environment)
+    public function matchRequest(\WP $environment)
     {
         $matched_route = $this->match($environment->query_vars);
 
@@ -170,7 +167,7 @@ class Router extends AbstractRouter
     /**
      * Checks to see if a route was found. If there's one, it calls the route hook.
      */
-    public function call_route_hook()
+    public function callRouteHook()
     {
         if (!empty($this->_matchedRoute)) {
             //Add query vars to request object

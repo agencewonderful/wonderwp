@@ -9,7 +9,6 @@
 namespace WonderWp\API;
 
 use WonderWp\HttpFoundation\Request;
-use WonderWp\Plugin\PageSettings\AbstractPageSettingsService;
 use WonderWp\Services\AbstractService;
 
 abstract class AbstractApiService extends AbstractService implements ApiServiceInterface{
@@ -48,7 +47,6 @@ abstract class AbstractApiService extends AbstractService implements ApiServiceI
         if($format=='json') {
             header('Content-Type: application/json');
             echo $result;
-            die();
         }
         return $result;
     }

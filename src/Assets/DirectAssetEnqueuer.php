@@ -2,8 +2,6 @@
 
 namespace WonderWp\Assets;
 
-use WonderWp\DI\Container;
-
 class DirectAssetEnqueuer extends AbstractAssetEnqueuer
 {
 
@@ -36,12 +34,12 @@ class DirectAssetEnqueuer extends AbstractAssetEnqueuer
 
     public function enqueueScripts($groupNames)
     {
-        // TODO: Implement enqueueScripts() method.
+
     }
 
     public function enqueueCritical($groupNames)
     {
-        // TODO: Implement enqueueScripts() method.
+
     }
 
 }

@@ -11,8 +11,6 @@ namespace WonderWp\Assets;
 class JsonAssetExporter extends AbstractAssetExporter{
 
     public function export(){
-        global $blog_id;
-
         /**
          * Get registered assets from manager
          */
@@ -27,7 +25,7 @@ class JsonAssetExporter extends AbstractAssetExporter{
         $assetsPrefix = $this->_container['wwp.assets.folder.prefix'];
         $json = array(
             'site'=>array(
-                'id'=>  $blog_id,
+                'id'=>  get_current_blog_id(),
                 'title'=>  get_bloginfo('name'),
                 'url' => $blogurl,
                 'assets_src'=>$this->_container['wwp.assets.folder.src'],

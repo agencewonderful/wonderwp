@@ -2,8 +2,6 @@
 
 namespace WonderWp\Forms;
 
-use Doctrine\ORM\Tools\SchemaTool;
-use Symfony\Component\HttpFoundation\Request;
 use WonderWp\DI\Container;
 use WonderWp\Entity\AbstractEntity;
 use WonderWp\Entity\EntityAttribute;

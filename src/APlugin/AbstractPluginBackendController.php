@@ -224,7 +224,6 @@ abstract class AbstractPluginBackendController
 
         //Load entity
         $id = $request->get('id', 0);
-        //$prefix = $this->_manager->getConfig('prefix');
         $entityName = $this->_manager->getConfig('entityName');
 
         if (!empty($id)) {

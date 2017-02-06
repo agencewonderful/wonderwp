@@ -2,10 +2,6 @@
 
 namespace WonderWp\APlugin;
 
-use WonderWp\Assets\AssetManager;
-use WonderWp\Assets\AssetServiceInterface;
-use WonderWp\DI\Container;
-use WonderWp\APlugin\Loader;
 use Pimple\Container as PContainer;
 use WonderWp\Services\AbstractService;
 

@@ -2,8 +2,6 @@
 
 namespace WonderWp\Forms;
 
-use WonderWp\Forms\Fields\FieldInterface;
-
 interface FormViewInterface {
 
     /**

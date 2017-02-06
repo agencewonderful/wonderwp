@@ -1,7 +1,6 @@
 <?php
 
 namespace WonderWp\Assets;
-use WonderWp\DI\Container;
 
 /**
  * AssetsManager
@@ -90,7 +89,7 @@ class AssetManager {
      * </code>
      * @return $this
      */
-    public function registerAsset($type,$dependency){
+    public function registerAsset($type, Asset $dependency){
         $dependencies = $this->_dependencies;
         $dependencies[$type][$dependency->handle] = $dependency;
         $this->_dependencies = $dependencies;
@@ -192,7 +191,6 @@ class AssetManager {
                 $s = $jsIndex[$handle];
                 $deps = $s->deps;
                 if(!empty($deps)){ $this->orderDependencies($deps,$type); }
-                //echo'<br />Ordering '.$s->name;
                 array_push($this->_queue[$type],$s->handle);
             } else if(strpos($handle, 'group:') !== false) {
                 $group = str_replace('group:', '', $handle);

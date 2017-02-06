@@ -2,7 +2,6 @@
 
 namespace WonderWp\APlugin;
 
-use Pimple\Tests\Fixtures\Service;
 use WonderWp\API\ApiServiceInterface;
 use WonderWp\Assets\AssetManager;
 use WonderWp\Assets\AssetServiceInterface;

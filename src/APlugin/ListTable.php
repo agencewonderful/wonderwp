@@ -145,7 +145,7 @@ class ListTable extends \WP_List_Table
         return array();
     }
 
-    function get_bulk_actions()
+    public function get_bulk_actions()
     {
         $actions = array(
             'delete' => __('Delete')
@@ -153,7 +153,7 @@ class ListTable extends \WP_List_Table
         return $actions;
     }
 
-    function extra_tablenav($which, $showAdd = true, $givenEditParams = array())
+    public function extra_tablenav($which, $showAdd = true, $givenEditParams = array())
     {
         if($showAdd) {
             $request = Request::getInstance();
@@ -168,7 +168,7 @@ class ListTable extends \WP_List_Table
         }
     }
 
-    function column_cb($item)
+    public function column_cb($item)
     {
         $identifier = $this->_entityMetas->getIdentifier();
         return sprintf(
@@ -222,7 +222,7 @@ class ListTable extends \WP_List_Table
      * @param array $givenEditParams
      * @param array $givenDeleteParams
      */
-    function column_action($item, $allowedActions = array('edit', 'delete'), $givenEditParams = array(), $givenDeleteParams = array())
+    public function column_action($item, $allowedActions = array('edit', 'delete'), $givenEditParams = array(), $givenDeleteParams = array())
     {
         $request = Request::getInstance();
         $identifier = $this->_entityMetas->getIdentifier();

@@ -90,17 +90,6 @@ class WpMailer extends AbstractMailer
         $subject = $this->_subject;
         $message = $this->_body;
         $headers = $this->prepareHeaders();
-
-        /*echo'<br />To';
-        \WonderWp\trace($to);
-        echo'<br /><br />Subject';
-        \WonderWp\trace($subject);
-        echo'<br /><br />Message';
-        \WonderWp\trace($message);
-        echo'<br /><br />Headers';
-        \WonderWp\trace($headers);
-        return true;*/
-
         $sent = wp_mail($to, $subject, $message, $headers);
         $code = $sent ? 200 : 500;
 

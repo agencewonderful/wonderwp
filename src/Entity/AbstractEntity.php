@@ -47,7 +47,7 @@ abstract class AbstractEntity
 
     /**
      * Get object attributes
-     * @todo attention a la perf, verifier que getClassMetaData est appele qu'une seule fois par $entityName et pas une fois par call
+     * to do attention a la perf, verifier que getClassMetaData est appele qu'une seule fois par $entityName et pas une fois par call
      * @return array
      */
     public function getMapping()
@@ -118,7 +118,13 @@ abstract class AbstractEntity
         $this->_relations = $relations;
     }
 
-    public function addRelatedEntity($fieldName,$entity,$callable){
+    /**
+     * @param string $fieldName
+     * @param AbstractEntity $entity
+     * @param callable $callable
+     * @return $this
+     */
+    public function addRelatedEntity($fieldName,AbstractEntity $entity,callable $callable){
         if (!$this->$fieldName->contains($entity)) {
             $this->$fieldName->add($entity);
             $entity->$callable($this);
@@ -126,7 +132,13 @@ abstract class AbstractEntity
         return $this;
     }
 
-    public function removeRelatedEntity($fieldName,$entity,$callable)
+    /**
+     * @param string $fieldName
+     * @param AbstractEntity $entity
+     * @param callable $callable
+     * @return $this
+     */
+    public function removeRelatedEntity($fieldName,AbstractEntity $entity, callable $callable)
     {
         if ($this->$fieldName->contains($entity)) {
             $this->$fieldName->removeElement($entity);
