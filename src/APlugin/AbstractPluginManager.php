@@ -55,9 +55,9 @@ abstract class AbstractPluginManager extends AbstractManager
     public function register(PContainer $container)
     {
         //Config
-        $prefix = $this->get_plugin_name();
+        $prefix = $this->getPluginName();
         $this->setConfig('prefix', $prefix);
-        $this->setConfig('version', $this->get_version());
+        $this->setConfig('version', $this->getVersion());
 
         //Services
         $this->addService(AbstractService::$LISTTABLESERVICENAME, function () {
@@ -85,7 +85,7 @@ abstract class AbstractPluginManager extends AbstractManager
      * @since     1.0.0
      * @return    string    The name of the plugin.
      */
-    public function get_plugin_name()
+    public function getPluginName()
     {
         return $this->plugin_name;
     }
@@ -96,7 +96,7 @@ abstract class AbstractPluginManager extends AbstractManager
      * @since     1.0.0
      * @return    string    The version number of the plugin.
      */
-    public function get_version()
+    public function getVersion()
     {
         return $this->version;
     }

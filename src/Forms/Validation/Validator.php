@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityRepository;
  * @inheritdoc
  *
  * @method static Validator UniqueEntity(EntityRepository $repository, string $field)
- * @method static Validator WP_Term(int $parentId = null)
+ * @method static Validator WpTerm(int $parentId = null)
  */
 class Validator extends \Respect\Validation\Validator
 {

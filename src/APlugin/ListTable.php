@@ -106,12 +106,12 @@ class ListTable extends \WP_List_Table
             ) );
         }
 
-        $this->_defineColumnHeaders();
+        $this->defineColumnHeaders();
 
         return $this;
     }
 
-    protected function _defineColumnHeaders()
+    protected function defineColumnHeaders()
     {
         //Register the Columns
         $columns = $this->get_columns();
@@ -172,7 +172,7 @@ class ListTable extends \WP_List_Table
     {
         $identifier = $this->_entityMetas->getIdentifier();
         return sprintf(
-            '<input type="checkbox" name="item[]" value="%s" />', $this->_getItemVal($item, reset($identifier))
+            '<input type="checkbox" name="item[]" value="%s" />', $this->getItemVal($item, reset($identifier))
         );
     }
 
@@ -183,11 +183,11 @@ class ListTable extends \WP_List_Table
      */
     public function column_default($item, $column_name)
     {
-        $val = $this->_getItemVal($item, $column_name);
-        echo $this->_formatVal($val);
+        $val = $this->getItemVal($item, $column_name);
+        echo $this->formatVal($val);
     }
 
-    protected function _getItemVal($item, $column_name)
+    protected function getItemVal($item, $column_name)
     {
         $val = '';
         if (is_object($item)) {
@@ -202,7 +202,7 @@ class ListTable extends \WP_List_Table
         return $val;
     }
 
-    protected function _formatVal($val)
+    protected function formatVal($val)
     {
         $valType = gettype($val);
         if ($valType === 'object') {
@@ -229,7 +229,7 @@ class ListTable extends \WP_List_Table
         $defaultEditParams = array(
             'page' => $request->get('page'),
             'action' => 'edit',
-            'id' => $this->_getItemVal($item, reset($identifier))
+            'id' => $this->getItemVal($item, reset($identifier))
         );
         $editParams = \WonderWp\array_merge_recursive_distinct($defaultEditParams, $givenEditParams);
         $defaultDeleteParams = $editParams;
