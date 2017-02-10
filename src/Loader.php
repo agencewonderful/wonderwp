@@ -156,6 +156,8 @@ class Loader extends Singleton{
             $sqlLogger = $container->offsetGet('doctrine.sqlLogger');
             $config->setSQLLogger($sqlLogger);
             $config->setNamingStrategy(new UnderscoreNamingStrategy());
+            $uploadsDir = wp_get_upload_dir();
+            $config->setProxyDir($uploadsDir['basedir'].DIRECTORY_SEPARATOR.'doctrine');
 
             //Evm, used to add wordpress table prefix
             $evm = new EventManager();
@@ -273,7 +275,7 @@ class Loader extends Singleton{
             return new JsonAssetEnqueuer($container['wwp.assets.manifest.path']);
         };
         $container['wwp.assets.folder.prefix'] = './';
-        $container['wwp.assets.folder.path'] = str_replace(get_bloginfo('url'),'',get_stylesheet_directory_uri());
+        $container['wwp.assets.folder.path'] = str_replace(get_bloginfo('url'),'',str_replace(network_site_url(),'',get_stylesheet_directory_uri()));
 
         //Forms
         $container['wwp.forms.modelForm'] = $container->factory(function(){
