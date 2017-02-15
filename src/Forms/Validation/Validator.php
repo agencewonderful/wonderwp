@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityRepository;
  *
  * @method static Validator UniqueEntity(EntityRepository $repository, string $field)
  * @method static Validator WpTerm(int $parentId = null)
+ * @method static Validator WpNonce(string $name)
  */
 class Validator extends \Respect\Validation\Validator
 {
