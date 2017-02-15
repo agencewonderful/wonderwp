@@ -55,9 +55,8 @@ abstract class AbstractPluginFrontendController{
         $viewContent = '';
         $pluginRoot = $this->_manager->getConfig('path.root');
         if(!empty($pluginRoot)){
-            $frags = explode(DIRECTORY_SEPARATOR,trim($pluginRoot,DIRECTORY_SEPARATOR));
-            $pluginFolder = end($frags);
-            $viewDest = get_stylesheet_directory().DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$pluginFolder.DIRECTORY_SEPARATOR.'public'.DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR.$viewName.'.php';
+
+            $viewDest = \WonderWp\get_plugin_file($pluginRoot,DIRECTORY_SEPARATOR.'public'.DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR.$viewName.'.php');
             if(!file_exists($viewDest)){
                 $viewDest = $pluginRoot.'/public/views/'.$viewName.'.php';
             }

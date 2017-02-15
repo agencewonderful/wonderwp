@@ -94,3 +94,18 @@ function implode_recursive($glue,$array) {
 
     return $ret;
 }
+
+function get_plugin_file($pluginRoot,$filePath){
+    $frags = explode(DIRECTORY_SEPARATOR,trim($pluginRoot,DIRECTORY_SEPARATOR));
+    $pluginFolderName = end($frags);
+    $fileDest = get_stylesheet_directory().DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$pluginFolderName.$filePath;
+    if(!file_exists($fileDest)){
+        $fileDest = $pluginRoot.$filePath;
+    }
+    return $fileDest;
+}
+
+function include_plugin_file($pluginRoot,$filePath){
+    $pluginFile = get_plugin_file($pluginRoot,$filePath);
+    include($pluginFile);
+}
