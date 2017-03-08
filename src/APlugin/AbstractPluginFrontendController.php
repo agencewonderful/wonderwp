@@ -8,11 +8,16 @@
 
 namespace WonderWp\APlugin;
 
+use Doctrine\ORM\EntityManager;
 use WonderWp\DI\Container;
 
 abstract class AbstractPluginFrontendController{
 
     protected $_container;
+    /**
+     * EntityManager
+     * @var EntityManager
+     */
     protected $_entityManager;
     /**
      * Plugin Manager
