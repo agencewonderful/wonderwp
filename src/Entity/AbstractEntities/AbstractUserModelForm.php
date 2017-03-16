@@ -29,9 +29,10 @@ class AbstractUserModelForm extends ModelForm
         switch($fieldName){
 
             case 'dob':
-                $f = new FieldGroup($fieldName,$val,['label' => $label,'inputAttributes'=>['class'=>['form-inline']]]);
+                $f = new FieldGroup($fieldName,null,['label' => $label,'inputAttributes'=>['class'=>['form-inline']]]);
 
-                $d = new NumericField($fieldName.'_day',null,[
+                $dayVal = $val instanceof \DateTime ? $val->format('d') : null;
+                $d = new NumericField($fieldName.'_day',$dayVal,[
                     'label'=>__('day',$this->_textDomain),
                     'inputAttributes'=>[
                         'name'=>'dob[day]',
@@ -41,7 +42,8 @@ class AbstractUserModelForm extends ModelForm
                 ]);
                 $f->addFieldToGroup($d);
 
-                $m = new NumericField($fieldName.'_month',null,[
+                $monthVal = $val instanceof \DateTime ? $val->format('m') : null;
+                $m = new NumericField($fieldName.'_month',$monthVal,[
                     'label'=>__('month',$this->_textDomain),
                     'inputAttributes'=>[
                         'name'=>'dob[month]',
@@ -51,7 +53,8 @@ class AbstractUserModelForm extends ModelForm
                 ]);
                 $f->addFieldToGroup($m);
 
-                $y = new NumericField($fieldName.'_year',null,[
+                $yearVal = $val instanceof \DateTime ? $val->format('Y') : null;
+                $y = new NumericField($fieldName.'_year',$yearVal,[
                     'label'=>__('year',$this->_textDomain),
                     'inputAttributes'=>[
                         'name'=>'dob[year]',
