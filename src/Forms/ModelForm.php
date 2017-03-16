@@ -37,10 +37,12 @@ class ModelForm
 
     /**
      * @param mixed $modelInstance
+     * @return $this
      */
     public function setModelInstance($modelInstance)
     {
         $this->_modelInstance = $modelInstance;
+        return $this;
     }
 
     /**
