@@ -48,10 +48,17 @@ class FormView implements FormViewInterface
         $markup .= $this->formStart($optsStart);
         $markup .= $this->formErrors();
         $fields = $this->getFormInstance()->getFields();
+
+        $allowedFields = array_keys($fields);
+        if(!empty($opts['allowFields'])){ $allowedFields = $opts['allowFields']; }
+        if(!empty($opts['excludeFields'])){ $allowedFields = array_diff($allowedFields,$opts['excludeFields']); }
+
         if (!empty($fields)) {
-            foreach ($fields as $f) {
-                /* @var $f fieldInterface */
-                $markup .= $this->renderField($f->getName());
+            foreach ($fields as $i=>$f) {
+                if(in_array($i,$allowedFields)) {
+                    /* @var $f fieldInterface */
+                    $markup .= $this->renderField($f->getName());
+                }
             }
         }
         $groups = $this->getFormInstance()->getGroups();
@@ -87,10 +94,10 @@ class FormView implements FormViewInterface
     public function formErrors()
     {
         $markup = '';
-        $errors = $this->_formInstance->getErrors();
+        /*$errors = $this->_formInstance->getErrors();
         if (!empty($errors)) {
             $markup .= '<div class="form-errors"></div>';
-        }
+        }*/
         return $markup;
     }
 

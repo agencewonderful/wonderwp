@@ -36,6 +36,7 @@ use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
 use WonderWp\Forms\Form;
 use WonderWp\Forms\FormValidator;
+use WonderWp\Forms\FormViewReadOnly;
 use WonderWp\Forms\ModelForm;
 use WonderWp\Forms\FormView;
 use WonderWp\Mail\WpMailer;
@@ -275,7 +276,6 @@ class Loader extends Singleton{
             return new JsonAssetEnqueuer($container['wwp.assets.manifest.path']);
         };
         $container['wwp.assets.folder.prefix'] = './';
-        $container['wwp.assets.folder.dest'] = '';
         $container['wwp.assets.folder.path'] = str_replace(get_bloginfo('url'),'',str_replace(network_site_url(),'',get_stylesheet_directory_uri()));
 
         //Forms
@@ -287,6 +287,9 @@ class Loader extends Singleton{
         });
         $container['wwp.forms.formView'] = $container->factory(function(){
             return new FormView();
+        });
+        $container['wwp.forms.formView.readOnly'] = $container->factory(function(){
+            return new FormViewReadOnly();
         });
         $container['wwp.forms.formValidator'] = $container->factory(function(){
             return new FormValidator();
