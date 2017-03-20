@@ -276,6 +276,7 @@ class Loader extends Singleton{
             return new JsonAssetEnqueuer($container['wwp.assets.manifest.path']);
         };
         $container['wwp.assets.folder.prefix'] = './';
+        $container['wwp.assets.folder.dest'] = '';
         $container['wwp.assets.folder.path'] = str_replace(get_bloginfo('url'),'',str_replace(network_site_url(),'',get_stylesheet_directory_uri()));
 
         //Forms
