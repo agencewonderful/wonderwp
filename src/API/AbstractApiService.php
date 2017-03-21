@@ -33,6 +33,12 @@ abstract class AbstractApiService extends AbstractService implements ApiServiceI
                 call_user_func(array($callable->instance,$callable->method));
                 wp_die();
             });
+            
+            add_action( 'wp_ajax_nopriv_'.$className.'.'.$method, function() use ($callable){
+                $callable->instance->setRequest(Request::getInstance());
+                call_user_func(array($callable->instance,$callable->method));
+                wp_die();
+            });            
         }}
     }
 
