@@ -123,14 +123,19 @@ class PanelManager
         //Verifs de securite
         $request = Request::getInstance();
         $post_id = $request->get('post_ID', 0);
-        $nonce = $request->get('module_noncename', ''); // verify this came from the our screen and with proper authorization, because save_post can be triggered at other times
         $postType = $request->request->get('post_type');
-        if (!wp_verify_nonce($nonce, plugin_basename(__FILE__))) {
+        //$nonce = $request->get('module_noncename', ''); // verify this came from the our screen and with proper authorization, because save_post can be triggered at other times
+        /*if (!wp_verify_nonce($nonce, plugin_basename(__FILE__))) {
+            echo 1; die;
             return $post_id;
-        }
-        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return $post_id;    // verify if this is an auto save routine. If it is our form has not been submitted, so we dont want to do anything
+        }*/
+        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE){
+            return $post_id;
+        }    // verify if this is an auto save routine. If it is our form has not been submitted, so we dont want to do anything
         if (!empty($postType) && 'page' == $postType) {// Check permissions
-            if (!current_user_can('edit_page', $post_id)) return $post_id;
+            if (!current_user_can('edit_page', $post_id)){
+                return $post_id;
+            }
         }
 
         // OK, we're authenticated: we need to find and save the data
