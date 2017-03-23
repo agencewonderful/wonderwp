@@ -49,7 +49,11 @@ abstract class AbstractPluginFrontendController{
     }
 
     public function handleShortcode($atts){
-        return $this->defaultAction($atts);
+        if(!empty($atts['action']) && method_exists($this,$atts['action'].'Action')){
+            return call_user_func_array(array($this,$atts['action'].'Action'),$atts);
+        } else {
+            return $this->defaultAction($atts);
+        }
     }
 
     public function defaultAction($atts){
