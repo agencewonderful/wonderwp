@@ -10,6 +10,7 @@ namespace WonderWp\Mail\Gateways;
 
 
 use WonderWp\API\Result;
+use WonderWp\DI\Container;
 use WonderWp\Mail\AbstractMailer;
 
 class SwiftMailerMailer extends AbstractMailer
@@ -56,7 +57,8 @@ class SwiftMailerMailer extends AbstractMailer
 
     public function setBody($body)
     {
-        $this->_message->setBody($body);
+        $body = apply_filters('wwp.mailer.setBody',str_replace("\n.", "\n..", (string) $body));
+        $this->_message->setBody($body, 'text/html');
         return $this;
     }
 
@@ -65,6 +67,12 @@ class SwiftMailerMailer extends AbstractMailer
      */
     public function send()
     {
-
+        $container = Container::getInstance();
+        $transport = $container->offsetExists('wwp.emails.mailer.swift_transport') ? $container->offsetGet('wwp.emails.mailer.swift_transport') : \Swift_MailTransport::newInstance();
+        $mailer = \Swift_Mailer::newInstance($transport);
+        $nbSent = $mailer->send($this->_message);
+        $code = $nbSent > 0 ? 200 : 500;
+        $result = new Result($code,array('res'=>$nbSent,'successes'=>$nbSent,'failures'=>null));
+        return $result;
     }
 }
