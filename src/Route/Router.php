@@ -15,10 +15,12 @@ class Router extends AbstractRouter
     protected $_routes = array();
     protected $_services = array();
     protected $_routeVariable = 'route';
+
     /**
      * @var Route
      */
     protected $_matchedRoute;
+    protected $_matchedRouteParams = array();
 
     public function __construct()
     {
@@ -82,6 +84,9 @@ class Router extends AbstractRouter
                     $newRewriteRule = 'index.php?' . $qs;
                 } else {
                     $newRewriteRule = $route->getCallable();
+                    if(strpos($newRewriteRule,$this->_routeVariable . '=' . $name)===false){
+                        $newRewriteRule.='&'.$this->_routeVariable . '=' . $name;
+                    }
                 }
 
                 add_rewrite_rule($regex, $newRewriteRule, 'top');
@@ -130,6 +135,21 @@ class Router extends AbstractRouter
 
         if ($matched_route instanceof Route) {
             $this->_matchedRoute = $matched_route;
+            //Add query vars to request object
+            $path = $this->_matchedRoute->getPath();
+            $request = Request::getInstance();
+            $params = array();
+            if (strpos($path, '{') !== false) {
+                preg_match_all('/{(.*?)}/', $path, $wildCardsMatchs);
+                if (!empty($wildCardsMatchs[1])) {
+                    foreach ($wildCardsMatchs[1] as $wildCard) {
+                        //Passing them to the request
+                        $request->query->set($wildCard, $environment->query_vars[$wildCard]);
+                        //Keeping them for the callable
+                        $this->_matchedRouteParams[$wildCard] = $environment->query_vars[$wildCard];
+                    }
+                }
+            }
         }
         if ($matched_route instanceof \WP_Error) {
             if (in_array('route_not_found', $matched_route->get_error_codes())) {
@@ -170,21 +190,8 @@ class Router extends AbstractRouter
     public function callRouteHook()
     {
         if (!empty($this->_matchedRoute)) {
-            //Add query vars to request object
-            $path = $this->_matchedRoute->getPath();
-            $request = Request::getInstance();
-            $params = array();
-            if (strpos($path, '{') !== false) {
-                preg_match_all('/{(.*?)}/', $path, $wildCardsMatchs);
-                if (!empty($wildCardsMatchs[1])) {
-                    foreach ($wildCardsMatchs[1] as $wildCard) {
-                        $request->query->set($wildCard, get_query_var($wildCard));
-                        $params[$wildCard] = get_query_var($wildCard);
-                    }
-                }
-            }
             if (is_callable($this->_matchedRoute->getCallable())) {
-                call_user_func_array($this->_matchedRoute->getCallable(), $params);
+                call_user_func_array($this->_matchedRoute->getCallable(), $this->_matchedRouteParams);
             }
         }
     }
