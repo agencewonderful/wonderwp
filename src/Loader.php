@@ -39,6 +39,7 @@ use WonderWp\Forms\FormValidator;
 use WonderWp\Forms\FormViewReadOnly;
 use WonderWp\Forms\ModelForm;
 use WonderWp\Forms\FormView;
+use WonderWp\Http\WpRequester;
 use WonderWp\Mail\WpMailer;
 use WonderWp\Panel\Panel;
 use WonderWp\Panel\PanelManager;
@@ -338,6 +339,10 @@ class Loader extends Singleton{
         $container['wwp.panel.Panel'] = $container->factory(function(){
             return new Panel();
         });
+
+        $container['wwp.http.requester'] = function () {
+            return new WpRequester();
+        };
 
         /**
          * Make container available
