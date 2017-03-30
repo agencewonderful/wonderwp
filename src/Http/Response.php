@@ -30,6 +30,54 @@ class Response
     }
 
     /**
+     * @return bool
+     */
+    public function isInfo()
+    {
+        return $this->getStatus() >= 100 && $this->getStatus() < 200;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOk()
+    {
+        return $this->getStatus() >= 200 && $this->getStatus() < 300;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRedirect()
+    {
+        return $this->getStatus() >= 300 && $this->getStatus() < 400;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isClientError()
+    {
+        return $this->getStatus() >= 400 && $this->getStatus() < 500;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isServerError()
+    {
+        return $this->getStatus() >= 500 && $this->getStatus() < 600;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isError()
+    {
+        return $this->isClientError() || $this->isServerError();
+    }
+
+    /**
      * @return int
      */
     public function getStatus()
