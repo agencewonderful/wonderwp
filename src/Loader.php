@@ -253,7 +253,11 @@ class Loader extends Singleton{
                 'user'     => DB_USER,
                 'password' => DB_PASSWORD,
                 'dbname'   => DB_NAME,
-                'host'     => DB_HOST
+                'host'     => DB_HOST,
+                'charset'  => 'utf8',
+                'driverOptions' => array(
+                    1002 => 'SET NAMES utf8'
+                )
             );
 
             $em = EntityManager::create($dbParams, $config, $evm);
