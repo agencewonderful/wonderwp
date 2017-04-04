@@ -30,7 +30,8 @@ class Container extends PimpleContainer implements SingletonInterface
     {
         $map = $this->parseContainer($this);
 
-        $fileName = $this['pimple_dump.output_dir'] . '/pimple.json';
+        $outputDir = array_key_exists('pimple_dump.output_dir', $this) ? $this['pimple_dump.output_dir'] : ROOT_DIR;
+        $fileName  = $outputDir . '/pimple.json';
         $this->write($map, $fileName);
 
         $this->processed = true;
