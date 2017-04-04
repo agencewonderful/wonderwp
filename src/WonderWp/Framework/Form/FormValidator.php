@@ -6,7 +6,7 @@ use Respect\Validation\Exceptions\ValidationException;
 use Respect\Validation\Rules\AbstractRule;
 use Respect\Validation\Rules\Optional;
 use Respect\Validation\Validator;
-use WonderWp\Framework\Form\Fields\FieldInterface;
+use WonderWp\Framework\Form\Field\FieldInterface;
 
 class FormValidator implements FormValidatorInterface
 {

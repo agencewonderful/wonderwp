@@ -1,6 +1,6 @@
 <?php
 
-namespace WonderWp\Framework\Form\Fields;
+namespace WonderWp\Framework\Form\Field;
 
 class CheckBoxField extends InputField
 {

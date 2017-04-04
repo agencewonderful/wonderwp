@@ -1,16 +1,15 @@
 <?php
 
-namespace WonderWp\Framework\Form\Fields;
+namespace WonderWp\Framework\Form\Field;
 
-class SelectField extends AbstractField
+class InputField extends AbstractField
 {
-    use AbstractOptionsField;
-
     /** @inheritdoc */
     public function __construct($name, $value = null, $displayRules = [], $validationRules = [])
     {
         parent::__construct($name, $value, $displayRules, $validationRules);
 
-        $this->tag = 'select';
+        $this->tag  = 'input';
+        $this->type = 'text';
     }
 }

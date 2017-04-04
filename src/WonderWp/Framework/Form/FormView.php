@@ -4,8 +4,8 @@ namespace WonderWp\Framework\Form;
 
 use Pimple\Container as PContainer;
 use WonderWp\Framework\DependencyInjection\Container;
-use WonderWp\Framework\Form\Fields\FieldInterface;
-use WonderWp\Framework\Form\Fields\SelectField;
+use WonderWp\Framework\Form\Field\FieldInterface;
+use WonderWp\Framework\Form\Field\SelectField;
 
 class FormView implements FormViewInterface
 {

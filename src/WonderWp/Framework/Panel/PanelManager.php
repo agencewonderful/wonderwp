@@ -3,7 +3,7 @@
 namespace WonderWp\Framework\Panel;
 
 use WonderWp\Framework\DependencyInjection\Container;
-use WonderWp\Framework\Form\Fields\AbstractField;
+use WonderWp\Framework\Form\Field\AbstractField;
 use WonderWp\Framework\Form\Form;
 use WonderWp\Framework\HttpFoundation\Request;
 

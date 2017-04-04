@@ -1,15 +1,15 @@
 <?php
 
-namespace WonderWp\Framework\Form\Fields;
+namespace WonderWp\Framework\Form\Field;
 
-class CategoryField extends SelectField
+class CategoryRadioField extends RadioField
 {
     /** @inheritdoc */
     public function __construct($name, $value = null, $displayRules = [], $validationRules = [], $parent = 0)
     {
         parent::__construct($name, $value, $displayRules, $validationRules);
 
-        $this->setCatOptions($parent);
+        $this->setCatOptions($parent)->generateRadios();
     }
 
     /**
@@ -19,11 +19,7 @@ class CategoryField extends SelectField
      */
     public function setCatOptions($parent)
     {
-        $displayRules = $this->getDisplayRules();
-        $firstLabel   = (!empty($displayRules) && !empty($displayRules['label'])) ? $displayRules['label'] : __('Category', WWP_THEME_TEXTDOMAIN);
-        $options      = [
-            '' => $firstLabel,
-        ];
+        $options = [];
 
         $args = [
             'child_of'   => $parent,
@@ -42,4 +38,5 @@ class CategoryField extends SelectField
 
         return $this;
     }
+
 }

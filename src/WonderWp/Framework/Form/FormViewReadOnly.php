@@ -2,8 +2,8 @@
 
 namespace WonderWp\Framework\Form;
 
-use WonderWp\Framework\Form\Fields\FieldInterface;
-use WonderWp\Framework\Form\Fields\HiddenField;
+use WonderWp\Framework\Form\Field\FieldInterface;
+use WonderWp\Framework\Form\Field\HiddenField;
 
 class FormViewReadOnly extends FormView
 {

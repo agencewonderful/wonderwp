@@ -1,15 +1,15 @@
 <?php
 
-namespace WonderWp\Framework\Form\Fields;
+namespace WonderWp\Framework\Form\Field;
 
-class DateField extends InputField
+class UrlField extends InputField
 {
     /** @inheritdoc */
     public function __construct($name, $value, $displayRules = [], $validationRules = [])
     {
         parent::__construct($name, $value, $displayRules, $validationRules);
 
-        $this->type = 'date';
+        $this->type = 'url';
 
         if (!array_key_exists('class', $this->displayRules['inputAttributes'])) {
             $this->displayRules['inputAttributes']['class'] = [];

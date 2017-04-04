@@ -3,8 +3,8 @@
 namespace WonderWp\Framework\Form;
 
 use WonderWp\Framework\DependencyInjection\Container;
-use WonderWp\Framework\Form\Fields\FieldGroup;
-use WonderWp\Framework\Form\Fields\FieldInterface;
+use WonderWp\Framework\Form\Field\FieldGroup;
+use WonderWp\Framework\Form\Field\FieldInterface;
 
 class Form implements FormInterface
 {

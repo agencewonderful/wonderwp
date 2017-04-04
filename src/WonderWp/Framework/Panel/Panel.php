@@ -2,7 +2,7 @@
 
 namespace WonderWp\Framework\Panel;
 
-use WonderWp\Framework\Form\Fields\FieldInterface;
+use WonderWp\Framework\Form\Field\FieldInterface;
 
 class Panel implements PanelInterface
 {
