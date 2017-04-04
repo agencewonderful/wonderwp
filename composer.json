@@ -2,15 +2,6 @@
     "name": "wonderwp/framework",
     "description": "WonderWP Framework part",
     "type": "library",
-    "require": {
-        "symfony/http-foundation": "~2.8|^3.0",
-        "pimple/pimple": "~3.0",
-        "doctrine/orm": "^2.4",
-        "gedmo/doctrine-extensions": "2.4.*",
-        "symfony/yaml": "2.*",
-        "wp-cli/wp-cli": "0.25.*",
-        "respect/validation": "^1.1"
-    },
     "license": "MIT",
     "authors": [
         {
@@ -18,10 +9,19 @@
             "email": "jeremy.desvaux@wonderful.com"
         }
     ],
+    "require": {
+        "johnpbloch/wordpress": "^4.7",
+        "pimple/pimple": "~3.0",
+        "respect/validation": "^1.1",
+        "symfony/http-foundation": "~2.8|^3.0",
+        "wp-cli/wp-cli": "0.25.*"
+    },
     "autoload": {
-        "psr-4": { "WonderWp\\": "src" },
-        "exclude-from-classmap": [
-            "/Tests/"
+        "psr-4": {
+            "WonderWp\\Framework\\": "src/WonderWp/Framework"
+        },
+        "files": [
+            "src/WonderWp/Framework/functions.php"
         ]
     }
 }
