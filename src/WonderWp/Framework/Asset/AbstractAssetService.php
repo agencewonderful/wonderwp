@@ -1,6 +1,6 @@
 <?php
 
-namespace WonderWp\Framework\Assets;
+namespace WonderWp\Framework\Asset;
 
 abstract class AbstractAssetService implements AssetServiceInterface
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace WonderWp\Framework\Assets;
+namespace WonderWp\Framework\Asset;
 
 use WonderWp\Framework\DependencyInjection\SingletonInterface;
 use WonderWp\Framework\DependencyInjection\SingletonTrait;

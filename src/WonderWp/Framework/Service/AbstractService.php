@@ -1,6 +1,6 @@
 <?php
 
-namespace WonderWp\Framework\Services;
+namespace WonderWp\Framework\Service;
 
 abstract class AbstractService implements ServiceInterface
 {

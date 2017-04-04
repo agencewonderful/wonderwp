@@ -16,7 +16,7 @@ class MandrillMailer extends AbstractMailer
      *
      * @return Result
      */
-    public function send($opts = [])
+    public function send(array $opts = [])
     {
         $container = Container::getInstance();
         if (empty($this->_mandrill)) {
@@ -57,6 +57,12 @@ class MandrillMailer extends AbstractMailer
         return $result;
     }
 
+    /**
+     * Opts to json payload
+     * @param $opts
+     *
+     * @return array
+     */
     public function computeJsonPayload($opts)
     {
 

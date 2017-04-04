@@ -3,14 +3,14 @@
 namespace WonderWp\Framework\AbstractPlugin;
 
 use WonderWp\Framework\API\ApiServiceInterface;
-use WonderWp\Framework\Assets\AssetServiceInterface;
+use WonderWp\Framework\Asset\AssetServiceInterface;
 use WonderWp\Framework\DependencyInjection\Container;
-use WonderWp\Framework\Hooks\HookServiceInterface;
+use WonderWp\Framework\Hook\HookServiceInterface;
 use WonderWp\Framework\HttpFoundation\Request;
 use WonderWp\Framework\Route\RouteServiceInterface;
-use WonderWp\Framework\Services\ServiceInterface;
+use WonderWp\Framework\Service\ServiceInterface;
 use WonderWp\Framework\Shortcode\ShortcodeServiceInterface;
-use WonderWp\Framework\Tasks\TaskServiceInterface;
+use WonderWp\Framework\Task\TaskServiceInterface;
 
 abstract class AbstractManager implements ManagerInterface
 {

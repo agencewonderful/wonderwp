@@ -4,15 +4,24 @@ namespace WonderWp\Framework\Mail;
 
 abstract class AbstractMailer implements MailerInterface
 {
+    /** @var  string */
     protected $_subject;
+    /** @var  string */
     protected $_body;
+    /** @var  string */
     protected $_alt_body;
 
+    /** @var array  */
     protected $_to       = [];
+    /** @var array  */
     protected $_cc       = [];
+    /** @var array  */
     protected $_bcc      = [];
+    /** @var array  */
     protected $_from     = [];
+    /** @var array  */
     protected $_reply_to = [];
+    /** @var array  */
     protected $_headers  = [];
 
     /**

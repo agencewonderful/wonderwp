@@ -4,10 +4,6 @@ namespace WonderWp\Framework\Form;
 
 use WonderWp\Framework\Form\Fields\FieldInterface;
 
-/**
- * Interface FormInterface
- * @package WonderWp\Forms
- */
 interface FormInterface
 {
     /**

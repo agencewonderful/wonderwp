@@ -7,17 +7,12 @@ use WonderWp\Framework\Form\Fields\AbstractField;
 use WonderWp\Framework\Form\Form;
 use WonderWp\Framework\HttpFoundation\Request;
 
-/**
- * Class NoewpPageBOParameterPanelManager
- * @package NoewpModels
- * @since   08/07/2011
- */
 class PanelManager
 {
 
     /**
      * The list of panels
-     * @var array
+     * @var PanelInterface[]
      */
     private $_panelList = [];
 

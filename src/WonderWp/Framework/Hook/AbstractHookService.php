@@ -1,8 +1,8 @@
 <?php
 
-namespace WonderWp\Framework\Hooks;
+namespace WonderWp\Framework\Hook;
 
-use WonderWp\Framework\Services\AbstractService;
+use WonderWp\Framework\Service\AbstractService;
 
 abstract class AbstractHookService extends AbstractService implements HookServiceInterface
 {

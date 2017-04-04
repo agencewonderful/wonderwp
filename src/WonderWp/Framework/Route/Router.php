@@ -7,14 +7,25 @@ use WonderWp\Framework\HttpFoundation\Request;
 class Router extends AbstractRouter
 {
 
+    /**
+     * @var Route[]
+     */
     protected $_routes        = [];
+    /**
+     * @var RouteServiceInterface[]
+     */
     protected $_services      = [];
+    /**
+     * @var string
+     */
     protected $_routeVariable = 'route';
-
     /**
      * @var Route
      */
     protected $_matchedRoute;
+    /**
+     * @var array
+     */
     protected $_matchedRouteParams = [];
 
     public function __construct()
@@ -26,11 +37,19 @@ class Router extends AbstractRouter
         add_filter('query_vars', [$this, 'registerQueryVars']);
     }
 
+    /**
+     * Each plugin's own routing service is registered towards this router instance by calling this method
+     * @param RouteServiceInterface $routeService
+     */
     public function addService(RouteServiceInterface $routeService)
     {
         $this->_services[] = $routeService;
     }
 
+    /**
+     * Ask each routing service for their routes
+     * @return Route[]
+     */
     public function getRoutes()
     {
         if (!empty($this->_services)) {
@@ -52,6 +71,10 @@ class Router extends AbstractRouter
         return $this->_routes;
     }
 
+    /**
+     * Routes are then registered to WordPress
+     * @return $this
+     */
     public function registerRules()
     {
 
@@ -87,8 +110,16 @@ class Router extends AbstractRouter
                 add_rewrite_rule($regex, $newRewriteRule, 'top');
             }
         }
+
+        return $this;
     }
 
+    /**
+     * Make wildcards known from WordPress
+     * @param array $vars
+     *
+     * @return array
+     */
     public function registerQueryVars($vars)
     {
         $routes = $this->getRoutes();
@@ -158,6 +189,11 @@ class Router extends AbstractRouter
         }
     }
 
+    /**
+     * @param array $query_variables
+     *
+     * @return Route|\WP_Error
+     */
     public function match(array $query_variables)
     {
         //Check Route Variable

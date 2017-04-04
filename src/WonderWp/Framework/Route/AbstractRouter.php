@@ -6,7 +6,7 @@ abstract class AbstractRouter implements RouterInterface
 {
 
     /**
-     * @return $this
+     * @inheritdoc
      */
     public function flushRules()
     {

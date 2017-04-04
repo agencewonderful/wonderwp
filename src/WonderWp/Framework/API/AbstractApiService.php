@@ -3,7 +3,7 @@
 namespace WonderWp\Framework\API;
 
 use WonderWp\Framework\HttpFoundation\Request;
-use WonderWp\Framework\Services\AbstractService;
+use WonderWp\Framework\Service\AbstractService;
 
 abstract class AbstractApiService extends AbstractService implements ApiServiceInterface
 {

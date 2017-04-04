@@ -22,6 +22,12 @@ class AdminNotification
      */
     public static $template = '<div class="{classes}" role="alert"><p>{message}</p></div>';
 
+    /**
+     * AdminNotification constructor.
+     *
+     * @param string $type
+     * @param string $message
+     */
     public function __construct($type, $message)
     {
         $this->_type    = $type;
@@ -104,6 +110,9 @@ class AdminNotification
         return $markup;
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return $this->getMarkup();

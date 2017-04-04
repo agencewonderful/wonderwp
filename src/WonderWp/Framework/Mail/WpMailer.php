@@ -7,15 +7,8 @@ use WonderWp\Framework\API\Result;
 class WpMailer extends AbstractMailer
 {
 
-    protected $_headers = [];
-
     /**
-     * setFrom
-     *
-     * @param string $email The email to send as from.
-     * @param string $name  The name to send as from.
-     *
-     * @return $this
+     * @inheritdoc
      */
     public function setFrom($email, $name = '')
     {
@@ -81,7 +74,7 @@ class WpMailer extends AbstractMailer
     /**
      * @inheritDoc
      */
-    public function send()
+    public function send(array $opts = [])
     {
         $to      = !(empty($this->_to)) ? join(', ', $this->_to) : '';
         $subject = $this->_subject;
@@ -93,6 +86,10 @@ class WpMailer extends AbstractMailer
         return new Result($code);
     }
 
+    /**
+     * array of headers to formatted string
+     * @return string
+     */
     public function prepareHeaders()
     {
 

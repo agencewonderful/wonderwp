@@ -1,6 +1,6 @@
 <?php
 
-namespace WonderWp\Framework\Templates\Views;
+namespace WonderWp\Framework\Template\Views;
 
 class AdminVue {
     

@@ -2,16 +2,30 @@
 
 namespace WonderWp\Framework\Panel;
 
+use WonderWp\Framework\Form\Fields\FieldInterface;
+
 class Panel implements PanelInterface
 {
 
+    /**
+     * @var string
+     */
     private $_id;
+    /**
+     * @var string
+     */
     private $_title;
+    /**
+     * @var FieldInterface[]
+     */
     private $_fields    = [];
+    /**
+     * @var array
+     */
     private $_postTypes = [];
 
     /**
-     * @return mixed
+     * @inheritdoc
      */
     public function getId()
     {
@@ -19,9 +33,7 @@ class Panel implements PanelInterface
     }
 
     /**
-     * @param mixed $id
-     *
-     * @return $this
+     * @inheritdoc
      */
     public function setId($id)
     {
@@ -31,7 +43,7 @@ class Panel implements PanelInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getTitle()
     {
@@ -39,9 +51,7 @@ class Panel implements PanelInterface
     }
 
     /**
-     * @param string $title
-     *
-     * @return $this
+     * @inheritdoc
      */
     public function setTitle($title)
     {
@@ -51,7 +61,7 @@ class Panel implements PanelInterface
     }
 
     /**
-     * @return array
+     * @inheritdoc
      */
     public function getFields()
     {
@@ -59,9 +69,7 @@ class Panel implements PanelInterface
     }
 
     /**
-     * @param mixed $fields
-     *
-     * @return $this
+     * @inheritdoc
      */
     public function setFields($fields)
     {
@@ -71,7 +79,7 @@ class Panel implements PanelInterface
     }
 
     /**
-     * @return array
+     * @inheritdoc
      */
     public function getPostTypes()
     {
@@ -79,9 +87,7 @@ class Panel implements PanelInterface
     }
 
     /**
-     * @param array $postTypes
-     *
-     * @return $this
+     * @inheritdoc
      */
     public function setPostTypes(array $postTypes)
     {

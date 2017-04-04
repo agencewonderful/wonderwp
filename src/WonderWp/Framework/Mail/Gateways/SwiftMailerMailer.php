@@ -19,6 +19,9 @@ class SwiftMailerMailer extends AbstractMailer
         return $this;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function setSubject($subject)
     {
         $this->_message->setSubject($subject);
@@ -26,6 +29,9 @@ class SwiftMailerMailer extends AbstractMailer
         return $this;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function setFrom($email, $name = "")
     {
         $this->_message->setFrom([$email => $name]);
@@ -33,6 +39,9 @@ class SwiftMailerMailer extends AbstractMailer
         return $this;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function addTo($email, $name = "")
     {
         $this->_message->addTo($email, $name);
@@ -40,6 +49,9 @@ class SwiftMailerMailer extends AbstractMailer
         return $this;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function addCc($email, $name = "")
     {
         $this->_message->addCc($email, $name);
@@ -47,6 +59,9 @@ class SwiftMailerMailer extends AbstractMailer
         return $this;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function addBcc($email, $name = "")
     {
         $this->_message->addBcc($email, $name);
@@ -54,6 +69,9 @@ class SwiftMailerMailer extends AbstractMailer
         return $this;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function setBody($body)
     {
         $body = apply_filters('wwp.mailer.setBody', str_replace("\n.", "\n..", (string)$body));
@@ -63,9 +81,9 @@ class SwiftMailerMailer extends AbstractMailer
     }
 
     /**
-     * @return Result
+     * @inheritdoc
      */
-    public function send()
+    public function send(array $opts = [])
     {
         $container = Container::getInstance();
         $transport = $container->offsetExists('wwp.emails.mailer.swift_transport') ? $container->offsetGet('wwp.emails.mailer.swift_transport') : \Swift_MailTransport::newInstance();

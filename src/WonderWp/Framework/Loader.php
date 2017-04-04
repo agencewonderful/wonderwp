@@ -20,10 +20,10 @@ use Gedmo\Uploadable\UploadableListener;
 use Sluggable\Fixture\Issue939\SluggableListener;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
-use WonderWp\Framework\Assets\Asset;
-use WonderWp\Framework\Assets\AssetManager;
-use WonderWp\Framework\Assets\JsonAssetEnqueuer;
-use WonderWp\Framework\Assets\JsonAssetExporter;
+use WonderWp\Framework\Asset\Asset;
+use WonderWp\Framework\Asset\AssetManager;
+use WonderWp\Framework\Asset\JsonAssetEnqueuer;
+use WonderWp\Framework\Asset\JsonAssetExporter;
 use WonderWp\Framework\DB\DebugStack;
 use WonderWp\Framework\DB\TablePrefix;
 use WonderWp\Framework\DependencyInjection\Container;
@@ -37,10 +37,10 @@ use WonderWp\Framework\Mail\WpMailer;
 use WonderWp\Framework\Panel\Panel;
 use WonderWp\Framework\Panel\PanelManager;
 use WonderWp\Framework\Route\Router;
-use WonderWp\Framework\Templates\Views\AdminVue;
-use WonderWp\Framework\Templates\Views\EditAdminView;
-use WonderWp\Framework\Templates\Views\ListAdminView;
-use WonderWp\Framework\Templates\Views\OptionsAdminView;
+use WonderWp\Framework\Template\Views\AdminVue;
+use WonderWp\Framework\Template\Views\EditAdminView;
+use WonderWp\Framework\Template\Views\ListAdminView;
+use WonderWp\Framework\Template\Views\OptionsAdminView;
 
 class Loader implements SingletonInterface
 {

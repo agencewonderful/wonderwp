@@ -3,6 +3,7 @@
 namespace WonderWp\Framework\Mail;
 
 use WonderWp\Framework\API\Result;
+use WonderWp\Framework\Http\Response;
 
 /**
  * Interface MailInterface
@@ -14,30 +15,30 @@ interface MailerInterface
     /**
      * @param $subject
      *
-     * @return $this
+     * @return static
      */
     public function setSubject($subject);
 
     /**
-     * @param        $email
+     * @param string $email
      * @param string $name
      *
-     * @return $this
+     * @return static
      */
     public function setFrom($email, $name = "");
 
     /**
-     * @param        $email
+     * @param string $email
      * @param string $name
      *
-     * @return $this
+     * @return static
      */
     public function addTo($email, $name = "");
 
     /**
      * @param array $tos
      *
-     * @return $this
+     * @return static
      */
     public function addTos(array $tos);
 
@@ -49,15 +50,15 @@ interface MailerInterface
     /**
      * @param array $tos
      *
-     * @return $this
+     * @return static
      */
     public function setTo(array $tos);
 
     /**
-     * @param        $email
+     * @param string $email
      * @param string $name
      *
-     * @return $this
+     * @return static
      */
     public function setReplyTo($email, $name = "");
 
@@ -69,17 +70,17 @@ interface MailerInterface
     //Ccs
 
     /**
-     * @param        $email
+     * @param string $email
      * @param string $name
      *
-     * @return $this
+     * @return static
      */
     public function addCc($email, $name = "");
 
     /**
      * @param array $ccs
      *
-     * @return $this
+     * @return static
      */
     public function addCcs(array $ccs);
 
@@ -91,64 +92,66 @@ interface MailerInterface
     /**
      * @param array $ccs
      *
-     * @return $this
+     * @return static
      */
     public function setCc(array $ccs);
 
     //Bccs
 
     /**
-     * @param        $email
+     * @param string $email
      * @param string $name
      *
-     * @return $this
+     * @return static
      */
     public function addBcc($email, $name = "");
 
     /**
      * @param array $bccs
      *
-     * @return $this
+     * @return static
      */
     public function addBccs(array $bccs);
 
     /**
-     * @return $this
+     * @return static
      */
     public function getBcc();
 
     /**
      * @param array $bccs
      *
-     * @return $this
+     * @return static
      */
     public function setBcc(array $bccs);
 
     /**
      * @param $body
      *
-     * @return $this
+     * @return static
      */
     public function setBody($body);
 
     /**
      * @param $alternativeBody
      *
-     * @return $this
+     * @return static
      */
     public function setAltBody($alternativeBody);
 
     /**
-     * @param      $path
-     * @param null $filename
+     * @param string $path
+     * @param null   $filename
      *
-     * @return $this
+     * @return static
      */
     public function addAttachment($path, $filename = null);
 
     /**
+     * @param array $opts
+     *
      * @return Result
      */
-    public function send();
+    public function send(array $opts = []);
 
 }

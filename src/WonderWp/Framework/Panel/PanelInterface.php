@@ -2,6 +2,8 @@
 
 namespace WonderWp\Framework\Panel;
 
+use WonderWp\Framework\Form\Fields\FieldInterface;
+
 interface PanelInterface
 {
 
@@ -13,7 +15,7 @@ interface PanelInterface
     /**
      * @param mixed $id
      *
-     * @return $this
+     * @return static
      */
     public function setId($id);
 
@@ -25,19 +27,19 @@ interface PanelInterface
     /**
      * @param string $title
      *
-     * @return $this
+     * @return static
      */
     public function setTitle($title);
 
     /**
-     * @return array
+     * @return FieldInterface[]
      */
     public function getFields();
 
     /**
      * @param mixed $fields
      *
-     * @return $this
+     * @return static
      */
     public function setFields($fields);
 
@@ -49,7 +51,7 @@ interface PanelInterface
     /**
      * @param array $postTypes
      *
-     * @return $this
+     * @return static
      */
     public function setPostTypes(array $postTypes);
 
