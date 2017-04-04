@@ -14,4 +14,9 @@ abstract class AbstractPluginActivator implements ActivatorInterface
     {
         $this->version = $version;
     }
+
+    /** @inheritdoc */
+    public function activate()
+    {
+    }
 }

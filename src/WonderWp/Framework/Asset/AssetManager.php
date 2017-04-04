@@ -7,9 +7,7 @@ use WonderWp\Framework\DependencyInjection\SingletonTrait;
 
 class AssetManager implements SingletonInterface
 {
-    use SingletonTrait {
-        SingletonTrait::__construct as traitConstruct;
-    }
+    use SingletonTrait;
 
     /**
      * Array $_dependencies, the name/path association for each javascript file

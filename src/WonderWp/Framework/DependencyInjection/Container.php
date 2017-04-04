@@ -25,14 +25,12 @@ class Container extends PimpleContainer implements SingletonInterface
 
     /**
      * Dumps the container for IDE auto-completion purposes
-     *
-     * @param Container $container
      */
-    public function dump(Container $container = null)
+    public function dump()
     {
-        $map = $this->parseContainer($container ?: $this);
+        $map = $this->parseContainer($this);
 
-        $fileName = $container['pimple_dump.output_dir'] . '/pimple.json';
+        $fileName = $this['pimple_dump.output_dir'] . '/pimple.json';
         $this->write($map, $fileName);
 
         $this->processed = true;
