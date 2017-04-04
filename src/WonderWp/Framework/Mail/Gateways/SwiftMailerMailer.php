@@ -2,9 +2,9 @@
 
 namespace WonderWp\Framework\Mail\Gateways;
 
-use WonderWp\API\Result;
-use WonderWp\DI\Container;
-use WonderWp\Mail\AbstractMailer;
+use WonderWp\Framework\API\Result;
+use WonderWp\Framework\DependencyInjection\Container;
+use WonderWp\Framework\Mail\AbstractMailer;
 
 class SwiftMailerMailer extends AbstractMailer
 {

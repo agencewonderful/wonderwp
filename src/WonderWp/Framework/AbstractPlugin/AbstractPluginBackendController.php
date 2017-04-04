@@ -3,9 +3,6 @@
 namespace WonderWp\Framework\AbstractPlugin;
 
 use WonderWp\Framework\DependencyInjection\Container;
-use WonderWp\Framework\Forms\FormInterface;
-use WonderWp\Framework\Forms\FormViewInterface;
-use WonderWp\Framework\Forms\ModelForm;
 use WonderWp\Framework\HttpFoundation\Request;
 use WonderWp\Framework\Notification\AdminNotification;
 use WonderWp\Framework\Services\ServiceInterface;
@@ -136,122 +133,6 @@ abstract class AbstractPluginBackendController
         }
 
         return $listTable;
-    }
-
-    /**
-     * @param string $entityName
-     * @param null   $modelForm
-     */
-    public function editAction($entityName = '', $modelForm = null)
-    {
-        $container = Container::getInstance();
-        $request   = Request::getInstance();
-        $em        = $container->offsetGet('entityManager');
-        $prefix    = $this->manager->getConfig('prefix');
-
-        //Load entity
-        $id = $request->get('id', 0);
-        if (empty($entityName)) {
-            $entityName = $this->manager->getConfig('entityName');
-        }
-        if (!empty($id)) {
-            $item = $em->find($entityName, $id);
-        } else {
-            $item = new $entityName();
-        }
-
-        //Get new form instance
-        /* @var $formInstance FormInterface */
-        $formInstance = $container->offsetGet('wwp.forms.form');
-
-        //Build model form, by adding fields corresponding to the model attributes, to the form instance
-        /* @var $modelForm ModelForm */
-        if ($modelForm === null) {
-            $modelForm = $this->manager->getService(ServiceInterface::MODEL_FORM_SERVICE_NAME);
-        }
-        if ($modelForm === null) {
-            $modelForm = $container->offsetGet('wwp.forms.modelForm');
-        }
-
-        //load textdomain
-        $textDomain = $modelForm->getTextDomain();
-        if (empty($textDomain)) {
-            $textDomain = $this->manager->getConfig('textDomain');
-        }
-        if (!empty($textDomain)) {
-            $modelForm->setTextDomain($textDomain);
-        }
-
-        //Set Model instance
-        $modelForm->setModelInstance($item);
-
-        //Set form instance, then build form from model attributes and groups
-        $modelForm->setFormInstance($formInstance)->buildForm();
-
-        $errors       = [];
-        $notification = null;
-        if ($request->getMethod() == 'POST') {
-            $data = $request->request->all();
-            /*} else {
-                $data = array();
-            }*/
-
-            $formValidator = $container->offsetExists($prefix . 'wwp.forms.formValidator') ? $container->offsetGet($prefix . 'wwp.forms.formValidator')
-                : $container->offsetGet('wwp.forms.formValidator');
-            $errors        = $modelForm->handleRequest($data, $formValidator);
-            if (!empty($errors)) {
-                $notifType = 'error';
-                $notifMsg  = ($id > 0) ? $container->offsetGet('wwp.element.edit.error') : $container->offsetGet('wwp.element.add.error');
-            } else {
-                $notifType = 'success';
-                $notifMsg  = ($id > 0) ? $container->offsetGet('wwp.element.edit.success') : $container->offsetGet('wwp.element.add.success');
-            }
-            $notification = new AdminNotification($notifType, $notifMsg);
-        }
-
-        $formInstance = $modelForm->getFormInstance();
-
-        //Form View
-        /* @var FormViewInterface $formView */
-        $formView = $container->offsetGet('wwp.forms.formView');
-        $formView->setFormInstance($formInstance);
-
-        $container->offsetGet('wwp.views.editAdmin')
-                  ->registerFrags($prefix)
-                  ->render([
-                      'title'         => get_admin_page_title(),
-                      'tabs'          => $this->getTabs(),
-                      'formView'      => $formView,
-                      'formSubmitted' => ($request->getMethod() == 'POST'),
-                      'formValid'     => (empty($errors)),
-                      'notification'  => $notification,
-                  ])
-        ;
-
-    }
-
-    public function deleteAction()
-    {
-        $container = Container::getInstance();
-        $em        = $container->offsetGet('entityManager');
-        $request   = Request::getInstance();
-
-        //Load entity
-        $id         = $request->get('id', 0);
-        $entityName = $this->manager->getConfig('entityName');
-
-        if (!empty($id)) {
-            $item = $em->find($entityName, $id);
-            $em->remove($item);
-            $em->flush();
-            $request->getSession()->getFlashbag()->add('success', $container->offsetGet('wwp.element.delete.success'));
-        } else {
-            $request->getSession()->getFlashbag()->add('success', $container->offsetGet('wwp.element.delete.error'));
-        }
-        $request->query->remove('action');
-        $request->query->remove('id');
-
-        \WonderWp\Framework\redirect($request->getBaseUrl() . '?' . http_build_query($request->query->all()));
     }
 
     /**

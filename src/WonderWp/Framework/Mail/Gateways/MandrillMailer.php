@@ -2,24 +2,24 @@
 
 namespace WonderWp\Framework\Mail\Gateways;
 
-use WonderWp\API\Result;
-use WonderWp\DI\Container;
-use WonderWp\Mail\AbstractMailer;
+use WonderWp\Framework\API\Result;
+use WonderWp\Framework\DependencyInjection\Container;
+use WonderWp\Framework\Mail\AbstractMailer;
 
 class MandrillMailer extends AbstractMailer
 {
-
-    /** @var  \Mandrill  */
+    /** @var  \Mandrill */
     private $_mandrill;
 
     /**
      * @param array $opts
+     *
      * @return Result
      */
-    public function send($opts=array())
+    public function send($opts = [])
     {
         $container = Container::getInstance();
-        if(empty($this->_mandrill)) {
+        if (empty($this->_mandrill)) {
             $this->_mandrill = new \Mandrill($container->offsetGet('mandrill_api_key'));
         }
 
@@ -28,18 +28,18 @@ class MandrillMailer extends AbstractMailer
         $endPointUrl = '/messages/send';
 
         $body = $this->getBody();
-        if(strpos($body,'template::')!==false){
+        if (strpos($body, 'template::') !== false) {
             $endPointUrl = '/messages/send-template';
         }
 
-        $res = $this->_mandrill->call($endPointUrl,$jsonPayLoad);
+        $res = $this->_mandrill->call($endPointUrl, $jsonPayLoad);
 
-        $successes = array();
-        $failures = array();
+        $successes = [];
+        $failures  = [];
 
-        if(!empty($res)){
-            foreach($res as $sentTo){
-                if(!empty($sentTo['status']) && in_array($sentTo['status'],array("sent", "queued", "scheduled"))){
+        if (!empty($res)) {
+            foreach ($res as $sentTo) {
+                if (!empty($sentTo['status']) && in_array($sentTo['status'], ["sent", "queued", "scheduled"])) {
                     $successes[] = $sentTo;
                 } else {
                     $failures[] = $sentTo;
@@ -48,58 +48,60 @@ class MandrillMailer extends AbstractMailer
         }
 
         $code = 500;
-        if(!empty($successes)){
+        if (!empty($successes)) {
             $code = 200;
         }
 
-        $result = new Result($code,array('res'=>$res,'successes'=>$successes,'failures'=>$failures));
+        $result = new Result($code, ['res' => $res, 'successes' => $successes, 'failures' => $failures]);
+
         return $result;
     }
 
-    public function computeJsonPayload($opts){
+    public function computeJsonPayload($opts)
+    {
 
-        $body = $this->getBody();
+        $body     = $this->getBody();
         $template = null;
-        if(strpos($body,'template::')!==false){
-            $template = str_replace('template::','',$body);
-            $body = null;
+        if (strpos($body, 'template::') !== false) {
+            $template = str_replace('template::', '', $body);
+            $body     = null;
         }
 
-        $defaultOpts = array (
-            'key' => $this->_mandrill->apikey,
+        $defaultOpts = [
+            'key'     => $this->_mandrill->apikey,
             'message' =>
-                array (
-                    'html' => $body,
-                    'text' => $this->getAltBody(),
-                    'subject' => $this->getSubject(),
-                    'from_email' => $this->_from[0],
-                    'from_name' => $this->_from[1],
-                    'to' => array (), //set further down
-                    'important' => false,
-                    'track_opens' => true,
-                    'track_clicks' => true,
-                    'auto_text' => true,
-                    'auto_html' => false,
-                    'inline_css' => true,
-                    'url_strip_qs' => false,
-                    'preserve_recipients' => NULL,
-                    'view_content_link' => NULL,
+                [
+                    'html'                => $body,
+                    'text'                => $this->getAltBody(),
+                    'subject'             => $this->getSubject(),
+                    'from_email'          => $this->_from[0],
+                    'from_name'           => $this->_from[1],
+                    'to'                  => [], //set further down
+                    'important'           => false,
+                    'track_opens'         => true,
+                    'track_clicks'        => true,
+                    'auto_text'           => true,
+                    'auto_html'           => false,
+                    'inline_css'          => true,
+                    'url_strip_qs'        => false,
+                    'preserve_recipients' => null,
+                    'view_content_link'   => null,
                     //'bcc_address' => 'message.bcc_address@example.com',
-                    'tracking_domain' => NULL,
-                    'signing_domain' => NULL,
-                    'return_path_domain' => NULL,
-                    'merge' => true,
-                    'merge_language' => 'mailchimp',
-                    'global_merge_vars' =>
-                        array (
+                    'tracking_domain'     => null,
+                    'signing_domain'      => null,
+                    'return_path_domain'  => null,
+                    'merge'               => true,
+                    'merge_language'      => 'mailchimp',
+                    'global_merge_vars'   =>
+                        [
                             /*0 =>
                                 array (
                                     'name' => 'merge1',
                                     'content' => 'merge1 content',
                                 ),*/
-                        ),
-                    'merge_vars' =>
-                        array (
+                        ],
+                    'merge_vars'          =>
+                        [
                             /*0 =>
                                 array (
                                     'rcpt' => 'recipient.email@example.com',
@@ -112,7 +114,7 @@ class MandrillMailer extends AbstractMailer
                                                 ),
                                         ),
                                 ),*/
-                        ),
+                        ],
                     /*'tags' =>
                         array (
                             0 => 'password-resets',
@@ -123,12 +125,12 @@ class MandrillMailer extends AbstractMailer
                             0 => 'example.com',
                         ),
                     'google_analytics_campaign' => 'message.from_email@example.com',*/
-                    'metadata' =>
-                        array (
+                    'metadata'            =>
+                        [
                             'website' => get_bloginfo('url'),
-                        ),
-                    'recipient_metadata' =>
-                        array (
+                        ],
+                    'recipient_metadata'  =>
+                        [
                             /*0 =>
                                 array (
                                     'rcpt' => 'recipient.email@example.com',
@@ -137,56 +139,56 @@ class MandrillMailer extends AbstractMailer
                                             'user_id' => 123456,
                                         ),
                                 ),*/
-                        ),
-                    'attachments' =>
-                        array (
+                        ],
+                    'attachments'         =>
+                        [
                             /*0 =>
                                 array (
                                     'type' => 'text/plain',
                                     'name' => 'myfile.txt',
                                     'content' => 'ZXhhbXBsZSBmaWxl',
                                 ),*/
-                        ),
-                    'images' =>
-                        array (
-                           /* 0 =>
-                                array (
-                                    'type' => 'image/png',
-                                    'name' => 'IMAGECID',
-                                    'content' => 'ZXhhbXBsZSBmaWxl',
-                                ),*/
-                        ),
-                ),
-            'async' => false,
+                        ],
+                    'images'              =>
+                        [
+                            /* 0 =>
+                                 array (
+                                     'type' => 'image/png',
+                                     'name' => 'IMAGECID',
+                                     'content' => 'ZXhhbXBsZSBmaWxl',
+                                 ),*/
+                        ],
+                ],
+            'async'   => false,
             'ip_pool' => 'Main Pool',
             'send_at' => date('Y-m-d H:i:s'),
-        );
+        ];
 
         //template ?
-        if(!empty($template)){
-            $defaultOpts['template_name'] = $template;
-            $defaultOpts['template_content'] = array(
+        if (!empty($template)) {
+            $defaultOpts['template_name']    = $template;
+            $defaultOpts['template_content'] = [
 
-            );
+            ];
         }
 
         //Add recipients
-        if(!empty($this->_to)){
-            foreach($this->_to as $to){
-                $defaultOpts['message']['to'][] = array(
-                    'email'=>$to[0],
-                    'name'=>$to[1],
-                    'type'=>'to'
-                );
+        if (!empty($this->_to)) {
+            foreach ($this->_to as $to) {
+                $defaultOpts['message']['to'][] = [
+                    'email' => $to[0],
+                    'name'  => $to[1],
+                    'type'  => 'to',
+                ];
             }
         }
 
         //reply to
-        if(!empty($this->_reply_to)){
+        if (!empty($this->_reply_to)) {
             $defaultOpts['message']['headers']['Reply-To'] = $this->_reply_to[0];
         }
 
-        $payload = \WonderWp\array_merge_recursive_distinct($defaultOpts,$opts);
+        $payload = \WonderWp\Framework\array_merge_recursive_distinct($defaultOpts, $opts);
 
         return $payload;
     }

@@ -5,7 +5,6 @@ namespace WonderWp\Framework\Form\Validation;
 /**
  * @inheritdoc
  *
- * @method static Validator UniqueEntity(EntityRepository $repository, string $field, $entity = null)
  * @method static Validator WpTerm(int $parentId = null)
  * @method static Validator WpNonce(string $name)
  */

@@ -2,24 +2,32 @@
 
 namespace WonderWp\Framework\Templates\Views;
 
-class VueFrag {
+class VueFrag
+{
+    /** @var string */
+    protected $templateFile;
+    /** @var array */
+    protected $values;
 
-    private $templateFile;
-    private $values;
-
-    public function __construct($templateFile,$values=array())
+    /**
+     * @param string $templateFile
+     * @param array  $values
+     */
+    public function __construct($templateFile, array $values = [])
     {
         $this->templateFile = $templateFile;
-        $this->values = $values;
+        $this->values       = $values;
     }
 
-    public function render($values = array()){
-        $params = \WonderWp\array_merge_recursive_distinct($this->values,$values);
-        //Spread attributes
-        if(!empty($params)){ foreach($params as $key=>$val){
-            $$key = $val;
-        }}
+    /**
+     * @param array $values
+     */
+    public function render(array $values = [])
+    {
+        $params = \WonderWp\Framework\array_merge_recursive_distinct($this->values, $values);
+        // Spread attributes
+        extract($params);
+
         include $this->templateFile;
     }
-
 }

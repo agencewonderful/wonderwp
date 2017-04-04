@@ -1,12 +1,12 @@
 <div class="edit-form-wrap">
 <?php
 
-    /** @var \WonderWp\Notification\AdminNotification $notification */
+    /** @var \WonderWp\Framework\Notification\AdminNotification $notification */
     if(is_object($notification)){
         echo $notification;
     }
 
-    /** @var \WonderWp\Forms\FormViewInterface $formView */
+    /** @var \WonderWp\Framework\Form\FormViewInterface $formView */
     echo $formView->render();
 ?>
 </div>

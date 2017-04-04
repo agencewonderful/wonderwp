@@ -2,10 +2,10 @@
 
 namespace WonderWp\Framework\Panel;
 
-use WonderWp\DI\Container;
-use WonderWp\Forms\Fields\AbstractField;
-use WonderWp\Forms\Form;
-use WonderWp\HttpFoundation\Request;
+use WonderWp\Framework\DependencyInjection\Container;
+use WonderWp\Framework\Form\Fields\AbstractField;
+use WonderWp\Framework\Form\Form;
+use WonderWp\Framework\HttpFoundation\Request;
 
 /**
  * Class NoewpPageBOParameterPanelManager
@@ -63,8 +63,8 @@ class PanelManager
      * Affiche le contenu du panneau dans le panneau
      * @since 08/07/2011
      *
-     * @param object $post    , le post en cours
-     * @param array  $context , toutes les données utiles
+     * @param \WP_Post $post    , le post en cours
+     * @param array    $context , toutes les données utiles
      */
     public function displayPanel(\WP_Post $post, $context)
     {

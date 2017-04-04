@@ -2,7 +2,7 @@
 
 namespace WonderWp\Framework\Mail;
 
-use WonderWp\API\Result;
+use WonderWp\Framework\API\Result;
 
 class WpMailer extends AbstractMailer
 {
