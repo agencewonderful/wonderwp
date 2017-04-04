@@ -2,36 +2,17 @@
 
 namespace WonderWp\Framework;
 
-use Doctrine\Common\EventManager;
-use Doctrine\Common\Persistence\Mapping\Driver\AnnotationDriver;
-use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
-use Doctrine\ORM\Events;
-use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
-use Gedmo\DoctrineExtensions;
-use Gedmo\IpTraceable\IpTraceableListener;
-use Gedmo\Mapping\MappedEventSubscriber;
-use Gedmo\ReferenceIntegrity\ReferenceIntegrityListener;
-use Gedmo\References\ReferencesListener;
-use Gedmo\SoftDeleteable\SoftDeleteableListener;
-use Gedmo\Sortable\SortableListener;
-use Gedmo\Timestampable\TimestampableListener;
-use Gedmo\Tree\TreeListener;
-use Gedmo\Uploadable\UploadableListener;
-use Sluggable\Fixture\Issue939\SluggableListener;
-use Doctrine\ORM\Tools\Setup;
-use Doctrine\ORM\EntityManager;
 use WonderWp\Framework\Asset\Asset;
 use WonderWp\Framework\Asset\AssetManager;
 use WonderWp\Framework\Asset\JsonAssetEnqueuer;
 use WonderWp\Framework\Asset\JsonAssetExporter;
-use WonderWp\Framework\DB\DebugStack;
-use WonderWp\Framework\DB\TablePrefix;
 use WonderWp\Framework\DependencyInjection\Container;
+use WonderWp\Framework\DependencyInjection\SingletonInterface;
+use WonderWp\Framework\DependencyInjection\SingletonTrait;
 use WonderWp\Framework\Form\Form;
 use WonderWp\Framework\Form\FormValidator;
 use WonderWp\Framework\Form\FormView;
 use WonderWp\Framework\Form\FormViewReadOnly;
-use WonderWp\Framework\Form\ModelForm;
 use WonderWp\Framework\Http\WpRequester;
 use WonderWp\Framework\Mail\WpMailer;
 use WonderWp\Framework\Panel\Panel;
@@ -48,11 +29,6 @@ class Loader implements SingletonInterface
         SingletonTrait::buildInstance as createInstance;
     }
 
-    /**
-     * @var bool
-     */
-    private $gedmoLoaded = false;
-
     /** @inheritdoc */
     public static function buildInstance()
     {
@@ -68,7 +44,6 @@ class Loader implements SingletonInterface
      */
     public function load()
     {
-        die('load');
         // Create DI container
         $container = Container::getInstance();
 
@@ -93,170 +68,6 @@ class Loader implements SingletonInterface
             return require($container['path_root'] . 'vendor/autoload.php');
         };
 
-        $container['doctrine.sqlLogger'] = function () {
-            $logger       = new DebugStack();
-            $loggerDumper = function () use ($logger) {
-                echo '<div id="doctrineQueryLog">';
-                dump($logger, 5);
-                echo '</div>';
-            };
-            if (defined('SAVEQUERIES') && SAVEQUERIES) {
-                add_action('wp_footer', $loggerDumper);
-                add_action('admin_footer', $loggerDumper);
-            }
-
-            return $logger;
-        };
-
-        //Entity Manager
-        /**
-         * @param PContainer $container
-         *
-         * @return EntityManager
-         */
-        $container['entityManager'] = function (Container $container) {
-            global $wpdb;
-
-            //Paths
-            $autoLoader = $container['wwp.autoLoader'];
-            $multiPaths = $autoLoader->getPrefixesPsr4();
-
-            $paths = [];
-            if (!empty($multiPaths)) {
-                foreach ($multiPaths as $pathName => $aPath) {
-                    if (strpos($pathName, 'WonderWp') !== false) {
-                        $paths = array_merge($paths, $aPath);
-                    }
-                }
-            }
-
-            //Env
-            $isDevMode                 = WP_ENV == 'development';
-            $proxyDir                  = null;
-            $cache                     = null;
-            $useSimpleAnnotationReader = false; //Keep it false to use @ORM annotations
-
-            //Create doctrine config
-            $config = Setup::createConfiguration($isDevMode, $proxyDir, $cache);
-
-            //Setup annotation driver
-            $anDriver = $config->newDefaultAnnotationDriver($paths, $useSimpleAnnotationReader);
-            $anDriver->addExcludePaths([
-                $container['path_framework_root'] . '/Templates/frags',
-            ]);
-
-            $config->setMetadataDriverImpl($anDriver);
-            $config->addCustomNumericFunction('RAND', 'WonderWp\DB\Rand');
-            $sqlLogger = $container['doctrine.sqlLogger'];
-            $config->setSQLLogger($sqlLogger);
-            $config->setNamingStrategy(new UnderscoreNamingStrategy());
-            $uploadsDir = wp_get_upload_dir();
-            $config->setProxyDir($uploadsDir['basedir'] . DIRECTORY_SEPARATOR . 'doctrine');
-
-            //Evm, used to add wordpress table prefix
-            $evm = new EventManager();
-
-            //Prefix
-            $tablePrefix = new TablePrefix($wpdb->prefix);
-            $evm->addEventListener(Events::loadClassMetadata, $tablePrefix);
-
-            if (defined('USE_GEDMO_SLUGGABLE') && USE_GEDMO_SLUGGABLE === true) {
-                // Gedmo Sluggable
-                $this->loadGedmoExtension(new SluggableListener(), $anDriver, $evm);
-            }
-
-            if (defined('USE_GEDMO_TREE') && USE_GEDMO_TREE === true) {
-                // Gedmo Tree
-                $this->loadGedmoExtension(new TreeListener(), $anDriver, $evm);
-            }
-
-            if (defined('USE_GEDMO_TIMESTAMPABLE') && USE_GEDMO_TIMESTAMPABLE === true) {
-                // Gedmo Timestampable
-                $this->loadGedmoExtension(new TimestampableListener(), $anDriver, $evm);
-            }
-
-            if (defined('USE_GEDMO_SORTABLE') && USE_GEDMO_SORTABLE === true) {
-                // Gedmo Sortable
-                $this->loadGedmoExtension(new SortableListener(), $anDriver, $evm);
-            }
-
-            if (defined('USE_GEDMO_SOFT_DELETEABLE') && USE_GEDMO_SOFT_DELETEABLE === true) {
-                // Gedmo SoftDeleteable
-                $this->loadGedmoExtension(new SoftDeleteableListener(), $anDriver, $evm);
-            }
-
-            if (defined('USE_GEDMO_UPLOADABLE') && USE_GEDMO_UPLOADABLE === true) {
-                // Gedmo Uploadable
-                $listener = new UploadableListener();
-
-                if (defined('GEDMO_UPLOADABLE_DIRECTORY')) {
-                    $listener->setDefaultPath(GEDMO_UPLOADABLE_DIRECTORY);
-                }
-
-                $this->loadGedmoExtension($listener, $anDriver, $evm);
-            }
-
-            if (defined('USE_GEDMO_REFERENCES') && USE_GEDMO_REFERENCES === true) {
-                // Gedmo References
-                $this->loadGedmoExtension(new ReferencesListener(), $anDriver, $evm);
-            }
-
-            if (defined('USE_GEDMO_REFERENCE_INTEGRITY') && USE_GEDMO_REFERENCE_INTEGRITY === true) {
-                // Gedmo Reference Integrity
-                $this->loadGedmoExtension(new ReferenceIntegrityListener(), $anDriver, $evm);
-            }
-
-            if (defined('USE_GEDMO_IP_TRACEABLE') && USE_GEDMO_IP_TRACEABLE === true) {
-                // Gedmo IpTraceable
-                $this->loadGedmoExtension(new IpTraceableListener(), $anDriver, $evm);
-            }
-
-            /* TO DO Get $username value
-            if (defined('USE_GEDMO_LOGGABLE') && USE_GEDMO_LOGGABLE === true) {
-                // Gedmo Loggable
-                $listener = new \Gedmo\Loggable\LoggableListener();
-                $listener->setUsername($username);
-                $this->loadGedmoExtension($listener, $anDriver, $evm);
-            }
-            */
-
-            /* TO DO Get $defaultLocale value
-            if (defined('USE_GEDMO_TRANSLATABLE') && USE_GEDMO_TRANSLATABLE === true) {
-                // Gedmo Translatable
-                $listener = new \Gedmo\Translatable\TranslatableListener();
-                $listener->setTranslatableLocale($defaultLocale);
-                $listener->setDefaultLocale($defaultLocale);
-                $this->loadGedmoExtension($listener, $anDriver, $evm);
-            }
-            */
-
-            /* TO DO Get $connectedUser value
-            if (defined('USE_GEDMO_BLAMEABLE') && USE_GEDMO_BLAMEABLE === true) {
-                // Gedmo Blameable
-                $listener = new \Gedmo\Blameable\BlameableListener();
-                $listener->setUserValue($connectedUser);
-                $this->loadGedmoExtension($listener, $anDriver, $evm);
-            }
-            */
-
-            //Connection configuration
-            $dbParams = [
-                'driver'        => 'pdo_mysql',
-                'user'          => DB_USER,
-                'password'      => DB_PASSWORD,
-                'dbname'        => DB_NAME,
-                'host'          => DB_HOST,
-                'charset'       => 'utf8',
-                'driverOptions' => [
-                    1002 => 'SET NAMES utf8',
-                ],
-            ];
-
-            $em = EntityManager::create($dbParams, $config, $evm);
-
-            return $em;
-        };
-
         //Routes
         $container['wwp.routes.router'] = function () {
             return new Router();
@@ -277,9 +88,6 @@ class Loader implements SingletonInterface
         $container['wwp.assets.folder.path']   = str_replace(get_bloginfo('url'), '', str_replace(network_site_url(), '', get_stylesheet_directory_uri()));
 
         //Forms
-        $container['wwp.forms.modelForm']         = $container->factory(function () {
-            return new ModelForm();
-        });
         $container['wwp.forms.form']              = $container->factory(function () {
             return new Form();
         });
@@ -345,22 +153,5 @@ class Loader implements SingletonInterface
          * Make container available
          */
         Container::setInstance($container);
-    }
-
-    /**
-     * @param MappedEventSubscriber $listener
-     * @param AnnotationDriver      $annotationDriver
-     * @param EventManager          $eventManager
-     *
-     * @return void
-     */
-    protected function loadGedmoExtension(MappedEventSubscriber $listener, AnnotationDriver $annotationDriver, EventManager $eventManager)
-    {
-        if (!$this->gedmoLoaded) {
-            DoctrineExtensions::registerAbstractMappingIntoDriverChainORM(new MappingDriverChain(), $annotationDriver->getReader());
-        }
-
-        $listener->setAnnotationReader($annotationDriver->getReader());
-        $eventManager->addEventSubscriber($listener);
     }
 }

@@ -7,12 +7,6 @@ trait SingletonTrait
     /** @var SingletonTrait */
     private static $singletonInstance;
 
-    /** Prevent external instance creation */
-    protected function __construct() { }
-
-    /** Prevent external instance creation */
-    function __clone() { }
-
     /**
      * @return static
      */
