@@ -8,8 +8,8 @@ use WonderWp\Framework\Mail\AbstractMailer;
 
 class MandrillMailer extends AbstractMailer
 {
-    /** @var  \Mandrill */
-    private $_mandrill;
+    /** @var \Mandrill */
+    private $mandrill;
 
     /**
      * @param array $opts
@@ -19,8 +19,8 @@ class MandrillMailer extends AbstractMailer
     public function send(array $opts = [])
     {
         $container = Container::getInstance();
-        if (empty($this->_mandrill)) {
-            $this->_mandrill = new \Mandrill($container->offsetGet('mandrill_api_key'));
+        if (empty($this->mandrill)) {
+            $this->mandrill = new \Mandrill($container->offsetGet('mandrill_api_key'));
         }
 
         $jsonPayLoad = $this->computeJsonPayload($opts);
@@ -32,7 +32,7 @@ class MandrillMailer extends AbstractMailer
             $endPointUrl = '/messages/send-template';
         }
 
-        $res = $this->_mandrill->call($endPointUrl, $jsonPayLoad);
+        $res = $this->mandrill->call($endPointUrl, $jsonPayLoad);
 
         $successes = [];
         $failures  = [];
@@ -74,7 +74,7 @@ class MandrillMailer extends AbstractMailer
         }
 
         $defaultOpts = [
-            'key'     => $this->_mandrill->apikey,
+            'key'     => $this->mandrill->apikey,
             'message' =>
                 [
                     'html'                => $body,
@@ -198,5 +198,4 @@ class MandrillMailer extends AbstractMailer
 
         return $payload;
     }
-
 }

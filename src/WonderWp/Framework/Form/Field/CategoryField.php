@@ -20,7 +20,7 @@ class CategoryField extends SelectField
     public function setCatOptions($parent)
     {
         $displayRules = $this->getDisplayRules();
-        $firstLabel   = (!empty($displayRules) && !empty($displayRules['label'])) ? $displayRules['label'] : __('Category', WWP_THEME_TEXTDOMAIN);
+        $firstLabel   = (!empty($displayRules) && !empty($displayRules['label'])) ? $displayRules['label'] : __('Category', $this->getTextDomain());
         $options      = [
             '' => $firstLabel,
         ];
@@ -34,12 +34,20 @@ class CategoryField extends SelectField
         if (!empty($cats)) {
             foreach ($cats as $cat) {
                 /** @var $cat \WP_Term */
-                $options[$cat->term_id] = __('term_' . $cat->slug, WWP_THEME_TEXTDOMAIN);
+                $options[$cat->term_id] = __('term_' . $cat->slug, $this->getTextDomain());
             }
         }
 
         $this->setOptions($options);
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTextDomain()
+    {
+        return defined('WWP_THEME_TEXTDOMAIN') ? WWP_THEME_TEXTDOMAIN : 'default';
     }
 }

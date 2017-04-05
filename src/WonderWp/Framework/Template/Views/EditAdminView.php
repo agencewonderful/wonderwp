@@ -7,7 +7,7 @@ use WonderWp\Framework\DependencyInjection\Container;
 class EditAdminView extends AdminVue
 {
     /** @inheritdoc */
-    public function registerFrags($prefix, $frags = [])
+    public function registerFrags($prefix, array $frags = [])
     {
         $container = Container::getInstance();
 

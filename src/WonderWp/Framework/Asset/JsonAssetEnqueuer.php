@@ -38,7 +38,7 @@ class JsonAssetEnqueuer extends AbstractAssetEnqueuer
     /** @inheritdoc */
     public function enqueueScripts(array $groupNames)
     {
-        $env        = env('WP_ENV');
+        $env        = WP_ENV;
         $versionNum = $this->getVersion();
 
         foreach ($groupNames as $group) {

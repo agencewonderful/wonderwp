@@ -108,12 +108,10 @@ class FormValidator implements FormValidatorInterface
                         if ($validationClass == Optional::class) {
                             /** @var Optional $r */
                             $subRules = $r->getValidatable()->getRules();
-                            if (!empty($subRules)) {
-                                foreach ($subRules as $sr) {
-                                    $validationClass = get_class($r);
-                                    if ($validationClass == $ruleName) {
-                                        return true;
-                                    }
+                            foreach ($subRules as $sr) {
+                                $validationClass = get_class($sr);
+                                if ($validationClass == $ruleName) {
+                                    return true;
                                 }
                             }
                         }
