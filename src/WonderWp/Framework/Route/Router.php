@@ -28,6 +28,7 @@ class Router extends AbstractRouter
      */
     protected $_matchedRouteParams = [];
 
+    /** Construct */
     public function __construct()
     {
         add_action('init', [$this, 'registerRules']);

@@ -30,6 +30,12 @@ function trace()
     }
 }
 
+/**
+ * @param array $array1
+ * @param array $array2
+ *
+ * @return array
+ */
 function array_merge_recursive_distinct(array &$array1, array &$array2)
 {
     $merged = $array1;
@@ -45,6 +51,9 @@ function array_merge_recursive_distinct(array &$array1, array &$array2)
     return $merged;
 }
 
+/**
+ * @param string $url
+ */
 function redirect($url)
 {
     if (!headers_sent()) {
@@ -54,7 +63,12 @@ function redirect($url)
     }
 }
 
-function paramsToHtml($params)
+/**
+ * @param array $params
+ *
+ * @return string
+ */
+function paramsToHtml(array $params)
 {
     $paramsHtml = '';
     if (!empty($params)) {
@@ -69,7 +83,13 @@ function paramsToHtml($params)
     return $paramsHtml;
 }
 
-function implode_recursive($glue, $array)
+/**
+ * @param string $glue
+ * @param array  $array
+ *
+ * @return bool|string
+ */
+function implode_recursive($glue, array $array)
 {
     $ret = '';
 
@@ -86,6 +106,12 @@ function implode_recursive($glue, $array)
     return $ret;
 }
 
+/**
+ * @param string $pluginRoot
+ * @param string $filePath
+ *
+ * @return string
+ */
 function get_plugin_file($pluginRoot, $filePath)
 {
     $frags            = explode(DIRECTORY_SEPARATOR, trim($pluginRoot, DIRECTORY_SEPARATOR));
@@ -98,6 +124,10 @@ function get_plugin_file($pluginRoot, $filePath)
     return $fileDest;
 }
 
+/**
+ * @param string $pluginRoot
+ * @param string $filePath
+ */
 function include_plugin_file($pluginRoot, $filePath)
 {
     $pluginFile = get_plugin_file($pluginRoot, $filePath);
