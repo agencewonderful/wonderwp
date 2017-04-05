@@ -4,6 +4,7 @@ namespace WonderWp\Framework\Template\Views;
 
 class AdminVue
 {
+    /** @var VueFrag[] */
     protected $frags = [];
 
     /**
@@ -19,16 +20,18 @@ class AdminVue
     }
 
     /**
-     * @param array  $frags
+     * @param string $prefix
+     * @param array $frags
      *
      * @return $this
      */
-    public function registerFrags($frags = [])
+    public function registerFrags($prefix, array $frags = [])
     {
-        if (!empty($frags)) {
-            foreach ($frags as $vueFrag) {
-                $this->addFrag($vueFrag);
-            }
+        /** @var $prefix string */
+        //To be overridden by children
+
+        foreach ($frags as $vueFrag) {
+            $this->addFrag($vueFrag);
         }
 
         return $this;
