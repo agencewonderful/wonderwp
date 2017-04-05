@@ -119,11 +119,7 @@ class PanelManager
         $request  = Request::getInstance();
         $post_id  = $request->get('post_ID', 0);
         $postType = $request->request->get('post_type');
-        //$nonce = $request->get('module_noncename', ''); // verify this came from the our screen and with proper authorization, because save_post can be triggered at other times
-        /*if (!wp_verify_nonce($nonce, plugin_basename(__FILE__))) {
-            echo 1; die;
-            return $post_id;
-        }*/
+
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
             return $post_id;
         }    // verify if this is an auto save routine. If it is our form has not been submitted, so we dont want to do anything

@@ -99,10 +99,10 @@ class FormView implements FormViewInterface
     {
         $markup = '';
 
-        /*$errors = $this->_formInstance->getErrors();
+        $errors = $this->_formInstance->getErrors();
         if (!empty($errors)) {
             $markup .= '<div class="form-errors"></div>';
-        }*/
+        }
 
         return $markup;
     }

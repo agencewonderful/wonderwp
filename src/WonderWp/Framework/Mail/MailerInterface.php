@@ -3,7 +3,6 @@
 namespace WonderWp\Framework\Mail;
 
 use WonderWp\Framework\API\Result;
-use WonderWp\Framework\Http\Response;
 
 /**
  * Interface MailInterface

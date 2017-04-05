@@ -166,7 +166,6 @@ class Router extends AbstractRouter
             //Add query vars to request object
             $path    = $this->_matchedRoute->getPath();
             $request = Request::getInstance();
-            $params  = [];
             if (strpos($path, '{') !== false) {
                 preg_match_all('/{(.*?)}/', $path, $wildCardsMatchs);
                 if (!empty($wildCardsMatchs[1])) {
