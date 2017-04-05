@@ -19,12 +19,11 @@ class AdminVue
     }
 
     /**
-     * @param string $prefix
      * @param array  $frags
      *
      * @return $this
      */
-    public function registerFrags($prefix, $frags = [])
+    public function registerFrags($frags = [])
     {
         if (!empty($frags)) {
             foreach ($frags as $vueFrag) {
