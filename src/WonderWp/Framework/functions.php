@@ -2,8 +2,6 @@
 
 namespace WonderWp\Framework;
 
-use Doctrine\Common\Util\Debug;
-
 /**
  * Trace an object
  * Easier to read than a normal print_r
@@ -30,13 +28,6 @@ function trace()
             highlight_string(print_r($obj, true));
         }
     }
-}
-
-function dump($toDump, $maxDepth = 5)
-{
-    $backtrace = debug_backtrace(); // Get the backtrace of this function : who called it (w/ ancestors)
-    echo '<div style="font-style: italic;">' . $backtrace[0]['file'] . ':<span style="color: red;">' . $backtrace[0]['line'] . '</span></div>'; // Prints the ancestor's filepath and line number before the trace
-    highlight_string(Debug::dump($toDump, $maxDepth, true, false));
 }
 
 function array_merge_recursive_distinct(array &$array1, array &$array2)
