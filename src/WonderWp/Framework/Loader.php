@@ -52,7 +52,7 @@ class Loader implements SingletonInterface
          */
         $container['path_root']                = ABSPATH . '../../'; // root
         $container['path_framework_root']      = __DIR__; // Framework root
-        $container['wwp.path.templates.frags'] = $container['path_framework_root'] . '/Templates/frags'; //Templates
+        $container['wwp.path.templates.frags'] = $container['path_framework_root'] . '/Template/frags'; //Templates
 
         /**
          * Define Services
