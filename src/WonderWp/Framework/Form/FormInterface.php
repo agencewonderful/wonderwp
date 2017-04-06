@@ -32,10 +32,11 @@ interface FormInterface
 
     /**
      * @param FieldInterface $field
+     * @param string         $groupName
      *
      * @return static
      */
-    public function addField(FieldInterface $field = null);
+    public function addField(FieldInterface $field = null, $groupName = '');
 
     /**
      * @param array FieldInterface[] $fields
