@@ -5,6 +5,20 @@ namespace WonderWp\Framework\Form\Field;
 interface FieldInterface
 {
     /**
+     * @param array $passedRules
+     *
+     * @return static
+     */
+    public function computeDisplayRules($passedRules);
+
+    /**
+     * @param array $passedRules
+     *
+     * @return static
+     */
+    public function computeValidationRules($passedRules);
+
+    /**
      * @return string
      */
     public function getName();
