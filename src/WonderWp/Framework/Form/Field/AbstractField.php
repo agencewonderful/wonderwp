@@ -2,6 +2,8 @@
 
 namespace WonderWp\Framework\Form\Field;
 
+use function WonderWp\Framework\array_merge_recursive_distinct;
+
 abstract class AbstractField implements FieldInterface
 {
     /** @var string */
@@ -149,11 +151,7 @@ abstract class AbstractField implements FieldInterface
         return $this;
     }
 
-    /**
-     * @param array $passedRules
-     *
-     * @return static
-     */
+    /** @inheritdoc */
     public function computeDisplayRules($passedRules)
     {
         $defaultRules = [
@@ -167,17 +165,13 @@ abstract class AbstractField implements FieldInterface
             ],
         ];
 
-        $this->displayRules = \WonderWp\Framework\array_merge_recursive_distinct($this->displayRules, $defaultRules);
-        $this->displayRules = \WonderWp\Framework\array_merge_recursive_distinct($this->displayRules, $passedRules);
+        $this->displayRules = array_merge_recursive_distinct($this->displayRules, $defaultRules);
+        $this->displayRules = array_merge_recursive_distinct($this->displayRules, $passedRules);
 
         return $this;
     }
 
-    /**
-     * @param array $passedRules
-     *
-     * @return static
-     */
+    /** @inheritdoc */
     public function computeValidationRules($passedRules)
     {
         $this->validationRules = array_merge($this->validationRules, $passedRules);
