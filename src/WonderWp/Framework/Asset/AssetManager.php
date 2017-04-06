@@ -10,12 +10,12 @@ class AssetManager implements SingletonInterface
     use SingletonTrait;
 
     /**
-     * Array $_dependencies, the name/path association for each javascript file
+     * Array $dependencies, the name/path association for each javascript file
      * @var Asset[][]
      */
     protected $dependencies = [];
     /**
-     * Array $_queue, internal queue used when processing dependencies
+     * Array $queue, internal queue used when processing dependencies
      * @var array
      */
     protected $queue = [];

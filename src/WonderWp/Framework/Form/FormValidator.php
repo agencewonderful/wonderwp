@@ -10,36 +10,14 @@ use WonderWp\Framework\Form\Field\FieldInterface;
 
 class FormValidator implements FormValidatorInterface
 {
-    /**
-     * @var FormInterface
-     */
-    private $_formInstance;
-
-    /**
-     * @param FormInterface $form
-     *
-     * @return $this
-     */
-    public function setFormInstance(FormInterface $form)
-    {
-        $this->_formInstance = $form;
-
-        return $this;
-    }
-
-    /**
-     * @return FormInterface
-     */
-    public function getFormInstance()
-    {
-        return $this->_formInstance;
-    }
+    /** @var FormInterface */
+    protected $formInstance;
 
     /** @inheritdoc */
     public function validate(array $data, $translationDomain = 'default')
     {
         /** @var FieldInterface[] $fields */
-        $fields = $this->_formInstance->getFields();
+        $fields = $this->formInstance->getFields();
 
         $errors = [];
 
@@ -84,7 +62,7 @@ class FormValidator implements FormValidatorInterface
             }
         }
 
-        $this->_formInstance->setErrors($errors);
+        $this->formInstance->setErrors($errors);
 
         return $errors;
     }
@@ -121,6 +99,26 @@ class FormValidator implements FormValidatorInterface
         }
 
         return false;
+    }
+
+    /**
+     * @param FormInterface $form
+     *
+     * @return static
+     */
+    public function setFormInstance(FormInterface $form)
+    {
+        $this->formInstance = $form;
+
+        return $this;
+    }
+
+    /**
+     * @return FormInterface
+     */
+    public function getFormInstance()
+    {
+        return $this->formInstance;
     }
 }
 

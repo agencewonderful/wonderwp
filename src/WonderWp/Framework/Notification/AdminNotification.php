@@ -4,96 +4,23 @@ namespace WonderWp\Framework\Notification;
 
 class AdminNotification
 {
-    /**
-     * @var string : notification type
-     */
-    protected $_type;
-    /**
-     * @var string : notification message
-     */
-    protected $_message;
-    /**
-     * @var boolean : is notification dismissible
-     */
-    protected $_dismissible;
-
-    /**
-     * @var string : notification template
-     */
+    /** @var string */
     public static $template = '<div class="{classes}" role="alert"><p>{message}</p></div>';
+    /** @var string */
+    protected $type;
+    /** @var string */
+    protected $message;
+    /** @var boolean */
+    protected $dismissible;
 
     /**
-     * AdminNotification constructor.
-     *
      * @param string $type
      * @param string $message
      */
     public function __construct($type, $message)
     {
-        $this->_type    = $type;
-        $this->_message = $message;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->_type;
-    }
-
-    /**
-     * @param AdminNotification $type
-     *
-     * @return $this
-     */
-    public function setType($type)
-    {
-        $this->_type = $type;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMessage()
-    {
-        return $this->_message;
-    }
-
-    /**
-     * @param string $message
-     *
-     * @return $this
-     */
-    public function setMessage($message)
-    {
-        $this->_message = $message;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDismissible()
-    {
-        return $this->_dismissible;
-    }
-
-    /**
-     * @param boolean $dismissible
-     *
-     * @return $this
-     */
-    public function setDismissible($dismissible)
-    {
-        $this->_dismissible = $dismissible;
-
-        return $this;
+        $this->type    = $type;
+        $this->message = $message;
     }
 
     /**
@@ -101,11 +28,11 @@ class AdminNotification
      */
     public function getMarkup()
     {
-        $classes = 'notice notice-' . $this->_type;
-        if ($this->getDismissible()) {
+        $classes = 'notice notice-' . $this->getType();
+        if ($this->isDismissible()) {
             $classes .= ' is-dismissible';
         }
-        $markup = str_replace(['{classes}', '{message}'], [$classes, $this->_message], self::$template);
+        $markup = str_replace(['{classes}', '{type}', '{message}'], [$classes, $this->getType(), $this->getMessage()], static::$template);
 
         return $markup;
     }
@@ -118,4 +45,63 @@ class AdminNotification
         return $this->getMarkup();
     }
 
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return static
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMessage()
+    {
+        return $this->message;
+    }
+
+    /**
+     * @param string $message
+     *
+     * @return static
+     */
+    public function setMessage($message)
+    {
+        $this->message = $message;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDismissible()
+    {
+        return $this->dismissible;
+    }
+
+    /**
+     * @param boolean $dismissible
+     *
+     * @return static
+     */
+    public function setDismissible($dismissible)
+    {
+        $this->dismissible = $dismissible;
+
+        return $this;
+    }
 }

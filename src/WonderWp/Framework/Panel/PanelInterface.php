@@ -6,7 +6,6 @@ use WonderWp\Framework\Form\Field\FieldInterface;
 
 interface PanelInterface
 {
-
     /**
      * @return mixed
      */

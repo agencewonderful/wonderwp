@@ -6,10 +6,7 @@ use WonderWp\Framework\API\Result;
 
 class WpMailer extends AbstractMailer
 {
-
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function setFrom($email, $name = '')
     {
         $this->addMailHeader('From', (string)$email, (string)$name);
@@ -17,68 +14,56 @@ class WpMailer extends AbstractMailer
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritdoc */
     public function addTo($email, $name = "")
     {
-        $this->_to[] = $this->formatHeader((string)$email, (string)$name);
+        $this->to[] = $this->formatHeader((string)$email, (string)$name);
 
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritdoc */
     public function setReplyTo($email, $name = "")
     {
-        $this->_headers[] = sprintf('%s: %s', (string)'Reply-To', $this->formatHeader((string)$email, (string)$name));
+        $this->headers[] = sprintf('%s: %s', (string)'Reply-To', $this->formatHeader((string)$email, (string)$name));
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritdoc */
     public function addCc($email, $name = "")
     {
-        $this->_cc[] = $this->formatHeader((string)$email, (string)$name);
+        $this->cc[] = $this->formatHeader((string)$email, (string)$name);
 
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritdoc */
     public function addBcc($email, $name = "")
     {
-        $this->_bcc[] = $this->formatHeader((string)$email, (string)$name);
+        $this->bcc[] = $this->formatHeader((string)$email, (string)$name);
 
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritdoc */
     public function setBody($body)
     {
-        $this->_body = apply_filters('wwp.mailer.setBody', str_replace("\n.", "\n..", (string)$body));
+        $this->body = apply_filters('wwp.mailer.setBody', str_replace("\n.", "\n..", (string)$body));
 
-        if (strpos($this->_body, '<body') !== false) {
+        if (strpos($this->body, '<body') !== false) {
             // Pour envoyer un mail HTML, l'en-tête Content-type doit être défini
-            $this->_headers[] = sprintf('%s: %s', (string)'Mime-Version', '1.0');
-            $this->_headers[] = sprintf('%s: %s', (string)'Content-type', 'text/html; charset=utf8');
+            $this->headers[] = sprintf('%s: %s', (string)'Mime-Version', '1.0');
+            $this->headers[] = sprintf('%s: %s', (string)'Content-type', 'text/html; charset=utf8');
         }
 
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritdoc */
     public function send(array $opts = [])
     {
-        $to      = !(empty($this->_to)) ? join(', ', $this->_to) : '';
-        $subject = $this->_subject;
-        $message = $this->_body;
+        $to      = !(empty($this->to)) ? join(', ', $this->to) : '';
+        $subject = $this->subject;
+        $message = $this->body;
         $headers = $this->prepareHeaders();
         $sent    = wp_mail($to, $subject, $message, $headers);
         $code    = $sent ? 200 : 500;
@@ -92,15 +77,14 @@ class WpMailer extends AbstractMailer
      */
     public function prepareHeaders()
     {
-
-        if (!empty($this->_cc)) {
-            $this->_headers[] = sprintf('%s: %s', (string)'Cc', join(',', $this->_cc));
+        if (!empty($this->cc)) {
+            $this->headers[] = sprintf('%s: %s', (string)'Cc', join(',', $this->cc));
         }
-        if (!empty($this->_bcc)) {
-            $this->_headers[] = sprintf('%s: %s', (string)'Bcc', join(',', $this->_bcc));
+        if (!empty($this->bcc)) {
+            $this->headers[] = sprintf('%s: %s', (string)'Bcc', join(',', $this->bcc));
         }
 
-        return !(empty($this->_headers)) ? join(PHP_EOL, $this->_headers) : '';
+        return !(empty($this->headers)) ? join(PHP_EOL, $this->headers) : '';
     }
 
     /**
@@ -114,8 +98,8 @@ class WpMailer extends AbstractMailer
      */
     public function addMailHeader($header, $email = null, $name = null)
     {
-        $address          = $this->formatHeader((string)$email, (string)$name);
-        $this->_headers[] = sprintf('%s: %s', (string)$header, $address);
+        $address         = $this->formatHeader((string)$email, (string)$name);
+        $this->headers[] = sprintf('%s: %s', (string)$header, $address);
 
         return $this;
     }
@@ -245,5 +229,4 @@ class WpMailer extends AbstractMailer
 
         return trim(strtr($filtered, $rule));
     }
-
 }

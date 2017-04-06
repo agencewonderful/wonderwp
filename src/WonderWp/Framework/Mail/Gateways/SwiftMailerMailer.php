@@ -8,7 +8,8 @@ use WonderWp\Framework\Mail\AbstractMailer;
 
 class SwiftMailerMailer extends AbstractMailer
 {
-    private $message;
+    /** @var \Swift_Message */
+    protected $message;
 
     /** @inheritdoc */
     public function __construct()

@@ -22,7 +22,7 @@ class FormViewReadOnly extends FormView
     public function renderField($fieldName)
     {
         $markup = '';
-        $f      = ($fieldName instanceof FieldInterface) ? $fieldName : $this->_formInstance->getField($fieldName);
+        $f      = ($fieldName instanceof FieldInterface) ? $fieldName : $this->formInstance->getField($fieldName);
 
         if ($f->isRendered()) {
             return $markup;
@@ -54,7 +54,7 @@ class FormViewReadOnly extends FormView
     {
         $markup = '';
         /** @var FieldInterface $f */
-        $f = ($fieldName instanceof FieldInterface) ? $fieldName : $this->_formInstance->getField($fieldName);
+        $f = ($fieldName instanceof FieldInterface) ? $fieldName : $this->formInstance->getField($fieldName);
 
         if (!empty($f)) {
             $val = $f->getValue();

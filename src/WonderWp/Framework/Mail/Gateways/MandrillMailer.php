@@ -9,7 +9,7 @@ use WonderWp\Framework\Mail\AbstractMailer;
 class MandrillMailer extends AbstractMailer
 {
     /** @var \Mandrill */
-    private $mandrill;
+    protected $mandrill;
 
     /**
      * @param array $opts
@@ -80,8 +80,8 @@ class MandrillMailer extends AbstractMailer
                     'html'                => $body,
                     'text'                => $this->getAltBody(),
                     'subject'             => $this->getSubject(),
-                    'from_email'          => $this->_from[0],
-                    'from_name'           => $this->_from[1],
+                    'from_email'          => $this->from[0],
+                    'from_name'           => $this->from[1],
                     'to'                  => [], //set further down
                     'important'           => false,
                     'track_opens'         => true,
@@ -179,8 +179,8 @@ class MandrillMailer extends AbstractMailer
         }
 
         //Add recipients
-        if (!empty($this->_to)) {
-            foreach ($this->_to as $to) {
+        if (!empty($this->to)) {
+            foreach ($this->to as $to) {
                 $defaultOpts['message']['to'][] = [
                     'email' => $to[0],
                     'name'  => $to[1],
@@ -190,8 +190,8 @@ class MandrillMailer extends AbstractMailer
         }
 
         //reply to
-        if (!empty($this->_reply_to)) {
-            $defaultOpts['message']['headers']['Reply-To'] = $this->_reply_to[0];
+        if (!empty($this->replyTo)) {
+            $defaultOpts['message']['headers']['Reply-To'] = $this->replyTo[0];
         }
 
         $payload = \WonderWp\Framework\array_merge_recursive_distinct($defaultOpts, $opts);
