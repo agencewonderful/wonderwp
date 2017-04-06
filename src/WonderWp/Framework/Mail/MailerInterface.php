@@ -4,19 +4,24 @@ namespace WonderWp\Framework\Mail;
 
 use WonderWp\Framework\API\Result;
 
-/**
- * Interface MailInterface
- * @package WonderWp\Mail
- */
 interface MailerInterface
 {
+    /**
+     * @return string
+     */
+    public function getSubject();
 
     /**
-     * @param $subject
+     * @param string $subject
      *
      * @return static
      */
     public function setSubject($subject);
+
+    /**
+     * @return array
+     */
+    public function getFrom();
 
     /**
      * @param string $email
@@ -125,11 +130,21 @@ interface MailerInterface
     public function setBcc(array $bccs);
 
     /**
+     * @return string
+     */
+    public function getBody();
+
+    /**
      * @param $body
      *
      * @return static
      */
     public function setBody($body);
+
+    /**
+     * @return string
+     */
+    public function getAltBody();
 
     /**
      * @param $alternativeBody

@@ -3,12 +3,10 @@
 namespace WonderWp\Framework\Route;
 
 /**
- * Class Route
  * With a route service, you can define two kinds of routes:
  * - Routes that map a url to a certain file
  * - Routes that map a url to a certain callable
  * You can also restrict the authorized HTTP methods that can call this route
- * @package WonderWp\Route
  */
 class Route
 {
@@ -16,28 +14,26 @@ class Route
      * regex that specifies the route condition
      * @var string
      */
-    private $_path;
+    protected $path;
     /**
      * Callable that will be executed upon route validation
      * @var callable
      */
-    private $_callable;
+    protected $callable;
     /**
      * The HTTP method authorized to call this route
      * @var string
      */
-    private $_method = 'ALL';
+    protected $method = 'ALL';
 
     /**
-     * Route constructor.
-     *
      * @param $args
      */
     public function __construct($args)
     {
-        $this->_path     = !empty($args[0]) ? $args[0] : null;
-        $this->_callable = !empty($args[1]) ? $args[1] : null;
-        $this->_method   = !empty($args[2]) ? $args[2] : 'ALL';
+        $this->path     = !empty($args[0]) ? $args[0] : null;
+        $this->callable = !empty($args[1]) ? $args[1] : null;
+        $this->method   = !empty($args[2]) ? $args[2] : 'ALL';
 
         return $this;
     }
@@ -47,7 +43,7 @@ class Route
      */
     public function getPath()
     {
-        return $this->_path;
+        return $this->path;
     }
 
     /**
@@ -55,7 +51,7 @@ class Route
      */
     public function setPath($path)
     {
-        $this->_path = $path;
+        $this->path = $path;
     }
 
     /**
@@ -63,7 +59,7 @@ class Route
      */
     public function getCallable()
     {
-        return $this->_callable;
+        return $this->callable;
     }
 
     /**
@@ -71,7 +67,7 @@ class Route
      */
     public function setCallable($callable)
     {
-        $this->_callable = $callable;
+        $this->callable = $callable;
     }
 
     /**
@@ -79,7 +75,7 @@ class Route
      */
     public function getMethod()
     {
-        return $this->_method;
+        return $this->method;
     }
 
     /**
@@ -87,7 +83,6 @@ class Route
      */
     public function setMethod($method)
     {
-        $this->_method = $method;
+        $this->method = $method;
     }
-
 }

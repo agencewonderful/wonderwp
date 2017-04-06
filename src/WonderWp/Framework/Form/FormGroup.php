@@ -6,34 +6,26 @@ use WonderWp\Framework\Form\Field\FieldInterface;
 
 class FormGroup
 {
-    /**
-     * @var string
-     */
-    protected $_name;
-    /**
-     * @var string
-     */
-    protected $_title;
-    /**
-     * @var FieldInterface[]
-     */
-    protected $_fields;
-    /**
-     * @var array
-     */
+    /** @var string */
+    protected $name;
+    /** @var string */
+    protected $title;
+    /** @var FieldInterface[] */
+    protected $fields;
+    /** @var array */
     protected $displayRules = [];
 
     /**
      * FormGroup constructor.
      *
-     * @param       $_name
-     * @param       $_title
-     * @param array $displayRules
+     * @param string $name
+     * @param string $title
+     * @param array  $displayRules
      */
-    public function __construct($_name, $_title, $displayRules = [])
+    public function __construct($name, $title, $displayRules = [])
     {
-        $this->_name        = $_name;
-        $this->_title       = $_title;
+        $this->name         = $name;
+        $this->title        = $title;
         $this->displayRules = $displayRules;
 
         if (empty($this->displayRules['class'])) {
@@ -41,7 +33,7 @@ class FormGroup
         }
         if (is_admin()) {
             $this->displayRules['class'][] = 'postbox';
-            $this->displayRules['class'][] = 'form-group-' . $this->_name;
+            $this->displayRules['class'][] = 'form-group-' . $this->name;
         }
     }
 
@@ -50,7 +42,7 @@ class FormGroup
      */
     public function getName()
     {
-        return $this->_name;
+        return $this->name;
     }
 
     /**
@@ -58,7 +50,7 @@ class FormGroup
      */
     public function setName($name)
     {
-        $this->_name = $name;
+        $this->name = $name;
     }
 
     /**
@@ -66,7 +58,7 @@ class FormGroup
      */
     public function getTitle()
     {
-        return $this->_title;
+        return $this->title;
     }
 
     /**
@@ -74,7 +66,7 @@ class FormGroup
      */
     public function setTitle($title)
     {
-        $this->_title = $title;
+        $this->title = $title;
     }
 
     /**
@@ -82,7 +74,7 @@ class FormGroup
      */
     public function getFields()
     {
-        return $this->_fields;
+        return $this->fields;
     }
 
     /**
@@ -90,7 +82,7 @@ class FormGroup
      */
     public function setFields($fields)
     {
-        $this->_fields = $fields;
+        $this->fields = $fields;
     }
 
     /**
@@ -98,7 +90,7 @@ class FormGroup
      */
     public function addField(FieldInterface $field)
     {
-        $this->_fields[$field->getName()] = $field;
+        $this->fields[$field->getName()] = $field;
     }
 
     /**

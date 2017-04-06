@@ -9,12 +9,11 @@ use WonderWp\Framework\HttpFoundation\Request;
 
 class PanelManager
 {
-
     /**
      * The list of panels
      * @var PanelInterface[]
      */
-    private $_panelList = [];
+    protected $panelList = [];
 
     /**
      * Ajout d'un panneau d'administration à la page
@@ -26,7 +25,7 @@ class PanelManager
     public function registerPanel(PanelInterface $panel)
     {
         //Ajout du panneau courant dans la liste du manager
-        $panelList = $this->_panelList;
+        $panelList = $this->panelList;
         $id        = $panel->getId();
 
         /** @var PanelInterface $panel */
@@ -38,8 +37,8 @@ class PanelManager
             }
         }
 
-        $panelList[$id]   = $panel;
-        $this->_panelList = $panelList;
+        $panelList[$id]  = $panel;
+        $this->panelList = $panelList;
 
         return $this;
     }
@@ -51,7 +50,7 @@ class PanelManager
      */
     public function getPanel($panelId)
     {
-        return isset($this->_panelList[$panelId]) ? $this->_panelList[$panelId] : null;
+        return isset($this->panelList[$panelId]) ? $this->panelList[$panelId] : null;
     }
 
     /**
@@ -130,7 +129,7 @@ class PanelManager
         }
 
         // OK, we're authenticated: we need to find and save the data
-        $panelList = $this->_panelList;
+        $panelList = $this->panelList;
         if (!empty($panelList)) {
             foreach ($panelList as $panel) {
                 /** @var PanelInterface $panel */
@@ -169,5 +168,4 @@ class PanelManager
 
         return $post_id;
     }
-
 }

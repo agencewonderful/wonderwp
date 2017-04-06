@@ -6,27 +6,16 @@ use WonderWp\Framework\HttpFoundation\Request;
 
 class Router extends AbstractRouter
 {
-
-    /**
-     * @var Route[]
-     */
-    protected $_routes        = [];
-    /**
-     * @var RouteServiceInterface[]
-     */
-    protected $_services      = [];
-    /**
-     * @var string
-     */
-    protected $_routeVariable = 'route';
-    /**
-     * @var Route
-     */
-    protected $_matchedRoute;
-    /**
-     * @var array
-     */
-    protected $_matchedRouteParams = [];
+    /** @var Route[] */
+    protected $routes = [];
+    /** @var RouteServiceInterface[] */
+    protected $services = [];
+    /** @var string */
+    protected $routeVariable = 'route';
+    /** @var Route */
+    protected $matchedRoute;
+    /** @var array */
+    protected $matchedRouteParams = [];
 
     /** Construct */
     public function __construct()
@@ -40,11 +29,12 @@ class Router extends AbstractRouter
 
     /**
      * Each plugin's own routing service is registered towards this router instance by calling this method
+     *
      * @param RouteServiceInterface $routeService
      */
     public function addService(RouteServiceInterface $routeService)
     {
-        $this->_services[] = $routeService;
+        $this->services[] = $routeService;
     }
 
     /**
@@ -53,8 +43,8 @@ class Router extends AbstractRouter
      */
     public function getRoutes()
     {
-        if (!empty($this->_services)) {
-            foreach ($this->_services as $service) {
+        if (!empty($this->services)) {
+            foreach ($this->services as $service) {
                 /** @var RouteServiceInterface $service */
                 $serviceName   = get_class($service);
                 $serviceRoutes = $service->getRoutes();
@@ -63,13 +53,13 @@ class Router extends AbstractRouter
                         if (is_array($r)) {
                             $r = new Route($r);
                         }
-                        $this->_routes[sanitize_title($serviceName . '#' . $i)] = $r;
+                        $this->routes[sanitize_title($serviceName . '#' . $i)] = $r;
                     }
                 }
             }
         }
 
-        return $this->_routes;
+        return $this->routes;
     }
 
     /**
@@ -81,13 +71,13 @@ class Router extends AbstractRouter
 
         $routes = $this->getRoutes();
         if (!empty($routes)) {
-            add_rewrite_tag('%' . $this->_routeVariable . '%', '(.+)');
+            add_rewrite_tag('%' . $this->routeVariable . '%', '(.+)');
             foreach ($routes as $name => $route) {
                 /** @var Route $route */
                 $regex = $this->generateRouteRegex($route);
                 $path  = $route->getPath();
 
-                $qs = $this->_routeVariable . '=' . $name;
+                $qs = $this->routeVariable . '=' . $name;
                 if (strpos($path, '{') !== false) {
                     preg_match_all('/{(.*?)}/', $path, $wildCardsMatchs);
                     $wildCards = $wildCardsMatchs[1];
@@ -103,8 +93,8 @@ class Router extends AbstractRouter
                     $newRewriteRule = 'index.php?' . $qs;
                 } else {
                     $newRewriteRule = $route->getCallable();
-                    if (strpos($newRewriteRule, $this->_routeVariable . '=' . $name) === false) {
-                        $newRewriteRule .= '&' . $this->_routeVariable . '=' . $name;
+                    if (strpos($newRewriteRule, $this->routeVariable . '=' . $name) === false) {
+                        $newRewriteRule .= '&' . $this->routeVariable . '=' . $name;
                     }
                 }
 
@@ -117,6 +107,7 @@ class Router extends AbstractRouter
 
     /**
      * Make wildcards known from WordPress
+     *
      * @param array $vars
      *
      * @return array
@@ -146,7 +137,7 @@ class Router extends AbstractRouter
      *
      * @return string
      */
-    private function generateRouteRegex(Route $route)
+    protected function generateRouteRegex(Route $route)
     {
         $path = preg_replace('/{(.*?)}/', '(.*)', $route->getPath());
 
@@ -163,9 +154,9 @@ class Router extends AbstractRouter
         $matched_route = $this->match($environment->query_vars);
 
         if ($matched_route instanceof Route) {
-            $this->_matchedRoute = $matched_route;
+            $this->matchedRoute = $matched_route;
             //Add query vars to request object
-            $path    = $this->_matchedRoute->getPath();
+            $path    = $this->matchedRoute->getPath();
             $request = Request::getInstance();
             if (strpos($path, '{') !== false) {
                 preg_match_all('/{(.*?)}/', $path, $wildCardsMatchs);
@@ -174,7 +165,7 @@ class Router extends AbstractRouter
                         //Passing them to the request
                         $request->query->set($wildCard, $environment->query_vars[$wildCard]);
                         //Keeping them for the callable
-                        $this->_matchedRouteParams[$wildCard] = $environment->query_vars[$wildCard];
+                        $this->matchedRouteParams[$wildCard] = $environment->query_vars[$wildCard];
                     }
                 }
             }
@@ -197,17 +188,17 @@ class Router extends AbstractRouter
     public function match(array $query_variables)
     {
         //Check Route Variable
-        if (empty($query_variables[$this->_routeVariable])) {
+        if (empty($query_variables[$this->routeVariable])) {
             return new \WP_Error('missing_route_variable');
         }
         //Check Route
-        $route_name = $query_variables[$this->_routeVariable];
-        if (!isset($this->_routes[$route_name])) {
+        $route_name = $query_variables[$this->routeVariable];
+        if (!isset($this->routes[$route_name])) {
             return new \WP_Error('route_not_found');
         }
         //Check Route Method
         /** @var Route $route */
-        $route         = $this->_routes[$route_name];
+        $route         = $this->routes[$route_name];
         $routeMethod   = $route->getMethod();
         $requestMethod = Request::getInstance()->getMethod();
         if ($routeMethod != 'ALL' && $routeMethod !== $requestMethod) {
@@ -222,11 +213,10 @@ class Router extends AbstractRouter
      */
     public function callRouteHook()
     {
-        if (!empty($this->_matchedRoute)) {
-            if (is_callable($this->_matchedRoute->getCallable())) {
-                call_user_func_array($this->_matchedRoute->getCallable(), $this->_matchedRouteParams);
+        if (!empty($this->matchedRoute)) {
+            if (is_callable($this->matchedRoute->getCallable())) {
+                call_user_func_array($this->matchedRoute->getCallable(), $this->matchedRouteParams);
             }
         }
     }
-
 }

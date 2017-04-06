@@ -2,28 +2,27 @@
 
 namespace WonderWp\Framework\Form;
 
-use Pimple\Container as PContainer;
 use WonderWp\Framework\DependencyInjection\Container;
 use WonderWp\Framework\Form\Field\FieldInterface;
 use WonderWp\Framework\Form\Field\SelectField;
 
 class FormView implements FormViewInterface
 {
-    /**
-     * @var FormInterface
-     */
-    protected $_formInstance;
+    /** @var FormInterface */
+    protected $formInstance;
+    /** @var Container */
+    protected $container;
 
-    /**
-     * @var PContainer
-     */
-    protected $_container;
+    /** Constructor */
+    public function __construct()
+    {
+        $this->container = Container::getInstance();
+    }
 
     /** @inheritdoc */
     public function setFormInstance(FormInterface $form)
     {
-        $this->_formInstance = $form;
-        $this->_container    = Container::getInstance();
+        $this->formInstance = $form;
 
         return $this;
     }
@@ -31,7 +30,7 @@ class FormView implements FormViewInterface
     /** @inheritdoc */
     public function getFormInstance()
     {
-        return $this->_formInstance;
+        return $this->formInstance;
     }
 
     /** @inheritdoc */
@@ -78,7 +77,7 @@ class FormView implements FormViewInterface
             'showFormTag' => 1,
             'method'      => 'post',
             'enctype'     => 'multipart/form-data',
-            'class'       => ['wwpform', $this->_formInstance->getName()],
+            'class'       => ['wwpform', $this->formInstance->getName()],
         ];
         $options        = array_merge_recursive($defaultOptions, $optsStart);
         $markup         = '';
@@ -99,7 +98,7 @@ class FormView implements FormViewInterface
     {
         $markup = '';
 
-        $errors = $this->_formInstance->getErrors();
+        $errors = $this->formInstance->getErrors();
         if (!empty($errors)) {
             $markup .= '<div class="form-errors"></div>';
         }
@@ -133,7 +132,7 @@ class FormView implements FormViewInterface
     public function renderField($fieldName)
     {
         $markup = '';
-        $f      = $fieldName instanceof FieldInterface ? $fieldName : $this->_formInstance->getField($fieldName);
+        $f      = $fieldName instanceof FieldInterface ? $fieldName : $this->formInstance->getField($fieldName);
 
         if ($f->isRendered()) {
             return $markup;
@@ -164,7 +163,7 @@ class FormView implements FormViewInterface
     public function fieldWrapStart($fieldName)
     {
         $markup         = '';
-        $f              = $fieldName instanceof FieldInterface ? $fieldName : $this->_formInstance->getField($fieldName);
+        $f              = $fieldName instanceof FieldInterface ? $fieldName : $this->formInstance->getField($fieldName);
         $displayRules   = $f->getDisplayRules();
         $wrapAttributes = $displayRules['wrapAttributes'];
 
@@ -199,9 +198,9 @@ class FormView implements FormViewInterface
     public function fieldLabel($fieldName)
     {
         $markup = '';
-        $f      = ($fieldName instanceof FieldInterface) ? $fieldName : $this->_formInstance->getField($fieldName);
+        $f      = ($fieldName instanceof FieldInterface) ? $fieldName : $this->formInstance->getField($fieldName);
         /** @var FormValidatorInterface $formValidator */
-        $formValidator   = $this->_container->offsetGet('wwp.forms.formValidator');
+        $formValidator   = $this->container->offsetGet('wwp.forms.formValidator');
         $validationRules = !empty($f) ? $f->getValidationRules() : [];
 
         //fields that  use the label differently:
@@ -227,7 +226,7 @@ class FormView implements FormViewInterface
     /** @inheritdoc */
     public function fieldStart($fieldName)
     {
-        $f = ($fieldName instanceof FieldInterface) ? $fieldName : $this->_formInstance->getField($fieldName);
+        $f = ($fieldName instanceof FieldInterface) ? $fieldName : $this->formInstance->getField($fieldName);
 
         $tag             = !empty($f) ? $f->getTag() : '';
         $type            = !empty($f) ? $f->getType() : [];
@@ -235,7 +234,7 @@ class FormView implements FormViewInterface
         $validationRules = !empty($f) ? $f->getValidationRules() : [];
         $params          = !empty($displayRules['inputAttributes']) ? $displayRules['inputAttributes'] : [];
         /** @var FormValidator $formValidator */
-        $formValidator = $this->_container->offsetGet('wwp.forms.formValidator');
+        $formValidator = $this->container->offsetGet('wwp.forms.formValidator');
         $markup        = '';
 
         //Classes
@@ -287,7 +286,7 @@ class FormView implements FormViewInterface
     public function fieldBetween($fieldName)
     {
         $markup       = '';
-        $f            = $fieldName instanceof FieldInterface ? $fieldName : $this->_formInstance->getField($fieldName);
+        $f            = $fieldName instanceof FieldInterface ? $fieldName : $this->formInstance->getField($fieldName);
         $displayRules = $f->getDisplayRules();
 
         if (!empty($f)) {
@@ -377,7 +376,7 @@ class FormView implements FormViewInterface
     /** @inheritdoc */
     public function fieldEnd($fieldName)
     {
-        $f            = ($fieldName instanceof FieldInterface) ? $fieldName : $this->_formInstance->getField($fieldName);
+        $f            = ($fieldName instanceof FieldInterface) ? $fieldName : $this->formInstance->getField($fieldName);
         $tag          = !empty($f) ? $f->getTag() : '';
         $displayRules = $f->getDisplayRules();
 
@@ -408,7 +407,7 @@ class FormView implements FormViewInterface
     public function fieldError($fieldName)
     {
         $markup       = '';
-        $f            = ($fieldName instanceof FieldInterface) ? $fieldName : $this->_formInstance->getField($fieldName);
+        $f            = ($fieldName instanceof FieldInterface) ? $fieldName : $this->formInstance->getField($fieldName);
         $errors       = $f->getErrors();
         $displayRules = $f->getDisplayRules();
         $fieldId      = !empty($displayRules) && !empty($displayRules['inputAttributes']) && !empty($displayRules['inputAttributes']['id']) ? $displayRules['inputAttributes']['id'] : '';
@@ -427,7 +426,7 @@ class FormView implements FormViewInterface
     public function fieldHelp($fieldName)
     {
         $markup = '';
-        $f      = ($fieldName instanceof FieldInterface) ? $fieldName : $this->_formInstance->getField($fieldName);
+        $f      = ($fieldName instanceof FieldInterface) ? $fieldName : $this->formInstance->getField($fieldName);
 
         $displayRules = $f->getDisplayRules();
         $help         = !empty($displayRules) && !empty($displayRules['help']) ? $displayRules['help'] : '';
@@ -442,7 +441,7 @@ class FormView implements FormViewInterface
     public function fieldWrapEnd($fieldName)
     {
         $markup         = '';
-        $f              = ($fieldName instanceof FieldInterface) ? $fieldName : $this->_formInstance->getField($fieldName);
+        $f              = ($fieldName instanceof FieldInterface) ? $fieldName : $this->formInstance->getField($fieldName);
         $displayRules   = $f->getDisplayRules();
         $wrapAttributes = $displayRules['wrapAttributes'];
 
