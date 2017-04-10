@@ -30,12 +30,16 @@ class Form implements FormInterface
     /** @inheritdoc */
     public function renderView($opts = [])
     {
+        $formView = $this->getView();
+        return $formView->render($opts);
+    }
+
+    public function getView(){
         $container = Container::getInstance();
         /** @var FormView $formView */
         $formView = $container['wwp.forms.formView'];
         $formView->setFormInstance($this);
-
-        return $formView->render($opts);
+        return $formView;
     }
 
     /** @inheritdoc */
