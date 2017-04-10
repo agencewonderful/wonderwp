@@ -18,7 +18,9 @@ class Container extends PimpleContainer implements SingletonInterface
     {
         $instance = static::createInstance();
 
-        add_action('shutdown', [$instance, 'dump']);
+        if (defined('DUMP_CONTAINER') && DUMP_CONTAINER === true) {
+            add_action('shutdown', [$instance, 'dump']);
+        }
 
         return $instance;
     }
