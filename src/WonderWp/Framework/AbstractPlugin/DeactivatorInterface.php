@@ -2,7 +2,9 @@
 
 namespace WonderWp\Framework\AbstractPlugin;
 
-interface DeactivatorInterface
+use WonderWp\Framework\Service\ServiceInterface;
+
+interface DeactivatorInterface extends ServiceInterface
 {
     /**
      * Code ran upon plugin deactivation

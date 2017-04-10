@@ -2,7 +2,9 @@
 
 namespace WonderWp\Framework\AbstractPlugin;
 
-interface ActivatorInterface
+use WonderWp\Framework\Service\ServiceInterface;
+
+interface ActivatorInterface extends ServiceInterface
 {
     /**
      * Code ran upon plugin activation
