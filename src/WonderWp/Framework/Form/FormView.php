@@ -133,6 +133,13 @@ class FormView implements FormViewInterface
     {
         $markup = '';
         $f      = $fieldName instanceof FieldInterface ? $fieldName : $this->formInstance->getField($fieldName);
+        if(!$f instanceof FieldInterface && is_string($fieldName)){
+            if(WP_ENV==='development') {
+                throw new \UnexpectedValueException($fieldName . ' is not an instance of FieldInterface');
+            } else {
+                return '';
+            }
+        }
 
         if ($f->isRendered()) {
             return $markup;
