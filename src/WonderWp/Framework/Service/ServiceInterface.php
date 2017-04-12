@@ -13,6 +13,7 @@ interface ServiceInterface
     const LIST_TABLE_SERVICE_NAME = 'listTable';
     const MODEL_FORM_SERVICE_NAME = 'modelForm';
     const ROUTE_SERVICE_NAME      = 'route';
+    const SEARCH_SERVICE_NAME     = 'search';
     const SHORT_CODE_SERVICE_NAME = 'shortCode';
     const VIEW_SERVICE_NAME       = 'view';
 }
