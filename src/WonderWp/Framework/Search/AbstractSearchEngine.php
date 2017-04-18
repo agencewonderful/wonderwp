@@ -8,17 +8,14 @@
 
 namespace WonderWp\Framework\Search;
 
+use WonderWp\Framework\DependencyInjection\Container;
+
 abstract class AbstractSearchEngine implements SearchEngineInterface
 {
     /**
      * @var SearchServiceInterface[]
      */
     protected $services = [];
-
-    /**
-     * @var SearchResultSetInterface[]
-     */
-    protected $resultsSet = [];
 
     /** @inheritdoc*/
     public function getServices()
@@ -35,25 +32,19 @@ abstract class AbstractSearchEngine implements SearchEngineInterface
     }
 
     /** @inheritdoc*/
-    public function getResultsSet()
-    {
-        return $this->resultsSet;
-    }
-
-    /** @inheritdoc*/
-    public function setResultsSet($resultsSet)
-    {
-        $this->resultsSet = $resultsSet;
-
-        return $this;
-    }
-
-    /** @inheritdoc*/
     public function addService(SearchServiceInterface $service)
     {
         $this->services[] = $service;
 
         return $this;
+    }
+
+    public function renderResults($results)
+    {
+        /** @var SearchResultsRendererInterface $renderer */
+        $renderer = Container::getInstance()->offsetGet('wwp.search.renderer');
+        echo $renderer->getMarkup($results, []);
+
     }
 
 }

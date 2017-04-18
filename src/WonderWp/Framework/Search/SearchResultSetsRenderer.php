@@ -8,10 +8,37 @@
 
 namespace WonderWp\Framework\Search;
 
-class SearchResultSetsRenderer extends AbstractSearchResultSetRenderer
+class SearchResultSetsRenderer implements SearchResultsRendererInterface
 {
-    public function getMarkup(array $opts = [])
+    /**
+     * @var SearchResultSetInterface[]
+     */
+    protected $sets;
+
+    /**
+     * @return SearchResultSetInterface[]
+     */
+    public function getSets()
     {
+        return $this->sets;
+    }
+
+    /**
+     * @param SearchResultSetInterface[] $sets
+     *
+     * @return static
+     */
+    public function setSets($sets)
+    {
+        $this->sets = $sets;
+
+        return $this;
+    }
+
+    public function getMarkup(array $results, array $opts = [])
+    {
+        $this->setSets($results);
+
         $markup = '<div class="search-results">';
         if (!empty($this->sets)) {
             foreach ($this->sets as $set) {
@@ -27,6 +54,8 @@ class SearchResultSetsRenderer extends AbstractSearchResultSetRenderer
 
     public function getSetMarkup(SearchResultSetInterface $set)
     {
+        if($set->getTotalCount()<=0){ return ''; }
+
         $markup  = '<div class="search-result-set">'
             . '<span class="set-title">' . $set->getLabel() . '</span>'
             . '<span class="set-total">' . (int)$set->getTotalCount() . '</span>';

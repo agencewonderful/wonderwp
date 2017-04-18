@@ -24,18 +24,6 @@ interface SearchEngineInterface
     public function setServices($services);
 
     /**
-     * @return SearchResultSetInterface[]
-     */
-    public function getResultsSet();
-
-    /**
-     * @param SearchResultSetInterface[] $resultsSet
-     *
-     * @return static
-     */
-    public function setResultsSet($resultsSet);
-
-    /**
      * @param SearchServiceInterface $service
      *
      * @return static
@@ -46,8 +34,15 @@ interface SearchEngineInterface
      * @param       $query
      * @param array $opts
      *
-     * @return SearchResultSet[]
+     * @return array
      */
-    public function getResultSets($query, array $opts = []);
+    public function getResults($query, array $opts = []);
+
+    /**
+     * @param array $results
+     *
+     * @return mixed
+     */
+    public function renderResults($results);
 
 }

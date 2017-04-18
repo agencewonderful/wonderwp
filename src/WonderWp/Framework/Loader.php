@@ -18,6 +18,11 @@ use WonderWp\Framework\Mail\WpMailer;
 use WonderWp\Framework\Panel\Panel;
 use WonderWp\Framework\Panel\PanelManager;
 use WonderWp\Framework\Route\Router;
+use WonderWp\Framework\Search\SearchEngine;
+use WonderWp\Framework\Search\SearchResult;
+use WonderWp\Framework\Search\SearchResultSet;
+use WonderWp\Framework\Search\SearchResultSetsRenderer;
+use WonderWp\Framework\Search\SearchResultsRenderer;
 use WonderWp\Framework\Template\Views\AdminVue;
 use WonderWp\Framework\Template\Views\EditAdminView;
 use WonderWp\Framework\Template\Views\ListAdminView;
@@ -50,9 +55,9 @@ class Loader implements SingletonInterface
         /**
          * Define Paths
          */
-        $container['path_root']                = ABSPATH . '../../'; // root
-        $container['path_framework_root']      = __DIR__; // Framework root
-        $container['wwp.path.templates.frags'] = $container['path_framework_root'] . '/Template/frags'; //Templates
+        $container['path_root']                           = ABSPATH . '../../'; // root
+        $container['path_framework_root']                 = __DIR__; // Framework root
+        $container['wwp.path.templates.frags']            = $container['path_framework_root'] . '/Template/frags'; //Templates
         $container['wwp.path.defaultlanguagedir.plugins'] = trailingslashit(WP_LANG_DIR) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR;
 
         /**
@@ -149,6 +154,20 @@ class Loader implements SingletonInterface
         $container['wwp.http.requester'] = function () {
             return new WpRequester();
         };
+
+        //Search
+        $container['wwp.search.engine']   = function () {
+            return new SearchEngine();
+        };
+        $container['wwp.search.renderer'] = function () {
+            return new SearchResultsRenderer();
+        };
+        $container['wwp.search.result']   = $container->factory(function () {
+            return new SearchResult();
+        });
+        $container['wwp.search.set']      = $container->factory(function () {
+            return new SearchResultSet();
+        });
 
         /**
          * Make container available

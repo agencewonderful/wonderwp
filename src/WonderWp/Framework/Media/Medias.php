@@ -37,7 +37,7 @@ class Medias
 
         return wp_get_attachment_image($imgId, $size, $icon, $attr);
     }
-    
+
     /**
      * @param int|\WP_Post $postId
      *
@@ -58,6 +58,6 @@ class Medias
         }
 
         return $imgUrl;
-    }    
+    }
 
 }

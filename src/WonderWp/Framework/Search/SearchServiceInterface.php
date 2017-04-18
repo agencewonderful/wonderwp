@@ -13,4 +13,6 @@ interface SearchServiceInterface
 
     public function getResultSet($query);
 
+    public function getResults($query);
+
 }

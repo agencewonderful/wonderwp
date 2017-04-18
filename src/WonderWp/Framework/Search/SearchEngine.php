@@ -8,17 +8,21 @@
 
 namespace WonderWp\Framework\Search;
 
+use WonderWp\Framework\DependencyInjection\Container;
+
 class SearchEngine extends AbstractSearchEngine
 {
 
-    public function getResultSets($query, array $opts = [])
+    protected $results;
+
+    public function getResults($query, array $opts = [])
     {
         if (!empty($this->services)) {
             foreach ($this->services as $searchService) {
-                $this->resultsSet[] = $searchService->getResultSet($query);
+                $this->results = array_merge($this->results, $searchService->getResults($query));
             }
         }
-        return $this->getResultsSet();
+        return $this->results;
     }
 
 }

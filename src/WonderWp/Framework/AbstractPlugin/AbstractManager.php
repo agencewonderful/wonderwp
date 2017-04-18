@@ -8,6 +8,8 @@ use WonderWp\Framework\DependencyInjection\Container;
 use WonderWp\Framework\Hook\HookServiceInterface;
 use WonderWp\Framework\HttpFoundation\Request;
 use WonderWp\Framework\Route\RouteServiceInterface;
+use WonderWp\Framework\Search\SearchEngineInterface;
+use WonderWp\Framework\Search\SearchServiceInterface;
 use WonderWp\Framework\Service\ServiceInterface;
 use WonderWp\Framework\Shortcode\ShortcodeServiceInterface;
 use WonderWp\Framework\Task\TaskServiceInterface;
@@ -196,6 +198,14 @@ abstract class AbstractManager implements ManagerInterface
         $commandService = $this->getService(ServiceInterface::COMMAND_SERVICE_NAME);
         if ($commandService instanceof TaskServiceInterface) {
             $commandService->registerCommands();
+        }
+
+        // Search
+        $searchService = $this->getService(ServiceInterface::SEARCH_SERVICE_NAME);
+        if ($searchService instanceof SearchServiceInterface) {
+            /** @var SearchEngineInterface $searchEngine */
+            $searchEngine = $this->container['wwp.search.engine'];
+            $searchEngine->addService($searchService);
         }
     }
 }
