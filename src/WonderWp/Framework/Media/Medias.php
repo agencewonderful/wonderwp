@@ -37,5 +37,27 @@ class Medias
 
         return wp_get_attachment_image($imgId, $size, $icon, $attr);
     }
+    
+    /**
+     * @param int|\WP_Post $postId
+     *
+     * @return string
+     */
+    public static function getFeaturedImage($postId = null)
+    {
+        global $post;
+        if (empty($postId) && $post) {
+            $postId = $post;
+        }
+        $imgUrl = '';
+        if (!empty($postId)) {
+            $imgUrl = str_replace(get_bloginfo('url'), '', wp_get_attachment_url(get_post_thumbnail_id($postId)));
+            if ($imgUrl === false) {
+                $imgUrl = '';
+            }
+        }
+
+        return $imgUrl;
+    }    
 
 }
