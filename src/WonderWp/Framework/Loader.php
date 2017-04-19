@@ -168,6 +168,11 @@ class Loader implements SingletonInterface
         $container['wwp.search.set']      = $container->factory(function () {
             return new SearchResultSet();
         });
+        
+        //Cache
+        $container['wwp.cache.cache'] = function () {
+            return new TransientCache();
+        };        
 
         /**
          * Make container available
