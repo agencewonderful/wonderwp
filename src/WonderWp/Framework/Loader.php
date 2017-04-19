@@ -6,6 +6,7 @@ use WonderWp\Framework\Asset\Asset;
 use WonderWp\Framework\Asset\AssetManager;
 use WonderWp\Framework\Asset\JsonAssetEnqueuer;
 use WonderWp\Framework\Asset\JsonAssetExporter;
+use WonderWp\Framework\Cache\TransientCache;
 use WonderWp\Framework\DependencyInjection\Container;
 use WonderWp\Framework\DependencyInjection\SingletonInterface;
 use WonderWp\Framework\DependencyInjection\SingletonTrait;
