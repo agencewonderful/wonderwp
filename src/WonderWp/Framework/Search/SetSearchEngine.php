@@ -36,7 +36,7 @@ class SetSearchEngine extends AbstractSearchEngine
     {
         if (!empty($this->services)) {
             foreach ($this->services as $searchService) {
-                $this->resultsSet[] = $searchService->getResultSet($query);
+                $this->resultsSet[] = $searchService->getResultSet($query, $opts);
             }
         }
         return $this->getResultsSet();
