@@ -16,17 +16,17 @@ abstract class AbstractRouteService implements RouteServiceInterface
     /**
      * @var array
      */
-    protected $_routes;
+    protected $routes;
 
     /**
      * @var WonderWp\APlugin\AbstractPluginManager
      */
-    protected $_manager;
+    protected $manager;
 
     /**
      * @var WonderWp\APlugin\AbstractPluginManager
      */
-    protected $_publicController;
+    protected $publicController;
 
     /**
      * Get registered routes. Must be overriden.
@@ -37,15 +37,15 @@ abstract class AbstractRouteService implements RouteServiceInterface
      *
      *   public function getRoutes()
      *   {
-     *       if (empty($this->_routes)) {
+     *       if (empty($this->routes)) {
      *           $this
-     *               ->addCallableRoute('route_name_in_manager', 'controllerAction')
+     *               ->addCallableRoute('route_name_inmanager', 'controllerAction')
      *               ->addCallableRoute('/url-to-catch/{component}', 'controllerAction')
-     *               ->addRedirectRoute('route_name_in_manager', 'file_to_redirect_to.php')
+     *               ->addRedirectRoute('route_name_inmanager', 'file_to_redirect_to.php')
      *           ;
      *       }
      *
-     *       return $this->_routes;
+     *       return $this->routes;
      *   }
      */
     abstract public function getRoutes();
@@ -74,7 +74,7 @@ abstract class AbstractRouteService implements RouteServiceInterface
         $defaultLocale = get_locale();
         $locale = ($locale && $locale !== $defaultLocale) ? $locale : null;
         $url = '';
-        $patterns = $this->getPatterns($routeRef, $this->_manager);
+        $patterns = $this->getPatterns($routeRef, $this->manager);
         if ($locale && isset($patterns[$locale])) {
             $url = $patterns[$locale];
         } elseif ($defaultLocale && isset($patterns[$defaultLocale])) {
@@ -106,8 +106,8 @@ abstract class AbstractRouteService implements RouteServiceInterface
      */
     protected function addCallableRoute($routeRef, $action, $method = 'GET', $controller = null)
     {
-        $controller = $controller ? $controller : $this->_publicController;
-        foreach ($this->getPatterns($routeRef, $this->_manager) as $pattern) {
+        $controller = $controller ? $controller : $this->publicController;
+        foreach ($this->getPatterns($routeRef, $this->manager) as $pattern) {
             $this->addRoute($pattern, [$controller, $action], $method);
         }
 
@@ -125,7 +125,7 @@ abstract class AbstractRouteService implements RouteServiceInterface
      */
     protected function addRedirectRoute($routeRef, $dest, $method = 'GET')
     {
-        foreach ($this->getPatterns($routeRef, $this->_manager) as $pattern) {
+        foreach ($this->getPatterns($routeRef, $this->manager) as $pattern) {
             $this->addRoute($pattern, $dest, $method);
         }
 
@@ -143,7 +143,7 @@ abstract class AbstractRouteService implements RouteServiceInterface
      */
     protected function addRoute($route, $dest, $method)
     {
-        $this->_routes[] = [ltrim($route, '/'), $dest, $method];
+        $this->routes[] = [ltrim($route, '/'), $dest, $method];
 
         return $this;
     }
@@ -157,7 +157,7 @@ abstract class AbstractRouteService implements RouteServiceInterface
      */
     protected function getPatterns($routeRef)
     {
-        $patterns = $this->_manager->getConfig($routeRef);
+        $patterns = $this->manager->getConfig($routeRef);
         if (!$patterns) {
             $patterns = [(get_locale()) => $routeRef];
         }
