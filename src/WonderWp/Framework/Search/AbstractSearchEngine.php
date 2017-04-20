@@ -50,8 +50,17 @@ abstract class AbstractSearchEngine implements SearchEngineInterface
     public function renderResults($query, array $opts = [], array $servicesNames = [])
     {
         if (!empty($this->services)) {
-            foreach ($this->services as $searchService) {
-                if (0 === count($servicesNames) || in_array($searchService->getName(), $servicesNames)) {
+            if (count($servicesNames) > 0) {
+                foreach ($servicesNames as $serviceName) {
+                    foreach ($this->services as $searchService) {
+                        if ($serviceName === $searchService->getName()) {
+                            $this->results[] = $searchService->getMarkup($query, $opts);
+                            break;
+                        }
+                    }
+                }
+            } else {
+                foreach ($this->services as $searchService) {
                     $this->results[] = $searchService->getMarkup($query, $opts);
                 }
             }
