@@ -39,7 +39,7 @@ class SearchResultSetsRenderer implements SearchResultsRendererInterface
     {
         $this->setSets($results);
 
-        $markup = '<div class="search-results">';
+        $markup = '';
         if (!empty($this->sets)) {
             foreach ($this->sets as $set) {
                 $markup .= $this->getSetMarkup($set);
@@ -47,18 +47,17 @@ class SearchResultSetsRenderer implements SearchResultsRendererInterface
         } else {
             $markup = $this->getNoResultMarkup($opts);
         }
-        $markup.='</div>';
 
         return $markup;
     }
 
     public function getSetMarkup(SearchResultSetInterface $set)
     {
-        if($set->getTotalCount()<=0){ return ''; }
+        if ($set->getTotalCount() <= 0) {
+            return '';
+        }
 
-        $markup  = '<div class="search-result-set">'
-            . '<span class="set-title">' . $set->getLabel() . '</span>'
-            . '<span class="set-total">' . (int)$set->getTotalCount() . '</span>';
+        $markup = '';
         $results = $set->getCollection();
         if (!empty($results)) {
             $markup .= '<ul>';
@@ -80,7 +79,6 @@ class SearchResultSetsRenderer implements SearchResultsRendererInterface
             }
             $markup .= '</ul>';
         }
-        $markup .= '</div>';
 
         return $markup;
     }
