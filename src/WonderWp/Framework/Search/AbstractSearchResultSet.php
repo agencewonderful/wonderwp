@@ -10,13 +10,15 @@ namespace WonderWp\Framework\Search;
 
 abstract class AbstractSearchResultSet implements SearchResultSetInterface
 {
-
     /** @var  string */
     protected $name;
+
     /** @var  string */
     protected $label;
+
     /** @var  SearchResultInterface[] */
-    protected $collection;
+    protected $collection = [];
+
     /** @var  int */
     protected $totalCount;
 

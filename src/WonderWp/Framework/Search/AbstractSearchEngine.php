@@ -17,6 +17,11 @@ abstract class AbstractSearchEngine implements SearchEngineInterface
      */
     protected $services = [];
 
+    /**
+     * @var array
+     */
+    protected $results = [];
+
     /** @inheritdoc*/
     public function getServices()
     {
@@ -24,9 +29,11 @@ abstract class AbstractSearchEngine implements SearchEngineInterface
     }
 
     /** @inheritdoc*/
-    public function setServices($services)
+    public function setServices(array $services)
     {
-        $this->services = $services;
+        foreach ($services as $service) {
+            $this->addService($service);
+        }
 
         return $this;
     }
@@ -39,12 +46,17 @@ abstract class AbstractSearchEngine implements SearchEngineInterface
         return $this;
     }
 
-    public function renderResults($results)
+    /** @inheritdoc*/
+    public function renderResults($query, array $opts = [], array $servicesNames = [])
     {
-        /** @var SearchResultsRendererInterface $renderer */
-        $renderer = Container::getInstance()->offsetGet('wwp.search.renderer');
-        echo $renderer->getMarkup($results, []);
+        if (!empty($this->services)) {
+            foreach ($this->services as $searchService) {
+                if (0 === count($servicesNames) || in_array($searchService->getName(), $servicesNames)) {
+                    $this->results[] = $searchService->getMarkup($query, $opts);
+                }
+            }
+        }
 
+        return implode('', $this->results);
     }
-
 }
