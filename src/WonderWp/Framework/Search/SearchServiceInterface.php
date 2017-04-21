@@ -11,7 +11,7 @@ namespace WonderWp\Framework\Search;
 interface SearchServiceInterface
 {
     /**
-     * Return search service name.
+     * Set search service name.
      *
      * @param  string $name
      *
