@@ -4,7 +4,6 @@ namespace WonderWp\Framework\Media;
 
 class Medias
 {
-
     /**
      * @param $mediaUrl , The url must be the one used by WordPress in the guid column
      *
@@ -59,5 +58,4 @@ class Medias
 
         return $imgUrl;
     }
-
 }

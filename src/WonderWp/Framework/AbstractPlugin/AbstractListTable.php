@@ -12,7 +12,7 @@ if (!class_exists('WP_List_Table')) {
 abstract class AbstractListTable extends \WP_List_Table
 {
     /* @var array */
-    protected $columns;
+    protected $columns = [];
     /** @var string */
     protected $textDomain;
 

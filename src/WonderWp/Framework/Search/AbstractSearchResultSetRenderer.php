@@ -13,7 +13,7 @@ abstract class AbstractSearchResultSetRenderer implements SearchResultSetRendere
     /**
      * @var SearchResultSetInterface[]
      */
-    protected $sets;
+    protected $sets = [];
 
     /** @inheritdoc */
     public function getSets()

@@ -4,10 +4,7 @@ namespace WonderWp\Framework\Route;
 
 abstract class AbstractRouter implements RouterInterface
 {
-
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function flushRules()
     {
         /** @var \WP_Rewrite $wp_rewrite */
@@ -16,5 +13,4 @@ abstract class AbstractRouter implements RouterInterface
 
         return $this;
     }
-
 }

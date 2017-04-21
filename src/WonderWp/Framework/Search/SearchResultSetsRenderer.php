@@ -13,7 +13,7 @@ class SearchResultSetsRenderer implements SearchResultsRendererInterface
     /**
      * @var SearchResultSetInterface[]
      */
-    protected $sets;
+    protected $sets = [];
 
     /**
      * @return SearchResultSetInterface[]
@@ -35,6 +35,7 @@ class SearchResultSetsRenderer implements SearchResultsRendererInterface
         return $this;
     }
 
+    /** @inheritdoc */
     public function getMarkup(array $results, array $opts = [])
     {
         $this->setSets($results);
@@ -51,6 +52,11 @@ class SearchResultSetsRenderer implements SearchResultsRendererInterface
         return $markup;
     }
 
+    /**
+     * @param SearchResultSetInterface $set
+     *
+     * @return string
+     */
     public function getSetMarkup(SearchResultSetInterface $set)
     {
         if ($set->getTotalCount() <= 0) {
@@ -83,8 +89,13 @@ class SearchResultSetsRenderer implements SearchResultsRendererInterface
         return $markup;
     }
 
+    /**
+     * @param array $opts
+     *
+     * @return string
+     */
     public function getNoResultMarkup(array $opts = [])
     {
-        return 'Pas de résultat';
+        return apply_filters('wwp.search.noresult', 'No result');
     }
 }
