@@ -2,14 +2,26 @@
     "name": "wonderwp/framework",
     "description": "WonderWP Framework part",
     "type": "library",
-    "require": {
-        
-    },
     "license": "MIT",
     "authors": [
         {
             "name": "Jeremy Desvaux",
             "email": "jeremy.desvaux@wonderful.com"
         }
-    ]
+    ],
+    "require": {
+        "johnpbloch/wordpress": "^4.7",
+        "pimple/pimple": "~3.0",
+        "respect/validation": "^1.1",
+        "symfony/http-foundation": "~2.8|^3.0",
+        "wp-cli/wp-cli": "0.25.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "WonderWp\\Framework\\": "src/WonderWp/Framework"
+        },
+        "files": [
+            "src/WonderWp/Framework/functions.php"
+        ]
+    }
 }
