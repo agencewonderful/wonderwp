@@ -10,20 +10,25 @@ namespace WonderWp\Framework\Search;
  */
 interface SearchEngineInterface
 {
-
     /**
+     * Get search service.
+     *
      * @return SearchServiceInterface[]
      */
     public function getServices();
 
     /**
-     * @param SearchServiceInterface[] $services
+     * Set search services.
+     *
+     * @param  array $services
      *
      * @return static
      */
-    public function setServices($services);
+    public function setServices(array $services);
 
     /**
+     * Add a search service.
+     *
      * @param SearchServiceInterface $service
      *
      * @return static
@@ -31,18 +36,13 @@ interface SearchEngineInterface
     public function addService(SearchServiceInterface $service);
 
     /**
-     * @param       $query
-     * @param array $opts
+     * Render results for a given query.
      *
-     * @return array
-     */
-    public function getResults($query, array $opts = []);
-
-    /**
-     * @param array $results
+     * @param  string $query
+     * @param  array  $opts
+     * @param  array  $servicesNames
      *
-     * @return mixed
+     * @return string
      */
-    public function renderResults($results);
-
+    public function renderResults($query, array $opts = [], array $servicesNames = []);
 }
