@@ -2,6 +2,9 @@
 
 namespace WonderWp\Framework\Form;
 
+use Respect\Validation\Validatable;
+use Respect\Validation\Validator;
+
 interface FormValidatorInterface
 {
     /**
@@ -25,10 +28,18 @@ interface FormValidatorInterface
     public function validate(array $data, $translationDomain = 'default');
 
     /**
-     * @param array  $validationRules
-     * @param string $ruleName
+     * @param Validator[] $validationRules
+     * @param string      $ruleName
      *
      * @return bool
      */
     public static function hasRule(array $validationRules, $ruleName);
+
+    /**
+     * @param Validator[] $validationRules
+     * @param string      $ruleName
+     *
+     * @return Validatable
+     */
+    public static function getRule(array $validationRules, $ruleName);
 }

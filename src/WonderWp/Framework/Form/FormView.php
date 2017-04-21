@@ -2,9 +2,18 @@
 
 namespace WonderWp\Framework\Form;
 
+use Respect\Validation\Rules\Length;
+use Respect\Validation\Rules\Max;
+use Respect\Validation\Rules\Min;
+use Respect\Validation\Rules\NotEmpty;
+use Respect\Validation\Rules\Regex;
+use Respect\Validation\Validator;
 use WonderWp\Framework\DependencyInjection\Container;
+use WonderWp\Framework\Form\Field\FieldGroupInterface;
 use WonderWp\Framework\Form\Field\FieldInterface;
 use WonderWp\Framework\Form\Field\SelectField;
+use function WonderWp\Framework\array_merge_recursive_distinct;
+use function WonderWp\Framework\paramsToHtml;
 
 class FormView implements FormViewInterface
 {
@@ -37,34 +46,31 @@ class FormView implements FormViewInterface
     public function render(array $opts = [])
     {
         $markup    = '';
-        $optsStart = !empty($opts['formStart']) ? $opts['formStart'] : [];
-        $optsEnd   = !empty($opts['formEnd']) ? $opts['formEnd'] : [];
-        $markup    .= $this->formStart($optsStart);
-        $markup    .= $this->formErrors();
-        $fields    = $this->getFormInstance()->getFields();
+        $optsStart = array_key_exists('formStart', $opts) ? $opts['formStart'] : [];
+        $optsEnd   = array_key_exists('formEnd', $opts) ? $opts['formEnd'] : [];
 
-        $allowedFields = array_keys($fields);
-        if (!empty($opts['allowFields'])) {
-            $allowedFields = $opts['allowFields'];
-        }
-        if (!empty($opts['excludeFields'])) {
+        $markup .= $this->formStart($optsStart);
+        $markup .= $this->formErrors();
+
+        $fields        = $this->getFormInstance()->getFields();
+        $allowedFields = array_key_exists('allowFields', $opts) ? $opts['allowFields'] : array_keys($fields);
+
+        if (array_key_exists('excludeFields', $opts)) {
             $allowedFields = array_diff($allowedFields, $opts['excludeFields']);
         }
 
-        if (!empty($fields)) {
-            foreach ($fields as $i => $f) {
-                if (in_array($i, $allowedFields)) {
-                    /* @var $f FieldInterface */
-                    $markup .= $this->renderField($f->getName());
-                }
+        foreach ($fields as $i => $field) {
+            if (in_array($i, $allowedFields)) {
+                $markup .= $this->renderField($field->getName());
             }
         }
+
         $groups = $this->getFormInstance()->getGroups();
-        if (!empty($groups)) {
-            foreach ($groups as $group) {
-                $markup .= $this->renderGroup($group);
-            }
+
+        foreach ($groups as $group) {
+            $markup .= $this->renderGroup($group);
         }
+
         $markup .= $this->formEnd($optsEnd);
 
         return $markup;
@@ -74,26 +80,26 @@ class FormView implements FormViewInterface
     public function formStart(array $optsStart = [])
     {
         $defaultOptions = [
-            'showFormTag' => 1,
+            'showFormTag' => true,
             'method'      => 'post',
             'enctype'     => 'multipart/form-data',
             'class'       => ['wwpform', $this->formInstance->getName()],
         ];
-        $options        = array_merge_recursive($defaultOptions, $optsStart);
-        $markup         = '';
-        if ($options['showFormTag'] == 1) {
-            if (!empty($options['showFormTag'])) {
-                unset($options['showFormTag']);
-            }
-            $markup .= '<form ' . \WonderWp\Framework\paramsToHtml($options) . '>';
+
+        $options = array_merge_recursive($defaultOptions, $optsStart);
+
+        if (!$options['showFormTag']) {
+            return '';
         }
 
-        return $markup;
+        unset($options['showFormTag']);
+
+        $htmlOptions = paramsToHtml($options);
+
+        return "<form {$htmlOptions}>";
     }
 
-    /**
-     * @return string
-     */
+    /** @inheritdoc */
     public function formErrors()
     {
         $markup = '';
@@ -106,180 +112,199 @@ class FormView implements FormViewInterface
         return $markup;
     }
 
-    /**
-     * @param FormGroup $group
-     *
-     * @return string
-     */
+    /** @inheritdoc */
     public function renderGroup(FormGroup $group)
     {
         $markup = '';
         $fields = $group->getFields();
+
         if (!empty($fields)) {
-            $markup .= '<fieldset ' . \WonderWp\Framework\paramsToHtml($group->getDisplayRules()) . '>
-            <legend class="hndle ui-sortable-handle">' . $group->getTitle() . '</legend>            
-            <div class="inside">';
+            $displayRules = paramsToHtml($group->getDisplayRules());
+            $markup       .= "<fieldset {$displayRules}>";
+            $markup       .= '<legend class="handle ui-sortable-handle">';
+            $markup       .= $group->getTitle();
+            $markup       .= '</legend>';
+            $markup       .= '<div class="inside">';
+
             foreach ($fields as $field) {
                 $markup .= $this->renderField($field);
             }
-            $markup .= '</div></fieldset>';
+
+            $markup .= '</div>';
+            $markup .= '</fieldset>';
         }
 
         return $markup;
     }
 
     /** @inheritdoc */
-    public function renderField($fieldName)
+    public function renderField($field)
     {
-        $markup = '';
-        $f      = $fieldName instanceof FieldInterface ? $fieldName : $this->formInstance->getField($fieldName);
-        if(!$f instanceof FieldInterface && is_string($fieldName)){
-            if(WP_ENV==='development') {
-                throw new \UnexpectedValueException($fieldName . ' is not an instance of FieldInterface');
-            } else {
-                return '';
-            }
+        if (is_string($field)) {
+            $field = $this->formInstance->getField($field);
         }
 
-        if ($f->isRendered()) {
-            return $markup;
+        if ($field === null || $field->isRendered()) {
+            return '';
         }
 
-        $type = (is_object($f)) ? $f->getType() : null;
+        $field->setRendered(true);
 
-        $markup .= $this->fieldWrapStart($fieldName);
-        if ($type !== 'radio' && $type !== 'checkbox') {
-            $markup .= $this->fieldLabel($fieldName);
-        }
-        $markup .= $this->fieldStart($fieldName);
-        $markup .= $this->fieldBetween($fieldName);
-        $markup .= $this->fieldEnd($fieldName);
-        if ($type === 'radio' || $type === 'checkbox') {
-            $markup .= $this->fieldLabel($fieldName);
-        }
-        $markup .= $this->fieldError($fieldName);
-        $markup .= $this->fieldHelp($fieldName);
-        $markup .= $this->fieldWrapEnd($fieldName);
+        $type   = $field->getType();
+        $markup = $this->fieldWrapStart($field);
 
-        $f->setRendered(true);
+        if (!in_array($type, ['radio', 'checkbox'], true)) {
+            $markup .= $this->fieldLabel($field);
+        }
+
+        $markup .= $this->fieldStart($field);
+        $markup .= $this->fieldBetween($field);
+        $markup .= $this->fieldEnd($field);
+
+        if (in_array($type, ['radio', 'checkbox'], true)) {
+            $markup .= $this->fieldLabel($field);
+        }
+
+        $markup .= $this->fieldError($field);
+        $markup .= $this->fieldHelp($field);
+        $markup .= $this->fieldWrapEnd($field);
 
         return $markup;
     }
 
     /** @inheritdoc */
-    public function fieldWrapStart($fieldName)
+    public function fieldWrapStart($field)
     {
-        $markup         = '';
-        $f              = $fieldName instanceof FieldInterface ? $fieldName : $this->formInstance->getField($fieldName);
-        $displayRules   = $f->getDisplayRules();
-        $wrapAttributes = $displayRules['wrapAttributes'];
-
-        if (isset($wrapAttributes['no-wrap']) && $wrapAttributes['no-wrap']) {
-            return $markup;
+        if (is_string($field)) {
+            $field = $this->formInstance->getField($field);
         }
 
-        //CSS classes
-        if (empty($wrapAttributes['class'])) {
+        if ($field === null) {
+            return '';
+        }
+
+        $displayRules   = $field->getDisplayRules();
+        $wrapAttributes = array_key_exists('wrapAttributes', $displayRules) ? $displayRules['wrapAttributes'] : [];
+
+        if (array_key_exists('no-wrap', $wrapAttributes) && $wrapAttributes['no-wrap']) {
+            return '';
+        }
+
+        // CSS classes
+        if (!array_key_exists('class', $wrapAttributes)) {
             $wrapAttributes['class'] = [];
         }
+
+        if (!is_array($wrapAttributes['class'])) {
+            $wrapAttributes['class'] = [$wrapAttributes['class']];
+        }
+
         $wrapAttributes['class'][] = 'form-group';
-        $wrapAttributes['class'][] = $f->getTag() . '-wrap';
-        $wrapAttributes['class'][] = $f->getName() . '-wrap';
-        $errors                    = $f->getErrors();
-        if (!empty($errors)) {
+        $wrapAttributes['class'][] = "{$field->getTag()}-wrap";
+        $wrapAttributes['class'][] = "{$field->getName()}-wrap";
+
+        if (count($field->getErrors()) > 0) {
             $wrapAttributes['class'][] = 'has-error';
         }
 
-        if (!empty($f)) {
-            $markup .= '<div ' . \WonderWp\Framework\paramsToHtml($wrapAttributes) . '>';
+        $markup = '<div ' . paramsToHtml($wrapAttributes) . '>';
 
-            if (!empty($displayRules['before'])) {
-                $markup .= $displayRules['before'];
-            }
+        if (!empty($displayRules['before'])) {
+            $markup .= $displayRules['before'];
         }
 
         return $markup;
     }
 
     /** @inheritdoc */
-    public function fieldLabel($fieldName)
+    public function fieldLabel($field)
     {
-        $markup = '';
-        $f      = ($fieldName instanceof FieldInterface) ? $fieldName : $this->formInstance->getField($fieldName);
-        /** @var FormValidatorInterface $formValidator */
-        $formValidator   = $this->container->offsetGet('wwp.forms.formValidator');
-        $validationRules = !empty($f) ? $f->getValidationRules() : [];
-
-        //fields that  use the label differently:
-        if ($f->getTag() == 'button') {
-            return $markup;
+        if (is_string($field)) {
+            $field = $this->formInstance->getField($field);
         }
 
-        if (!empty($f)) {
-            $displayRules = $f->getDisplayRules();
-            if (!empty($displayRules['label'])) {
-                $markup = '<label ' . (!empty($displayRules['labelAttributes']) ? \WonderWp\Framework\paramsToHtml($displayRules['labelAttributes']) : '') . '>';
-                $markup .= $displayRules['label'];
-                if ($formValidator::hasRule($validationRules, 'NotEmpty') && $f->getType() !== 'radio') {
-                    $markup .= '<span class="required">*</span>';
-                }
-                $markup .= '</label>';
-            }
+        if ($field === null) {
+            return '';
         }
+
+        // Fields that  use the label differently:
+        if ($field->getTag() === 'button') {
+            return '';
+        }
+
+        $displayRules = $field->getDisplayRules();
+
+        if (!array_key_exists('label', $displayRules) || $displayRules['label'] === false) {
+            return '';
+        }
+
+        $validationRules      = $field->getValidationRules();
+        $attributes           = array_key_exists('labelAttributes', $displayRules) ? $displayRules['labelAttributes'] : [];
+        $validationAttributes = $this->getValidationLabelAttributes($validationRules);
+        $attributes           = array_merge_recursive_distinct($validationAttributes, $attributes);
+
+        $htmlAttributes = paramsToHtml($attributes);
+        $markup         = "<label {$htmlAttributes}>";
+        $markup         .= $this->getValidationLabelContent($displayRules['label'], $field);
+        $markup         .= '</label>';
 
         return $markup;
     }
 
     /** @inheritdoc */
-    public function fieldStart($fieldName)
+    public function fieldStart($field)
     {
-        $f = ($fieldName instanceof FieldInterface) ? $fieldName : $this->formInstance->getField($fieldName);
+        if (is_string($field)) {
+            $field = $this->formInstance->getField($field);
+        }
 
-        $tag             = !empty($f) ? $f->getTag() : '';
-        $type            = !empty($f) ? $f->getType() : [];
-        $displayRules    = !empty($f) ? $f->getDisplayRules() : [];
-        $validationRules = !empty($f) ? $f->getValidationRules() : [];
-        $params          = !empty($displayRules['inputAttributes']) ? $displayRules['inputAttributes'] : [];
-        /** @var FormValidator $formValidator */
-        $formValidator = $this->container->offsetGet('wwp.forms.formValidator');
-        $markup        = '';
+        if ($field === null) {
+            return '';
+        }
+
+        $tag                  = $field->getTag();
+        $type                 = $field->getType();
+        $displayRules         = $field->getDisplayRules();
+        $validationRules      = $field->getValidationRules();
+        $attributes           = array_key_exists('inputAttributes', $displayRules) ? $displayRules['inputAttributes'] : [];
+        $validationAttributes = $this->getValidationInputAttributes($validationRules);
+        $attributes           = array_merge_recursive_distinct($validationAttributes, $attributes);
 
         //Classes
-        if (empty($params['class'])) {
-            $params['class'] = [];
-        }
-        $params['class'][] = 'form-control';
-
-        if ($tag == 'input') {
-            $params['class'][] = $type;
-        }
-        if ($formValidator::hasRule($validationRules, 'NotEmpty')) {
-            $params['required'] = '';
+        if (empty($attributes['class'])) {
+            $attributes['class'] = [];
         }
 
-        if ($tag == 'select') {
+        $attributes['class'][] = 'form-control';
+
+        if ($tag === 'input') {
+            $attributes['class'][] = $type;
+        }
+
+        if ($field instanceof FieldGroupInterface && array_key_exists('name', $attributes)) {
+            unset($attributes['name']);
+        }
+
+        $markup = '';
+        if ($tag === 'select') {
             $markup .= '<div class="select-style">';
         }
 
-        if (method_exists($f, 'getGroup') && !empty($params) && !empty($params['name'])) {
-            unset($params['name']);
-        }
-
         //Open tag
-        $markup .= '<' . $tag;
+        $markup .= "<{$tag}";
 
         //Type
-        if ($tag == 'input') {
-            $markup .= ' type="' . $f->getType() . '" ';
+        if ($tag === 'input') {
+            $markup .= " type=\"{$field->getType()}\" ";
         }
 
-        $isMultiple = !empty($params['multiple']);
+        $isMultiple = !empty($attributes['multiple']);
         if ($isMultiple) {
-            $params['name'] .= '[]';
+            $attributes['name'] .= '[]';
         }
 
         //Add input parameters
-        $markup .= ' ' . \WonderWp\Framework\paramsToHtml($params) . '';
+        $markup .= ' ' . paramsToHtml($attributes);
 
         //Close opening tag
         if ($tag != 'input') {
@@ -290,59 +315,66 @@ class FormView implements FormViewInterface
     }
 
     /** @inheritdoc */
-    public function fieldBetween($fieldName)
+    public function fieldBetween($field)
     {
+        if (is_string($field)) {
+            $field = $this->formInstance->getField($field);
+        }
+
+        if ($field === null) {
+            return '';
+        }
+
         $markup       = '';
-        $f            = $fieldName instanceof FieldInterface ? $fieldName : $this->formInstance->getField($fieldName);
-        $displayRules = $f->getDisplayRules();
+        $displayRules = $field->getDisplayRules();
 
-        if (!empty($f)) {
-            $tag  = $f->getTag();
-            $val  = $f->getValue();
-            $type = $f->getType();
+        $tag  = $field->getTag();
+        $val  = $field->getValue();
+        $type = $field->getType();
 
-            //If group -> recurse
-            if (method_exists($f, 'getGroup')) {
-                $group = $f->getGroup();
-                if (!empty($group)) {
-                    foreach ($group as $fFromFroup) {
-                        $markup .= $this->renderField($fFromFroup);
-                    }
-                }
+        //If group -> recurse
+        if ($field instanceof FieldGroupInterface) {
+            $group = $field->getGroup();
+
+            foreach ($group as $fFromFroup) {
+                $markup .= $this->renderField($fFromFroup);
+            }
+        }
+
+        if ($val instanceof \DateTime) {
+            $val = $val->format('Y-m-d H:i:s');
+        }
+
+        //Value
+        if ($tag === 'input') {
+            if (is_array($val) || is_object($val)) {
+                $val = json_encode($val);
             }
 
-            if ($val instanceof \DateTime) {
-                $val = $val->format('Y-m-d H:i:s');
-            }
+            $markup .= " value=\"{$val}\" ";
 
-            //Value
-            if ($tag == 'input') {
-                if (is_array($val) || is_object($val)) {
-                    $val = json_encode($val);
-                }
-                $markup .= ' value="' . $val . '" ';
-                if ($type == 'checkbox') {
-                    $cbValue = $displayRules['inputAttributes']['value'];
-                    $markup  .= \checked($f->getValue(), $cbValue, false);
-                }
+            if ($type === 'checkbox') {
+                $cbValue = $displayRules['inputAttributes']['value'];
+                $markup  .= \checked($field->getValue(), $cbValue, false);
             }
-            if ($tag == 'textarea') {
-                $markup .= $val;
-            }
-            if ($tag == 'button') {
-                $markup .= $displayRules['label'];
-            }
+        }
 
-            //Select Options
-            if ($tag == 'select') {
-                /** @var $f SelectField */
-                $opts       = $f->getOptions();
-                $isMultiple = !empty($displayRules['inputAttributes']['multiple']);
-                if (!empty($opts)) {
-                    foreach ($opts as $key => $val) {
-                        $markup .= $this->buildSelectOption($f, $val, $key, $isMultiple);
-                    }
-                }
+        if ($tag === 'textarea') {
+            $markup .= $val;
+        }
+
+        if ($tag === 'button' && array_key_exists('label', $displayRules) && $displayRules['label'] !== false) {
+            $markup .= $displayRules['label'];
+        }
+
+        //Select Options
+        if ($tag === 'select') {
+            /** @var $field SelectField */
+            $opts       = $field->getOptions();
+            $isMultiple = !empty($displayRules['inputAttributes']['multiple']);
+
+            foreach ($opts as $key => $val) {
+                $markup .= $this->buildSelectOption($field, $val, $key, $isMultiple);
             }
         }
 
@@ -357,10 +389,10 @@ class FormView implements FormViewInterface
      *
      * @return string
      */
-    public function buildSelectOption(SelectField $field, $label, $value, $isMultiple)
+    protected function buildSelectOption(SelectField $field, $label, $value, $isMultiple)
     {
         if (is_array($label)) {
-            $markup = '<optgroup label="' . $value . '">';
+            $markup = "<optgroup label=\"{$value}\">";
 
             foreach ($label as $value => $realLabel) {
                 $markup .= $this->buildSelectOption($field, $realLabel, $value, $isMultiple);
@@ -372,88 +404,117 @@ class FormView implements FormViewInterface
         }
 
         if ($isMultiple) {
-            $selected = is_array($field->getValue()) && in_array($value, $field->getValue()) ? 'selected' : '';
+            $selected = is_array($field->getValue()) && in_array($value, $field->getValue()) ? 'selected="selected"' : '';
         } else {
             $selected = \selected($field->getValue(), $value, false);
         }
 
-        return '<option value="' . $value . '" ' . $selected . ' >' . $label . '</option>';
+        return "<option value=\"{$value}\" {$selected}>{$label}</option>";
     }
 
     /** @inheritdoc */
-    public function fieldEnd($fieldName)
+    public function fieldEnd($field)
     {
-        $f            = ($fieldName instanceof FieldInterface) ? $fieldName : $this->formInstance->getField($fieldName);
-        $tag          = !empty($f) ? $f->getTag() : '';
-        $displayRules = $f->getDisplayRules();
+        if (is_string($field)) {
+            $field = $this->formInstance->getField($field);
+        }
+
+        if ($field === null) {
+            return '';
+        }
+
+        $tag          = $field->getTag();
+        $displayRules = $field->getDisplayRules();
 
         $markup = '';
 
-        if ($tag == 'input') {
+        if ($tag === 'input') {
             $markup .= ' />';
         } else {
-            $markup .= '</' . $tag . '>';
+            $markup .= "</{$tag}>";
         }
 
-        if ($tag == 'select') {
+        if ($tag === 'select') {
             $markup .= '</div>'; // select-style
         }
 
-        if (!empty($displayRules['after'])) {
+        if (array_key_exists('after', $displayRules)) {
             $markup .= $displayRules['after'];
         }
 
         return $markup;
     }
 
-    /**
-     * @param string $fieldName
-     *
-     * @return string
-     */
-    public function fieldError($fieldName)
+    /** @inheritdoc */
+    public function fieldError($field)
     {
-        $markup       = '';
-        $f            = ($fieldName instanceof FieldInterface) ? $fieldName : $this->formInstance->getField($fieldName);
-        $errors       = $f->getErrors();
-        $displayRules = $f->getDisplayRules();
-        $fieldId      = !empty($displayRules) && !empty($displayRules['inputAttributes']) && !empty($displayRules['inputAttributes']['id']) ? $displayRules['inputAttributes']['id'] : '';
-        if (!empty($errors)) {
-            $markup .= '<label class="label-error" ' . ($fieldId ? 'for="' . $fieldId . '"' : '') . '>' . implode(', ', $errors) . '</label>';
+        if (is_string($field)) {
+            $field = $this->formInstance->getField($field);
         }
 
-        return $markup;
-    }
-
-    /**
-     * @param string $fieldName
-     *
-     * @return string
-     */
-    public function fieldHelp($fieldName)
-    {
-        $markup = '';
-        $f      = ($fieldName instanceof FieldInterface) ? $fieldName : $this->formInstance->getField($fieldName);
-
-        $displayRules = $f->getDisplayRules();
-        $help         = !empty($displayRules) && !empty($displayRules['help']) ? $displayRules['help'] : '';
-        if (!empty($help)) {
-            $markup .= '<span class="help">' . $help . '</span>';
+        if ($field === null) {
+            return '';
         }
+
+        $errors = $field->getErrors();
+
+        if (count($errors) < 1) {
+            return '';
+        }
+
+        $displayRules = $field->getDisplayRules();
+        $attributes   = [
+            'class' => 'label-error',
+        ];
+
+        if (array_key_exists('inputAttributes', $displayRules) && array_key_exists('id', $displayRules['inputAttributes'])) {
+            $attributes['for'] = $displayRules['inputAttributes']['id'];
+        }
+
+        $attributesHtml = paramsToHtml($attributes);
+        $markup         = "<label {$attributesHtml}>";
+        $markup         .= implode(', ', $errors);
+        $markup         .= '</label>';
 
         return $markup;
     }
 
     /** @inheritdoc */
-    public function fieldWrapEnd($fieldName)
+    public function fieldHelp($field)
     {
-        $markup         = '';
-        $f              = ($fieldName instanceof FieldInterface) ? $fieldName : $this->formInstance->getField($fieldName);
-        $displayRules   = $f->getDisplayRules();
-        $wrapAttributes = $displayRules['wrapAttributes'];
+        if (is_string($field)) {
+            $field = $this->formInstance->getField($field);
+        }
 
-        if (isset($wrapAttributes['no-wrap']) && $wrapAttributes['no-wrap']) {
-            return $markup;
+        if ($field === null) {
+            return '';
+        }
+
+        $displayRules = $field->getDisplayRules();
+
+        if (!array_key_exists('help', $displayRules) || $displayRules['help'] === false) {
+            return '';
+        }
+
+        return "<span class=\"help\">{$displayRules['help']}</span>";
+    }
+
+    /** @inheritdoc */
+    public function fieldWrapEnd($field)
+    {
+        if (is_string($field)) {
+            $field = $this->formInstance->getField($field);
+        }
+
+        if ($field === null) {
+            return '';
+        }
+
+        $displayRules   = $field->getDisplayRules();
+        $wrapAttributes = array_key_exists('wrapAttributes', $displayRules) ? $displayRules['wrapAttributes'] : [];
+
+        if (array_key_exists('no-wrap', $wrapAttributes) && $wrapAttributes['no-wrap']) {
+            return '';
         }
 
         return '</div>';
@@ -465,7 +526,8 @@ class FormView implements FormViewInterface
         $markup = '';
 
         $defaultOptions = [
-            'showSubmit'    => 1,
+            'showFormTag'   => true,
+            'showSubmit'    => true,
             'submitLabel'   => __('submit'),
             'btnAttributes' => [
                 'type'  => 'submit',
@@ -473,18 +535,94 @@ class FormView implements FormViewInterface
             ],
         ];
 
-        $options = \WonderWp\Framework\array_merge_recursive_distinct($defaultOptions, $optsEnd);
+        $options = array_merge_recursive_distinct($defaultOptions, $optsEnd);
 
-        if (!isset($options['showSubmit']) || $options['showSubmit'] == 1) {
-            $markup .= '<div class="submitFormField">
-                <button ' . \WonderWp\Framework\paramsToHtml($options['btnAttributes']) . '>' . $options['submitLabel'] . '</button>
-            </div>';
+        if ($options['showSubmit']) {
+            $btnAttributes = paramsToHtml($options['btnAttributes']);
+            $markup        .= '<div class="submitFormField">';
+            $markup        .= "<button {$btnAttributes}>";
+            $markup        .= $options['submitLabel'];
+            $markup        .= '</button>';
+            $markup        .= '</div>';
         }
 
-        if (empty($options['showFormTag']) || $options['showFormTag'] == 1) {
+        if ($options['showFormTag']) {
             $markup .= '</form>';
         }
 
         return $markup;
+    }
+
+    /**
+     * @param Validator[] $validationRules
+     *
+     * @return array
+     */
+    protected function getValidationInputAttributes(array $validationRules)
+    {
+        $attributes = [];
+        $validator  = $this->getFormValidator();
+
+        if ($validator::hasRule($validationRules, NotEmpty::class)) {
+            $attributes['required'] = 'required';
+        }
+
+        $lengthRule = $validator::getRule($validationRules, Length::class);
+        if ($lengthRule instanceof Length && $lengthRule->maxValue !== null) {
+            $attributes['maxlength'] = $lengthRule->maxValue;
+        }
+
+        $maxRule = $validator::getRule($validationRules, Max::class);
+        if ($maxRule instanceof Max) {
+            $attributes['max'] = $maxRule->interval;
+        }
+
+        $minRule = $validator::getRule($validationRules, Min::class);
+        if ($minRule instanceof Min) {
+            $attributes['min'] = $minRule->interval;
+        }
+
+        $regexRule = $validator::getRule($validationRules, Regex::class);
+        if ($regexRule instanceof Regex) {
+            $attributes['pattern'] = $regexRule->regex;
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * @param Validator[] $validationRules
+     *
+     * @return array
+     */
+    protected function getValidationLabelAttributes(array $validationRules)
+    {
+        return [];
+    }
+
+    /**
+     * @param string         $label
+     * @param FieldInterface $field
+     *
+     * @return string
+     */
+    protected function getValidationLabelContent($label, FieldInterface $field)
+    {
+        $validator       = $this->getFormValidator();
+        $validationRules = $field->getValidationRules();
+
+        if ($field->getType() !== 'radio' && $validator::hasRule($validationRules, NotEmpty::class)) {
+            $label .= '<span class="required">*</span>';
+        }
+
+        return $label;
+    }
+
+    /**
+     * @return FormValidator
+     */
+    protected function getFormValidator()
+    {
+        return $this->container->offsetGet('wwp.forms.formValidator');
     }
 }

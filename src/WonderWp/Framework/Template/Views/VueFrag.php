@@ -2,6 +2,8 @@
 
 namespace WonderWp\Framework\Template\Views;
 
+use function WonderWp\Framework\array_merge_recursive_distinct;
+
 class VueFrag
 {
     /** @var string */
@@ -24,7 +26,7 @@ class VueFrag
      */
     public function render(array $values = [])
     {
-        $params = \WonderWp\Framework\array_merge_recursive_distinct($this->values, $values);
+        $params = array_merge_recursive_distinct($this->values, $values);
         // Spread attributes
         extract($params);
 

@@ -5,7 +5,7 @@ namespace WonderWp\Framework\Form\Field;
 class CategoryField extends SelectField
 {
     /** @inheritdoc */
-    public function __construct($name, $value = null, $displayRules = [], $validationRules = [], $parent = 0)
+    public function __construct($name, $value = null, array $displayRules = [], array $validationRules = [], $parent = 0)
     {
         parent::__construct($name, $value, $displayRules, $validationRules);
 

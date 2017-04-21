@@ -2,8 +2,9 @@
 
 namespace WonderWp\Framework\Form;
 
-use WonderWp\Framework\Form\Field\FieldInterface;
+use function WonderWp\Framework\array_merge_recursive_distinct;
 use WonderWp\Framework\Form\Field\HiddenField;
+use WonderWp\Framework\Form\Field\OptionsFieldInterface;
 
 class FormViewReadOnly extends FormView
 {
@@ -13,74 +14,81 @@ class FormViewReadOnly extends FormView
         $defaultOptions = [
             'class' => ['wwpReadonlyForm'],
         ];
-        $options        = array_merge_recursive($defaultOptions, $optsStart);
+        $options        = array_merge_recursive_distinct($defaultOptions, $optsStart);
 
         return parent::formStart($options);
     }
 
     /** @inheritdoc */
-    public function renderField($fieldName)
+    public function renderField($field)
     {
-        $markup = '';
-        $f      = ($fieldName instanceof FieldInterface) ? $fieldName : $this->formInstance->getField($fieldName);
-
-        if ($f->isRendered()) {
-            return $markup;
+        if (is_string($field)) {
+            $field = $this->formInstance->getField($field);
         }
 
-        $markup .= $this->fieldWrapStart($fieldName);
+        if ($field === null) {
+            return '';
+        }
 
-        $markup .= $this->fieldLabel($fieldName);
+        if ($field->isRendered()) {
+            return '';
+        }
 
-        $markup .= $this->fieldStart($fieldName);
-        $markup .= $this->fieldBetween($fieldName);
-        $markup .= $this->fieldEnd($fieldName);
+        $markup = $this->fieldWrapStart($field);
+        $markup .= $this->fieldLabel($field);
+        $markup .= $this->fieldStart($field);
+        $markup .= $this->fieldBetween($field);
+        $markup .= $this->fieldEnd($field);
+        $markup .= $this->fieldWrapEnd($field);
 
-        $markup .= $this->fieldWrapEnd($fieldName);
-
-        $f->setRendered(true);
+        $field->setRendered(true);
 
         return $markup;
     }
 
     /** @inheritdoc */
-    public function fieldStart($fieldName)
+    public function fieldStart($field)
     {
         return '<span class="readOnlyVal">';
     }
 
     /** @inheritdoc */
-    public function fieldBetween($fieldName)
+    public function fieldBetween($field)
     {
+        if (is_string($field)) {
+            $field = $this->formInstance->getField($field);
+        }
+
+        if ($field === null) {
+            return '';
+        }
+
         $markup = '';
-        /** @var FieldInterface $f */
-        $f = ($fieldName instanceof FieldInterface) ? $fieldName : $this->formInstance->getField($fieldName);
 
-        if (!empty($f)) {
-            $val = $f->getValue();
-            if ($val instanceof \DateTime) {
-                $val = $val->format('d/m/Y');
-            }
+        $val = $field->getValue();
+        if ($val instanceof \DateTime) {
+            $val = $val->format('d/m/Y');
+        }
 
-            if ($f instanceof HiddenField) {
-                return '';
-            }
+        if ($field instanceof HiddenField) {
+            return '';
+        }
 
-            if (method_exists($f, 'getOptions') && !empty($f->getOptions())) {
-                $opts = $f->getOptions();
-                if (!empty($opts[$val])) {
-                    $markup .= $opts[$val];
-                }
-            } else {
-                $markup .= print_r($val, true);
+        if ($field instanceof OptionsFieldInterface) {
+            $opts = $field->getOptions();
+
+            if (array_key_exists($val, $opts) && !empty($opts[$val])) {
+                $markup .= $opts[$val];
             }
+        } else {
+            $markup .= print_r($val, true);
         }
 
         return $markup;
     }
 
     /** @inheritdoc */
-    public function fieldEnd($fieldName)
+    public function fieldEnd($field)
     {
         return '</span>';
     }

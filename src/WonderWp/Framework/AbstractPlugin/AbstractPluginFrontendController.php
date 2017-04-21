@@ -3,6 +3,7 @@
 namespace WonderWp\Framework\AbstractPlugin;
 
 use WonderWp\Framework\DependencyInjection\Container;
+use function WonderWp\Framework\get_plugin_file;
 
 abstract class AbstractPluginFrontendController
 {
@@ -58,7 +59,7 @@ abstract class AbstractPluginFrontendController
         $pluginRoot  = $this->manager->getConfig('path.root');
 
         if (!empty($pluginRoot)) {
-            $viewFile = \WonderWp\Framework\get_plugin_file($pluginRoot, DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . $viewName . '.php');
+            $viewFile = get_plugin_file($pluginRoot, DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . $viewName . '.php');
             if (!file_exists($viewFile)) {
                 $viewFile = $pluginRoot . '/public/views/' . $viewName . '.php';
             }

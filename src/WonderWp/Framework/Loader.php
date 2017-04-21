@@ -22,7 +22,6 @@ use WonderWp\Framework\Route\Router;
 use WonderWp\Framework\Search\SearchEngine;
 use WonderWp\Framework\Search\SearchResult;
 use WonderWp\Framework\Search\SearchResultSet;
-use WonderWp\Framework\Search\SearchResultSetsRenderer;
 use WonderWp\Framework\Search\SearchResultsRenderer;
 use WonderWp\Framework\Template\Views\AdminVue;
 use WonderWp\Framework\Template\Views\EditAdminView;
@@ -169,11 +168,11 @@ class Loader implements SingletonInterface
         $container['wwp.search.set']      = $container->factory(function () {
             return new SearchResultSet();
         });
-        
+
         //Cache
         $container['wwp.cache.cache'] = function () {
             return new TransientCache();
-        };        
+        };
 
         /**
          * Make container available

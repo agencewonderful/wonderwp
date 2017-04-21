@@ -2,6 +2,7 @@
 
 namespace WonderWp\Framework\AbstractPlugin;
 
+use function WonderWp\Framework\array_merge_recursive_distinct;
 use WonderWp\Framework\HttpFoundation\Request;
 
 if (!class_exists('WP_List_Table')) {
@@ -100,7 +101,7 @@ abstract class AbstractListTable extends \WP_List_Table
                 'page'   => $request->get('page'),
                 'action' => 'edit',
             ];
-            $editParams        = \WonderWp\Framework\array_merge_recursive_distinct($defaultEditParams, $givenEditParams);
+            $editParams        = array_merge_recursive_distinct($defaultEditParams, $givenEditParams);
             $editPage          = admin_url('/admin.php?' . http_build_query($editParams));
             $addBtn            = '<a href="' . $editPage . '" class="button action noewpaddrecordbtn">' . esc_html_x('Add New', 'link') . '</a>';
             echo $addBtn;
