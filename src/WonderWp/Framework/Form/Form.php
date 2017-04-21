@@ -11,11 +11,11 @@ class Form implements FormInterface
     /** @var string */
     protected $name;
     /** @var FieldInterface[] */
-    protected $fields;
+    protected $fields = [];
     /** @var array */
     protected $errors = [];
     /** @var array */
-    protected $groups;
+    protected $groups = [];
 
     /**
      * @param string           $name

@@ -11,7 +11,7 @@ class FormGroup
     /** @var string */
     protected $title;
     /** @var FieldInterface[] */
-    protected $fields;
+    protected $fields = [];
     /** @var array */
     protected $displayRules = [];
 
@@ -70,7 +70,7 @@ class FormGroup
     }
 
     /**
-     * @return mixed
+     * @return FieldInterface[]
      */
     public function getFields()
     {
@@ -78,9 +78,9 @@ class FormGroup
     }
 
     /**
-     * @param mixed $fields
+     * @param FieldInterface[] $fields
      */
-    public function setFields($fields)
+    public function setFields(array $fields)
     {
         $this->fields = $fields;
     }
