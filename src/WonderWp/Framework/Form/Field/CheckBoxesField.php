@@ -2,10 +2,12 @@
 
 namespace WonderWp\Framework\Form\Field;
 
+use function WonderWp\Framework\array_merge_recursive_distinct;
+
 class CheckBoxesField extends FieldGroup
 {
     /** @inheritdoc */
-    public function __construct($name, $value = null, $displayRules = [], $validationRules = [])
+    public function __construct($name, $value = null, array $displayRules = [], array $validationRules = [])
     {
         parent::__construct($name, $value, $displayRules, $validationRules);
 
@@ -22,7 +24,7 @@ class CheckBoxesField extends FieldGroup
      *
      * @return static
      */
-    public function generateCheckBoxes($passedGroupedDisplayRules = [], $passedGroupedValidationRules = [])
+    public function generateCheckBoxes(array $passedGroupedDisplayRules = [], array $passedGroupedValidationRules = [])
     {
         $name = $this->getName();
 
@@ -36,7 +38,7 @@ class CheckBoxesField extends FieldGroup
                 ],
             ];
             $passedOptDisplayRules  = isset($passedGroupedDisplayRules[$val]) ? $passedGroupedDisplayRules[$val] : [];
-            $optDisplayRules        = \WonderWp\Framework\array_merge_recursive_distinct($defaultOptDisplayRules, $passedOptDisplayRules);
+            $optDisplayRules        = array_merge_recursive_distinct($defaultOptDisplayRules, $passedOptDisplayRules);
 
             $optField = new CheckBoxField($optFieldName, isset($this->value[$val]) ? $this->value[$val] : null, $optDisplayRules);
             $this->addFieldToGroup($optField);
@@ -63,5 +65,4 @@ class CheckBoxesField extends FieldGroup
 
         return $this;
     }
-
 }

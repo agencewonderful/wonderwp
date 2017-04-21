@@ -5,7 +5,7 @@ namespace WonderWp\Framework\Form\Field;
 class PageField extends SelectField
 {
     /** @inheritdoc */
-    public function __construct($name, $value = null, $displayRules = [], $validationRules = [], $args = [])
+    public function __construct($name, $value = null, array $displayRules = [], array $validationRules = [], array $args = [])
     {
         parent::__construct($name, $value, $displayRules, $validationRules);
 
@@ -17,9 +17,8 @@ class PageField extends SelectField
      *
      * @return static
      */
-    public function setPageOptions($args)
+    public function setPageOptions(array $args)
     {
-
         $defaults = [
             'depth'                 => 0,
             'child_of'              => 0,
@@ -51,5 +50,4 @@ class PageField extends SelectField
 
         return $this;
     }
-
 }

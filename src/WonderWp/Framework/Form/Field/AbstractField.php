@@ -29,7 +29,7 @@ abstract class AbstractField implements FieldInterface
      * @param array  $displayRules
      * @param array  $validationRules
      */
-    public function __construct($name, $value = null, $displayRules = [], $validationRules = [])
+    public function __construct($name, $value = null, array $displayRules = [], array $validationRules = [])
     {
         $this
             ->setName($name)
@@ -102,7 +102,7 @@ abstract class AbstractField implements FieldInterface
     }
 
     /** @inheritdoc */
-    public function setDisplayRules($displayRules)
+    public function setDisplayRules(array $displayRules)
     {
         $this->displayRules = $displayRules;
 
@@ -116,7 +116,7 @@ abstract class AbstractField implements FieldInterface
     }
 
     /** @inheritdoc */
-    public function setValidationRules($validationRules)
+    public function setValidationRules(array $validationRules)
     {
         $this->validationRules = $validationRules;
 
@@ -152,7 +152,7 @@ abstract class AbstractField implements FieldInterface
     }
 
     /** @inheritdoc */
-    public function computeDisplayRules($passedRules)
+    public function computeDisplayRules(array $passedRules)
     {
         $defaultRules = [
             'wrapAttributes'  => [],
@@ -172,7 +172,7 @@ abstract class AbstractField implements FieldInterface
     }
 
     /** @inheritdoc */
-    public function computeValidationRules($passedRules)
+    public function computeValidationRules(array $passedRules)
     {
         $this->validationRules = array_merge($this->validationRules, $passedRules);
 

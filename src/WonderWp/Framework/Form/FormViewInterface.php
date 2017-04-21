@@ -2,12 +2,14 @@
 
 namespace WonderWp\Framework\Form;
 
+use WonderWp\Framework\Form\Field\FieldInterface;
+
 interface FormViewInterface
 {
     /**
      * @param FormInterface $form
      *
-     * @return $this
+     * @return static
      */
     public function setFormInstance(FormInterface $form);
 
@@ -19,70 +21,96 @@ interface FormViewInterface
     /**
      * @param array $opts
      *
-     * @return mixed
+     * @return string
      */
     public function render(array $opts = []);
 
     /**
      * @param array $optsStart
      *
-     * @return mixed
+     * @return string
      */
     public function formStart(array $optsStart = []);
 
     /**
-     * @param $fieldName
-     *
-     * @return mixed
+     * @return string
      */
-    public function renderField($fieldName);
+    public function formErrors();
 
     /**
-     * @param $fieldName
+     * @param FormGroup $group
      *
-     * @return mixed
+     * @return string
      */
-    public function fieldWrapStart($fieldName);
+    public function renderGroup(FormGroup $group);
 
     /**
-     * @param $fieldName
+     * @param FieldInterface|string $field
      *
-     * @return mixed
+     * @return string
      */
-    public function fieldLabel($fieldName);
+    public function renderField($field);
 
     /**
-     * @param $fieldName
+     * @param FieldInterface|string $field
      *
-     * @return mixed
+     * @return string
      */
-    public function fieldStart($fieldName);
+    public function fieldWrapStart($field);
 
     /**
-     * @param $fieldName
+     * @param FieldInterface|string $field
      *
-     * @return mixed
+     * @return string
      */
-    public function fieldBetween($fieldName);
+    public function fieldLabel($field);
 
     /**
-     * @param $fieldName
+     * @param FieldInterface|string $field
      *
-     * @return mixed
+     * @return string
      */
-    public function fieldEnd($fieldName);
+    public function fieldStart($field);
 
     /**
-     * @param $fieldName
+     * @param FieldInterface|string $field
      *
-     * @return mixed
+     * @return string
      */
-    public function fieldWrapEnd($fieldName);
+    public function fieldBetween($field);
+
+    /**
+     * @param FieldInterface|string $field
+     *
+     * @return string
+     */
+    public function fieldEnd($field);
+
+    /**
+     * @param FieldInterface|string $field
+     *
+     * @return string
+     */
+    public function fieldError($field);
+
+    /**
+     * @param string $field
+     *
+     * @return string
+     */
+    public function fieldHelp($field);
+
+    /**
+     * @param FieldInterface|string $field
+     *
+     * @return string
+     */
+    public function fieldWrapEnd($field);
 
     /**
      * @param array $optsEnd
      *
-     * @return mixed
+     * @return string
      */
     public function formEnd(array $optsEnd = []);
 }

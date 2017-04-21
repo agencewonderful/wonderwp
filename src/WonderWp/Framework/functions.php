@@ -42,9 +42,9 @@ function array_merge_recursive_distinct(array &$array1, array &$array2)
 
     foreach ($array2 as $key => &$value) {
         if (is_array($value) && isset ($merged [$key]) && is_array($merged [$key])) {
-            $merged [$key] = array_merge_recursive_distinct($merged [$key], $value);
+            $merged[$key] = array_merge_recursive_distinct($merged [$key], $value);
         } else {
-            $merged [$key] = $value;
+            $merged[$key] = $value;
         }
     }
 
@@ -70,17 +70,17 @@ function redirect($url)
  */
 function paramsToHtml(array $params)
 {
-    $paramsHtml = '';
-    if (!empty($params)) {
-        foreach ($params as $key => $val) {
-            if (is_array($val)) {
-                $val = implode(' ', $val);
-            }
-            $paramsHtml .= ' ' . $key . ' = "' . $val . '"';
+    $html = '';
+
+    foreach ($params as $key => $val) {
+        if (is_array($val)) {
+            $val = implode(' ', $val);
         }
+
+        $html .= " {$key}=\"{$val}\"";
     }
 
-    return $paramsHtml;
+    return $html;
 }
 
 /**

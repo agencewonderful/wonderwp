@@ -2,15 +2,15 @@
 
 namespace WonderWp\Framework\Form\Field;
 
-class FieldGroup extends AbstractField
+class FieldGroup extends AbstractField implements FieldGroupInterface, OptionsFieldInterface
 {
-    use AbstractOptionsField;
+    use OptionsFieldTrait;
 
-    /** @var array */
+    /** @var FieldInterface[] */
     protected $group = [];
 
     /** @inheritdoc */
-    public function __construct($name, $value = null, $displayRules = [], $validationRules = [])
+    public function __construct($name, $value = null, array $displayRules = [], array $validationRules = [])
     {
         parent::__construct($name, $value, $displayRules, $validationRules);
 
@@ -23,12 +23,8 @@ class FieldGroup extends AbstractField
         $this->displayRules['inputAttributes']['class'][] = 'field-group';
     }
 
-    /**
-     * @param AbstractField $field
-     *
-     * @return static
-     */
-    public function addFieldToGroup(AbstractField $field)
+    /** @inheritdoc */
+    public function addFieldToGroup(FieldInterface $field)
     {
         $fieldName               = $field->getName();
         $this->group[$fieldName] = $field;
@@ -36,19 +32,17 @@ class FieldGroup extends AbstractField
         return $this;
     }
 
-    /**
-     * @return array
-     */
+    /** @inheritdoc */
     public function getGroup()
     {
         return $this->group;
     }
 
-    /**
-     * @param array $group
-     */
-    public function setGroup($group)
+    /** @inheritdoc */
+    public function setGroup(array $group)
     {
         $this->group = $group;
+
+        return $this;
     }
 }

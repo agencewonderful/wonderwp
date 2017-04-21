@@ -31,14 +31,20 @@ class Form implements FormInterface
     public function renderView($opts = [])
     {
         $formView = $this->getView();
+
         return $formView->render($opts);
     }
 
-    public function getView(){
+    /**
+     * @return FormView
+     */
+    public function getView()
+    {
         $container = Container::getInstance();
         /** @var FormView $formView */
         $formView = $container['wwp.forms.formView'];
         $formView->setFormInstance($this);
+
         return $formView;
     }
 
@@ -182,7 +188,12 @@ class Form implements FormInterface
         return $this;
     }
 
-    /** @inheritdoc */
+    /**
+     * @param FieldInterface $f
+     * @param mixed          $data
+     *
+     * @return static
+     */
     public function fillField(FieldInterface $f, $data)
     {
         $displayRules = $f->getDisplayRules();

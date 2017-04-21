@@ -5,7 +5,7 @@ namespace WonderWp\Framework\Form\Field;
 class CategoryRadioField extends RadioField
 {
     /** @inheritdoc */
-    public function __construct($name, $value = null, $displayRules = [], $validationRules = [], $parent = 0)
+    public function __construct($name, $value = null, array $displayRules = [], array $validationRules = [], $parent = 0)
     {
         parent::__construct($name, $value, $displayRules, $validationRules);
 
@@ -27,11 +27,9 @@ class CategoryRadioField extends RadioField
         ];
         $cats = get_categories($args);
 
-        if (!empty($cats)) {
-            foreach ($cats as $cat) {
-                /** @var $cat \WP_Term */
-                $options[$cat->term_id] = __('term_' . $cat->slug, $this->getTextDomain());
-            }
+        foreach ($cats as $cat) {
+            /** @var $cat \WP_Term */
+            $options[$cat->term_id] = __('term_' . $cat->slug, $this->getTextDomain());
         }
 
         $this->setOptions($options);

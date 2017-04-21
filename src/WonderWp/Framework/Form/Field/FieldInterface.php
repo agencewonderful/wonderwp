@@ -2,6 +2,8 @@
 
 namespace WonderWp\Framework\Form\Field;
 
+use Respect\Validation\Validator;
+
 interface FieldInterface
 {
     /**
@@ -9,14 +11,14 @@ interface FieldInterface
      *
      * @return static
      */
-    public function computeDisplayRules($passedRules);
+    public function computeDisplayRules(array $passedRules);
 
     /**
-     * @param array $passedRules
+     * @param Validator[] $passedRules
      *
      * @return static
      */
-    public function computeValidationRules($passedRules);
+    public function computeValidationRules(array $passedRules);
 
     /**
      * @return string
@@ -76,19 +78,19 @@ interface FieldInterface
      *
      * @return static
      */
-    public function setDisplayRules($displayRules);
+    public function setDisplayRules(array $displayRules);
 
     /**
-     * @return array
+     * @return Validator[]
      */
     public function getValidationRules();
 
     /**
-     * @param array $validationRules
+     * @param Validator[] $validationRules
      *
      * @return static
      */
-    public function setValidationRules($validationRules);
+    public function setValidationRules(array $validationRules);
 
     /**
      * @return array

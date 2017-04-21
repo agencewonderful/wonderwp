@@ -2,7 +2,7 @@
 
 namespace WonderWp\Framework\Form\Field;
 
-trait AbstractOptionsField
+trait OptionsFieldTrait
 {
     protected $options = [];
 
@@ -17,9 +17,9 @@ trait AbstractOptionsField
     /**
      * @param array $options
      *
-     * @return $this
+     * @return static
      */
-    public function setOptions($options)
+    public function setOptions(array $options)
     {
         $this->options = $options;
 

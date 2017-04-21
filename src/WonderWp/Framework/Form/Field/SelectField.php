@@ -2,9 +2,9 @@
 
 namespace WonderWp\Framework\Form\Field;
 
-class SelectField extends AbstractField
+class SelectField extends AbstractField implements OptionsFieldInterface
 {
-    use AbstractOptionsField;
+    use OptionsFieldTrait;
 
     /** @inheritdoc */
     public function __construct($name, $value = null, $displayRules = [], $validationRules = [])

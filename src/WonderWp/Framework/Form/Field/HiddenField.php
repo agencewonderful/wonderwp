@@ -5,11 +5,9 @@ namespace WonderWp\Framework\Form\Field;
 class HiddenField extends InputField
 {
     /** @inheritdoc */
-    public function __construct($name, $value = null, $displayRules = [], $validationRules = [])
+    public function __construct($name, $value = null, array $displayRules = [], array $validationRules = [])
     {
-        if (array_key_exists('label', $displayRules)) {
-            unset($displayRules['label']);
-        }
+        $displayRules['label'] = false;
 
         parent::__construct($name, $value, $displayRules, $validationRules);
 

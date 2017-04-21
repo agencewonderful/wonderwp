@@ -3,6 +3,7 @@
 namespace WonderWp\Framework\Mail\Gateways;
 
 use WonderWp\Framework\API\Result;
+use function WonderWp\Framework\array_merge_recursive_distinct;
 use WonderWp\Framework\DependencyInjection\Container;
 use WonderWp\Framework\Mail\AbstractMailer;
 
@@ -194,7 +195,7 @@ class MandrillMailer extends AbstractMailer
             $defaultOpts['message']['headers']['Reply-To'] = $this->replyTo[0];
         }
 
-        $payload = \WonderWp\Framework\array_merge_recursive_distinct($defaultOpts, $opts);
+        $payload = array_merge_recursive_distinct($defaultOpts, $opts);
 
         return $payload;
     }

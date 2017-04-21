@@ -5,7 +5,7 @@ namespace WonderWp\Framework\Form\Field;
 class UrlField extends InputField
 {
     /** @inheritdoc */
-    public function __construct($name, $value, $displayRules = [], $validationRules = [])
+    public function __construct($name, $value, array $displayRules = [], array $validationRules = [])
     {
         parent::__construct($name, $value, $displayRules, $validationRules);
 

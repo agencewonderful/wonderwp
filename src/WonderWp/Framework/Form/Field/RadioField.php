@@ -2,13 +2,14 @@
 
 namespace WonderWp\Framework\Form\Field;
 
+use function WonderWp\Framework\array_merge_recursive_distinct;
 use WonderWp\Framework\DependencyInjection\Container;
 use WonderWp\Framework\Form\Validation\Validator;
 
 class RadioField extends FieldGroup
 {
     /** @inheritdoc */
-    public function __construct($name, $value = null, $displayRules = [], $validationRules = [])
+    public function __construct($name, $value = null, array $displayRules = [], array $validationRules = [])
     {
         parent::__construct($name, $value, $displayRules, $validationRules);
 
@@ -25,7 +26,7 @@ class RadioField extends FieldGroup
      *
      * @return static
      */
-    public function generateRadios($passedGroupedDisplayRules = [], $passedGroupedValidationRules = [])
+    public function generateRadios(array $passedGroupedDisplayRules = [], array $passedGroupedValidationRules = [])
     {
         $container = Container::getInstance();
         $name      = $this->getName();
@@ -48,7 +49,7 @@ class RadioField extends FieldGroup
                     $defaultOptDisplayRules['inputAttributes']['checked'] = '';
                 }
                 $passedOptDisplayRules = isset($passedGroupedDisplayRules[$val]) ? $passedGroupedDisplayRules[$val] : [];
-                $optDisplayRules       = \WonderWp\Framework\array_merge_recursive_distinct($defaultOptDisplayRules, $passedOptDisplayRules);
+                $optDisplayRules       = array_merge_recursive_distinct($defaultOptDisplayRules, $passedOptDisplayRules);
 
                 $validationRules = [];
                 if ($i === 0) {

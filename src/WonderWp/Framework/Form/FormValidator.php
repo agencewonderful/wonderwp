@@ -3,10 +3,9 @@
 namespace WonderWp\Framework\Form;
 
 use Respect\Validation\Exceptions\ValidationException;
-use Respect\Validation\Rules\AbstractRule;
-use Respect\Validation\Rules\Optional;
-use Respect\Validation\Validator;
-use WonderWp\Framework\Form\Field\FieldInterface;
+use Respect\Validation\Rules\AbstractComposite;
+use Respect\Validation\Rules\AbstractWrapper;
+use Respect\Validation\Validatable;
 
 class FormValidator implements FormValidatorInterface
 {
@@ -16,49 +15,41 @@ class FormValidator implements FormValidatorInterface
     /** @inheritdoc */
     public function validate(array $data, $translationDomain = 'default')
     {
-        /** @var FieldInterface[] $fields */
         $fields = $this->formInstance->getFields();
 
         $errors = [];
 
-        if (!empty($fields)) {
-            foreach ($fields as $f) {
-                /** @var Validator[] $validationRules */
-                $validationRules = $f->getValidationRules();
+        foreach ($fields as $field) {
+            $fieldErrors     = [];
+            $fieldData       = array_key_exists($field->getName(), $data) ? $data[$field->getName()] : null;
+            $validationRules = $field->getValidationRules();
+            $displayRules    = $field->getDisplayRules();
+            $name            = array_key_exists('label', $displayRules) ? $displayRules['label'] : $field->getName();
 
-                $fieldData = !empty($data[$f->getName()]) ? $data[$f->getName()] : null;
+            foreach ($validationRules as $validator) {
+                /** @var Validatable[] $rules */
+                $rules = $validator->setName($name)->getRules();
 
-                $fieldErrors = [];
-
-                if (!empty($validationRules)) {
-                    foreach ($validationRules as $validator) {
-                        $displayRules = $f->getDisplayRules();
-                        $name         = array_key_exists('label', $displayRules) ? $displayRules['label'] : $f->getName();
-                        $rules        = $validator->setName($name)->getRules();
-                        if (!empty($rules)) {
-                            foreach ($rules as $rule) {
-                                /** @var $rule AbstractRule */
-                                try {
-                                    $rule->assert($fieldData);
-                                } catch (ValidationException $exception) {
-                                    if (!empty($validationRule[1])) {
-                                        $errorMsg = $validationRule[1];
-                                    } else {
-                                        $errorMsg = $exception
-                                            ->setTemplate(__($exception->getTemplate(), $translationDomain))
-                                            ->getMainMessage()
-                                        ;
-                                    }
-                                    $fieldErrors[] = $errorMsg;
-                                }
-                            }
+                foreach ($rules as $rule) {
+                    try {
+                        $rule->assert($fieldData);
+                    } catch (ValidationException $exception) {
+                        if (!empty($validationRule[1])) {
+                            $errorMsg = $validationRule[1];
+                        } else {
+                            $errorMsg = $exception
+                                ->setTemplate(__($exception->getTemplate(), $translationDomain))
+                                ->getMainMessage()
+                            ;
                         }
+                        $fieldErrors[] = $errorMsg;
                     }
                 }
-                if (!empty($fieldErrors)) {
-                    $f->setErrors($fieldErrors);
-                    $errors[$f->getName()] = $fieldErrors;
-                }
+            }
+
+            if (!empty($fieldErrors)) {
+                $field->setErrors($fieldErrors);
+                $errors[$field->getName()] = $fieldErrors;
             }
         }
 
@@ -70,35 +61,31 @@ class FormValidator implements FormValidatorInterface
     /** @inheritdoc */
     public static function hasRule(array $validationRules, $ruleName)
     {
-        $ruleName = 'Respect\Validation\Rules\\' . $ruleName;
+        return static::getRule($validationRules, $ruleName) !== null;
+    }
 
-        if (!empty($validationRules)) {
-            foreach ($validationRules as $validator) {
-                /** @var Validator $validator */
-                $rules = $validator->getRules();
-                if (!empty($rules)) {
-                    foreach ($rules as $r) {
-                        $validationClass = get_class($r);
-                        if ($validationClass == $ruleName) {
-                            return true;
-                        }
+    /** @inheritdoc */
+    public static function getRule(array $validationRules, $ruleName)
+    {
+        foreach ($validationRules as $rule) {
+            if ($rule instanceof AbstractWrapper) {
+                $rule = $rule->getValidatable();
+            }
 
-                        if ($validationClass == Optional::class) {
-                            /** @var Optional $r */
-                            $subRules = $r->getValidatable()->getRules();
-                            foreach ($subRules as $sr) {
-                                $validationClass = get_class($sr);
-                                if ($validationClass == $ruleName) {
-                                    return true;
-                                }
-                            }
-                        }
-                    }
+            $reflection = new \ReflectionClass($rule);
+
+            if ($ruleName === $reflection->getShortName() || $ruleName === $reflection->getName()) {
+                return $rule;
+            }
+
+            if ($rule instanceof AbstractComposite) {
+                if (null !== $rule = static::getRule($rule->getRules(), $ruleName)) {
+                    return $rule;
                 }
             }
         }
 
-        return false;
+        return null;
     }
 
     /**
@@ -121,4 +108,3 @@ class FormValidator implements FormValidatorInterface
         return $this->formInstance;
     }
 }
-
