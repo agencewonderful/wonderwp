@@ -40,7 +40,7 @@ abstract class AbstractRequester implements RequesterInterface
         return $this->doRequest($this->createRequest(RequesterInterface::METHOD_PUT, $uri, $headers, $body));
     }
 
-    /** @inheritDoc */
+    /** @inheritdoc */
     public function delete($uri, array $headers = array(), $body = null)
     {
         return $this->doRequest($this->createRequest(RequesterInterface::METHOD_DELETE, $uri, $headers, $body));

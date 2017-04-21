@@ -8,7 +8,6 @@ use WonderWp\Framework\Service\AbstractService;
 
 abstract class AbstractHookService extends AbstractService implements HookServiceInterface
 {
-
     /**
      * @var AbstractManager
      */
@@ -28,5 +27,4 @@ abstract class AbstractHookService extends AbstractService implements HookServic
         // wp-content/plugins/plugin-name/languages/plugin-name-de_DE.mo
         load_plugin_textdomain($domain, false, $languageDir);
     }
-
 }

@@ -1,31 +1,21 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: jeremydesvaux
- * Date: 01/09/2016
- * Time: 11:19
- */
 
 namespace WonderWp\Framework\Route;
+
+use WonderWp\Framework\AbstractPlugin\AbstractPluginManager;
 
 /**
  * AbstractRouteService defines methods to add routes in the app.
  */
 abstract class AbstractRouteService implements RouteServiceInterface
 {
-    /**
-     * @var array
-     */
-    protected $routes;
+    /** @var array */
+    protected $routes = [];
 
-    /**
-     * @var WonderWp\APlugin\AbstractPluginManager
-     */
+    /** @var AbstractPluginManager */
     protected $manager;
 
-    /**
-     * @var WonderWp\APlugin\AbstractPluginManager
-     */
+    /** @var AbstractPluginManager */
     protected $publicController;
 
     /**
@@ -53,10 +43,10 @@ abstract class AbstractRouteService implements RouteServiceInterface
     /**
      * Generate an url for a given route reference and parameters.
      *
-     * @param string  $routeRef  can be a reference in the manager, or a pattern
-     * @param array   $params    contains marker to replace in the url
-     * @param string  $locale    defines the locale to use to generate the url (user locale by default)
-     * @param boolean $absolute  defines if url should be absolute (not by default)
+     * @param string  $routeRef can be a reference in the manager, or a pattern
+     * @param array   $params   contains marker to replace in the url
+     * @param string  $locale   defines the locale to use to generate the url (user locale by default)
+     * @param boolean $absolute defines if url should be absolute (not by default)
      *
      * @return  string
      *
@@ -67,14 +57,14 @@ abstract class AbstractRouteService implements RouteServiceInterface
      *
      * return $router->generateUrl('route_name', ['component' => 'component_value']);
      */
-    public function generateUrl($routeRef, array $params = array(), $locale = null, $absolute = false)
+    public function generateUrl($routeRef, array $params = [], $locale = null, $absolute = false)
     {
         // Searching for a pattern matching a locale.
         // With the given one first, then the default one. Elsewise, return empty string.
         $defaultLocale = get_locale();
-        $locale = ($locale && $locale !== $defaultLocale) ? $locale : null;
-        $url = '';
-        $patterns = $this->getPatterns($routeRef, $this->manager);
+        $locale        = ($locale && $locale !== $defaultLocale) ? $locale : null;
+        $url           = '';
+        $patterns      = $this->getPatterns($routeRef);
         if ($locale && isset($patterns[$locale])) {
             $url = $patterns[$locale];
         } elseif ($defaultLocale && isset($patterns[$defaultLocale])) {
@@ -84,7 +74,7 @@ abstract class AbstractRouteService implements RouteServiceInterface
         }
         // Replace markers in pattern found
         foreach ($params as $search => $replace) {
-            $url = str_replace('{'. $search .'}', $replace, $url);
+            $url = str_replace('{' . $search . '}', $replace, $url);
         }
         // Making absolute url
         if (true === $absolute) {
@@ -102,12 +92,12 @@ abstract class AbstractRouteService implements RouteServiceInterface
      * @param string $method     is the method allowed ("GET" by default)
      * @param mixed  $controller is the controller having the action to call
      *
-     * @return SSORouteService
+     * @return static
      */
     protected function addCallableRoute($routeRef, $action, $method = 'ALL', $controller = null)
     {
         $controller = $controller ? $controller : $this->publicController;
-        foreach ($this->getPatterns($routeRef, $this->manager) as $pattern) {
+        foreach ($this->getPatterns($routeRef) as $pattern) {
             $this->addRoute($pattern, [$controller, $action], $method);
         }
 
@@ -117,15 +107,15 @@ abstract class AbstractRouteService implements RouteServiceInterface
     /**
      * Add route leading to a file.
      *
-     * @param string $routeRef   can be a reference in the manager, or a pattern
-     * @param string $dest       is the file to point to
-     * @param string $method     is the method allowed ("GET" by default)
+     * @param string $routeRef can be a reference in the manager, or a pattern
+     * @param string $dest     is the file to point to
+     * @param string $method   is the method allowed ("GET" by default)
      *
-     * @return SSORouteService
+     * @return static
      */
     protected function addFileRoute($routeRef, $dest, $method = 'ALL')
     {
-        foreach ($this->getPatterns($routeRef, $this->manager) as $pattern) {
+        foreach ($this->getPatterns($routeRef) as $pattern) {
             $this->addRoute($pattern, $dest, $method);
         }
 
@@ -139,7 +129,7 @@ abstract class AbstractRouteService implements RouteServiceInterface
      * @param mixed  $dest   can be an array containing controller and action, or a string file reference
      * @param string $method is the method allowed
      *
-     * @return SSORouteService
+     * @return static
      */
     protected function addRoute($route, $dest, $method)
     {
@@ -151,7 +141,7 @@ abstract class AbstractRouteService implements RouteServiceInterface
     /**
      * Get url patterns for a given reference.
      *
-     * @param string $routeRef   can be a reference in the manager, or a pattern
+     * @param string $routeRef can be a reference in the manager, or a pattern
      *
      * @return array
      */

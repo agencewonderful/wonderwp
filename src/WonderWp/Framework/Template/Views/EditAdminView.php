@@ -20,5 +20,4 @@ class EditAdminView extends AdminVue
 
         return parent::registerFrags($prefix, $frags);
     }
-
 }
