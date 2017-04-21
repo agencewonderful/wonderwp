@@ -41,7 +41,7 @@ abstract class AbstractRouteService implements RouteServiceInterface
      *           $this
      *               ->addCallableRoute('route_name_inmanager', 'controllerAction')
      *               ->addCallableRoute('/url-to-catch/{component}', 'controllerAction')
-     *               ->addRedirectRoute('route_name_inmanager', 'file_to_redirect_to.php')
+     *               ->addFileRoute('route_name_inmanager', 'file_to_redirect_to.php')
      *           ;
      *       }
      *
@@ -104,7 +104,7 @@ abstract class AbstractRouteService implements RouteServiceInterface
      *
      * @return SSORouteService
      */
-    protected function addCallableRoute($routeRef, $action, $method = 'GET', $controller = null)
+    protected function addCallableRoute($routeRef, $action, $method = 'ALL', $controller = null)
     {
         $controller = $controller ? $controller : $this->publicController;
         foreach ($this->getPatterns($routeRef, $this->manager) as $pattern) {
@@ -115,15 +115,15 @@ abstract class AbstractRouteService implements RouteServiceInterface
     }
 
     /**
-     * Add route leading to a file redirection.
+     * Add route leading to a file.
      *
      * @param string $routeRef   can be a reference in the manager, or a pattern
-     * @param string $dest       is the file to redirect to
+     * @param string $dest       is the file to point to
      * @param string $method     is the method allowed ("GET" by default)
      *
      * @return SSORouteService
      */
-    protected function addRedirectRoute($routeRef, $dest, $method = 'GET')
+    protected function addFileRoute($routeRef, $dest, $method = 'ALL')
     {
         foreach ($this->getPatterns($routeRef, $this->manager) as $pattern) {
             $this->addRoute($pattern, $dest, $method);
