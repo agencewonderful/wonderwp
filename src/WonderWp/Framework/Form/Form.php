@@ -194,7 +194,7 @@ class Form implements FormInterface
      *
      * @return static
      */
-    public function fillField(FieldInterface $f, $data)
+    protected function fillField(FieldInterface $f, $data)
     {
         $displayRules = $f->getDisplayRules();
 
@@ -208,7 +208,7 @@ class Form implements FormInterface
                         $data       = $isMultiple ? [] : null;
                         continue;
                     } else {
-                        $data = $data[$ndx];
+                        $data = is_string($data[$ndx]) && strpos($data[$ndx], '\\\\') !== false ? str_replace('\\\\', '\\', $data[$ndx]) : $data[$ndx];
                     }
                 }
             }
