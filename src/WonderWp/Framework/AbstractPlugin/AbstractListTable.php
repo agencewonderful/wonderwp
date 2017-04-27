@@ -153,6 +153,10 @@ abstract class AbstractListTable extends \WP_List_Table
             $val = $val->format('d/m/Y H:i');
         }
 
+        if(is_array($val) || is_object($val)){
+            return json_encode($val);
+        }
+
         return $val;
     }
 
