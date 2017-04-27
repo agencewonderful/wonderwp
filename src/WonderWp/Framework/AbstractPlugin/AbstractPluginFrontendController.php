@@ -31,7 +31,7 @@ abstract class AbstractPluginFrontendController
     public function handleShortCode(array $attributes = [])
     {
         if (!empty($attributes['action']) && method_exists($this, $attributes['action'] . 'Action')) {
-            return call_user_func_array([$this, $attributes['action'] . 'Action'], $attributes);
+            return call_user_func_array([$this, $attributes['action'] . 'Action'], [$attributes]);
         } else {
             return $this->defaultAction($attributes);
         }
