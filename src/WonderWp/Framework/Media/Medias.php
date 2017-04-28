@@ -2,6 +2,9 @@
 
 namespace WonderWp\Framework\Media;
 
+use WonderWp\Framework\API\Result;
+use WonderWp\Framework\DependencyInjection\Container;
+
 class Medias
 {
     /**
