@@ -15,6 +15,7 @@ use WonderWp\Framework\Form\FormValidator;
 use WonderWp\Framework\Form\FormView;
 use WonderWp\Framework\Form\FormViewReadOnly;
 use WonderWp\Framework\Http\WpRequester;
+use WonderWp\Framework\Log\DirectOutputLog;
 use WonderWp\Framework\Mail\WpMailer;
 use WonderWp\Framework\Panel\Panel;
 use WonderWp\Framework\Panel\PanelManager;
@@ -173,6 +174,11 @@ class Loader implements SingletonInterface
         $container['wwp.cache.cache'] = function () {
             return new TransientCache();
         };
+        
+        //Log
+        $container['wwp.log.log'] = function () {
+            return new DirectOutputLog();
+        };        
 
         /**
          * Make container available
