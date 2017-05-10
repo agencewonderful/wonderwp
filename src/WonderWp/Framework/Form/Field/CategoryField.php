@@ -2,6 +2,7 @@
 
 namespace WonderWp\Framework\Form\Field;
 
+// @deprecated
 class CategoryField extends SelectField
 {
     /** @inheritdoc */
