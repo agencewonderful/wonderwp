@@ -4,7 +4,7 @@ namespace WonderWp\Framework\Form\Field;
 
 use WonderWp\Framework\Form\Field\AbstractCategoryField;
 
-class TranslatedCategoryField extends AbstractCategoryField implements OptionsFieldInterface
+class TranslatedCategoryField extends AbstractCategoryField
 {
 
     /**
@@ -20,6 +20,15 @@ class TranslatedCategoryField extends AbstractCategoryField implements OptionsFi
         $this->setOptions($this->selectOptions);
 
         return $this;
+    }
+
+    /**
+    * Returns the translation domain
+    * @return string
+    */
+    private function getTextDomain()
+    {
+        return defined('WWP_THEME_TEXTDOMAIN') ? WWP_THEME_TEXTDOMAIN : 'default';
     }
 
 }

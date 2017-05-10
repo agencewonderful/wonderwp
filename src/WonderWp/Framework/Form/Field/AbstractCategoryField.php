@@ -5,7 +5,7 @@ namespace WonderWp\Framework\Form\Field;
 use WonderWp\Framework\Form\Field\SelectField;
 use WonderWp\Framework\Form\Field\OptionsFieldInterface;
 
-abstract class AbstractCategoryField extends SelectField implements OptionsFieldInterface
+abstract class AbstractCategoryField extends SelectField
 {
 
     /** @var array **/
@@ -72,15 +72,6 @@ abstract class AbstractCategoryField extends SelectField implements OptionsField
         } else {
             return '';
         }
-    }
-
-    /**
-     * Returns the translation domain
-     * @return string
-     */
-    protected function getTextDomain()
-    {
-        return defined('WWP_THEME_TEXTDOMAIN') ? WWP_THEME_TEXTDOMAIN : 'default';
     }
 
     /**
