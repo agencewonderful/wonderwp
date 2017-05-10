@@ -65,11 +65,13 @@ abstract class AbstractCategoryField extends SelectField implements OptionsField
     {
         $displayRules = $this->getDisplayRules();
 
-        if (!empty($displayRules) && !empty($displayRules['label'])) {
+        if (isset($displayRules['firstOptionLabel'])) {
+            return $displayRules['firstOptionLabel'];
+        } elseif (isset($displayRules['label'])) {
             return $displayRules['label'];
+        } else {
+            return '';
         }
-
-        return __('Category', $this->getTextDomain());
     }
 
     /**
