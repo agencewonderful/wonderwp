@@ -121,7 +121,7 @@ class FormView implements FormViewInterface
         if (!empty($fields)) {
             $displayRules = paramsToHtml($group->getDisplayRules());
             $markup       .= "<fieldset {$displayRules}>";
-            $markup       .= '<legend class="handle ui-sortable-handle">';
+            $markup       .= '<legend class="hndle ui-sortable-handle">';
             $markup       .= $group->getTitle();
             $markup       .= '</legend>';
             $markup       .= '<div class="inside">';
