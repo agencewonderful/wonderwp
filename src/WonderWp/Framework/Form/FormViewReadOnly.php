@@ -3,6 +3,7 @@
 namespace WonderWp\Framework\Form;
 
 use function WonderWp\Framework\array_merge_recursive_distinct;
+use WonderWp\Framework\Form\Field\FieldGroupInterface;
 use WonderWp\Framework\Form\Field\HiddenField;
 use WonderWp\Framework\Form\Field\OptionsFieldInterface;
 
@@ -66,6 +67,16 @@ class FormViewReadOnly extends FormView
         $markup = '';
 
         $val = $field->getValue();
+
+        //If group -> recurse
+        if ($field instanceof FieldGroupInterface) {
+            $group = $field->getGroup();
+
+            foreach ($group as $fFromFroup) {
+                $markup .= $this->renderField($fFromFroup);
+            }
+        }
+
         if ($val instanceof \DateTime) {
             $val = $val->format('d/m/Y');
         }
@@ -91,5 +102,13 @@ class FormViewReadOnly extends FormView
     public function fieldEnd($field)
     {
         return '</span>';
+    }
+
+    public function formEnd(array $optsEnd = [])
+    {
+        if(!isset($optsEnd['showSubmit'])){
+            $optsEnd['showSubmit'] = false;
+        }
+        return parent::formEnd($optsEnd);
     }
 }

@@ -86,7 +86,7 @@ class FormView implements FormViewInterface
             'class'       => ['wwpform', $this->formInstance->getName()],
         ];
 
-        $options = array_merge_recursive($defaultOptions, $optsStart);
+        $options = array_merge_recursive_distinct($defaultOptions, $optsStart);
 
         if (!$options['showFormTag']) {
             return '';
