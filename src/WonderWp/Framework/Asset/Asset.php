@@ -23,7 +23,7 @@ class Asset extends \_WP_Dependency
      */
     public function __construct($handle = '', $src = '', $deps = [], $ver = '', $inFooter = false, $groupName = 'app', $args = [])
     {
-        parent::__construct();
+        parent::__construct($handle,$src,$deps,$ver,$args);
 
         if ($inFooter) {
             $this->add_data('group', 1);
