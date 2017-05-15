@@ -23,6 +23,26 @@ class AssetManager implements SingletonInterface
     protected $services = [];
 
     /**
+     * @return AssetServiceInterface[]
+     */
+    public function getServices()
+    {
+        return $this->services;
+    }
+
+    /**
+     * @param AssetServiceInterface[] $services
+     *
+     * @return static
+     */
+    public function setServices($services)
+    {
+        $this->services = $services;
+
+        return $this;
+    }
+
+    /**
      * Prevent external instance creation
      */
     private function __construct()
