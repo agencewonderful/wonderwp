@@ -209,6 +209,9 @@ class Form implements FormInterface
                         continue;
                     } else {
                         $data = is_string($data[$ndx]) && strpos($data[$ndx], '\\\\') !== false ? str_replace('\\\\', '\\', $data[$ndx]) : $data[$ndx];
+                        if(is_string($data)){
+                            $data = stripslashes($data);
+                        }
                     }
                 }
             }
