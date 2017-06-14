@@ -208,7 +208,7 @@ abstract class AbstractMailer implements MailerInterface
     /** @inheritdoc */
     public function addAttachment($path, $filename = null)
     {
-        // TODO: Implement addAttachement() method.
+        // TO DO: Implement addAttachement() method.
         return $this;
     }
 

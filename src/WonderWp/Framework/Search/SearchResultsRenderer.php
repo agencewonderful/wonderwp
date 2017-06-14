@@ -15,7 +15,7 @@ class SearchResultsRenderer implements SearchResultsRendererInterface
      */
     public function getMarkup(array $results, array $opts = [])
     {
-        // TODO: Implement getMarkup() method.
+        // TO DO: Implement getMarkup() method.
     }
 
 }

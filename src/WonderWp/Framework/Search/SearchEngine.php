@@ -8,8 +8,6 @@
 
 namespace WonderWp\Framework\Search;
 
-use WonderWp\Framework\DependencyInjection\Container;
-
 class SearchEngine extends AbstractSearchEngine
 {
 
