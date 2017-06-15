@@ -139,7 +139,11 @@ abstract class AbstractListTable extends \WP_List_Table
             $val = $item[$columnName];
         }
 
-        return stripslashes($val);
+        if(is_string($val)){
+            $val = stripslashes($val);
+        }
+
+        return $val;
     }
 
     /**
