@@ -14,6 +14,7 @@ if ($request->getMethod() == 'POST' && !empty($request->request->get('saveOption
         }
     }
 }
+
 ?>
 <div class="options-wrap">
     <form method="post" action="" class="">
@@ -77,9 +78,9 @@ if ($request->getMethod() == 'POST' && !empty($request->request->get('saveOption
 
             case 'title':
             ?></table>
-        <?php echo '<h3>' . __($value['desc']) . '</h3>';
+        <?php echo '<h3 class="opt-group opt-group-title" data-group="'.sanitize_title($value['desc']).'">' . __($value['desc']) . '</h3>';
         ?>
-        <table class="form-table">
+        <table class="form-table opt-group" data-group="<?php echo sanitize_title($value['desc']); ?>">
             <?php
             break;
 
