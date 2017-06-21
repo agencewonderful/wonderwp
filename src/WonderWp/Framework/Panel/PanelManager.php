@@ -153,6 +153,7 @@ class PanelManager
                                 if (is_array($val) || is_object($val)) {
                                     $val = serialize($val);
                                 }
+                                if(is_string($val)){ $val = stripslashes($val); }//Because request adds a / 
                                 $metaval[$key] = $val;
                                 //On MaJ la valeur individuelle, utile pour faire des query avec get_posts en utilisant les champs meta_key et meta_value.
                                 //La cle etant faite de $metakey.$key
