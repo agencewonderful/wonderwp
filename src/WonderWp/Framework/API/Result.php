@@ -18,6 +18,7 @@ class Result implements \JsonSerializable
     /**
      * @param int   $code
      * @param array $data
+     * @codeCoverageIgnore
      */
     public function __construct($code, $data = [])
     {

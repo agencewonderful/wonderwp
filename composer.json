@@ -23,5 +23,8 @@
         "files": [
             "src/WonderWp/Framework/functions.php"
         ]
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.1"
     }
 }
