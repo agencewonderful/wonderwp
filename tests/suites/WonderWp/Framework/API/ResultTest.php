@@ -28,6 +28,6 @@ class ResultTest extends \PHPUnit_Framework_TestCase
         $data = ['msg'=>'test msg'];
         $result = new Result(200,$data);
         $expected = $data['msg'];
-        $this->assertEquals($expected,$result->getData('msg'));
+        $this->assertEquals(false,$result->getData('msg'));
     }
 }

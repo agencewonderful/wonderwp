@@ -18,7 +18,7 @@ pipeline {
         stage('notify'){
             steps {
                 script {
-                    slackSend color: '#4CAF50', channel: '#jenkins', message: "Completed ${env.JOB_NAME} (<${env.BUILD_URL}|build ${env.BUILD_NUMBER}>) successfully"
+                    slackSend(message: "Completed ${env.JOB_NAME} (<${env.BUILD_URL}|build ${env.BUILD_NUMBER}>) successfully", channel: '#jenkins', color: 'good', failOnError: true, teamDomain: 'wdf-team', token: 'ebmZ6kgsvWsgFVUY3UViZPOS')
                 }
             }
         }
