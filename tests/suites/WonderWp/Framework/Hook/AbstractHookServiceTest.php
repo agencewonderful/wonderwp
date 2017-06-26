@@ -18,9 +18,9 @@ class AbstractHookServiceTest extends \PHPUnit_Framework_TestCase
         $this->hookService = new FakeHookService();
     }
 
-    public function testLoadTextDomain()
+    public function testLoadTextDomainWithValues()
     {
-        // ex: $this->assertEquals(false, $this->hookService->loadTextdomain('fakeDomain', 'fr_FR', '/fake/folder/path'));
+        $this->assertEquals(false, $this->hookService->loadTextdomain('fakeDomain', 'fr_FR', '/fake/folder/path'));
     }
 }
 
