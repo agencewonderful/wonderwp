@@ -28,6 +28,7 @@ class Router extends AbstractRouter
     }
 
     /**
+     * @codeCoverageIgnore
      * @return RouteServiceInterface[]
      */
     public function getServices()
@@ -37,6 +38,7 @@ class Router extends AbstractRouter
 
     /**
      * @param RouteServiceInterface[] $services
+     * @codeCoverageIgnore
      *
      * @return static
      */

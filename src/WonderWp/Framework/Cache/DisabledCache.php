@@ -12,6 +12,7 @@ class DisabledCache implements CacheInterface
 {
     /**
      * @inheritDoc
+     * @codeCoverageIgnore
      */
     public function get($key)
     {
@@ -20,6 +21,7 @@ class DisabledCache implements CacheInterface
 
     /**
      * @inheritDoc
+     * @codeCoverageIgnore
      */
     public function set($key, $val, $duration = 0)
     {
@@ -28,6 +30,7 @@ class DisabledCache implements CacheInterface
 
     /**
      * @inheritDoc
+     * @codeCoverageIgnore
      */
     public function delete($key)
     {

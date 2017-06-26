@@ -14,6 +14,7 @@ class AdminNotification
     protected $dismissible;
 
     /**
+     * @codeCoverageIgnore
      * @param string $type
      * @param string $message
      */
@@ -47,6 +48,7 @@ class AdminNotification
 
     /**
      * @return string
+     * @codeCoverageIgnore
      */
     public function getType()
     {
@@ -55,6 +57,7 @@ class AdminNotification
 
     /**
      * @param string $type
+     * @codeCoverageIgnore
      *
      * @return static
      */
@@ -66,6 +69,8 @@ class AdminNotification
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @return string
      */
     public function getMessage()
@@ -74,6 +79,7 @@ class AdminNotification
     }
 
     /**
+     * @codeCoverageIgnore
      * @param string $message
      *
      * @return static
@@ -86,6 +92,8 @@ class AdminNotification
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @return bool
      */
     public function isDismissible()
@@ -94,6 +102,7 @@ class AdminNotification
     }
 
     /**
+     * @codeCoverageIgnore
      * @param boolean $dismissible
      *
      * @return static
