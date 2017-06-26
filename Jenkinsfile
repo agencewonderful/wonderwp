@@ -12,7 +12,7 @@ pipeline {
             steps {
             echo 'Starting PHPUnit Tests'
             // Run PHPUnit
-            sh 'vendor/bin/phpunit tests/suites --coverage-html tests/reports/coverage.html --whitelist src/WonderWp/Framework --log-junit tests/reports/phunit.xml';
+            sh 'vendor/bin/phpunit tests/suites --bootstrap tests/bootstrap.php  --coverage-html tests/reports/coverage.html --whitelist src/WonderWp/Framework --log-junit tests/reports/phunit.xml';
             }
         }
         stage('notify'){

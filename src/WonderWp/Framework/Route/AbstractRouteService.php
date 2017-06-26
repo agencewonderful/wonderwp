@@ -41,6 +41,7 @@ abstract class AbstractRouteService implements RouteServiceInterface
     abstract public function getRoutes();
 
     /**
+     * @codeCoverageIgnore
      * @return AbstractPluginManager
      */
     public function getManager()
@@ -49,6 +50,7 @@ abstract class AbstractRouteService implements RouteServiceInterface
     }
 
     /**
+     * @codeCoverageIgnore
      * @param AbstractPluginManager $manager
      *
      * @return static
@@ -61,6 +63,7 @@ abstract class AbstractRouteService implements RouteServiceInterface
     }
 
     /**
+     * @codeCoverageIgnore
      * @return AbstractPluginManager
      */
     public function getPublicController()
@@ -69,6 +72,7 @@ abstract class AbstractRouteService implements RouteServiceInterface
     }
 
     /**
+     * @codeCoverageIgnore
      * @param AbstractPluginManager $publicController
      *
      * @return static
@@ -192,7 +196,6 @@ abstract class AbstractRouteService implements RouteServiceInterface
             $patterns = [(get_locale()) => $routeRef];
         }
         $patterns = is_array($patterns) ? $patterns : [$patterns];
-
         return $patterns;
     }
 }

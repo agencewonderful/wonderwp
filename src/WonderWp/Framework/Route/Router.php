@@ -109,10 +109,11 @@ class Router extends AbstractRouter
                         }
                     }
                 }
-                if (is_callable($route->getCallable())) {
+                $callable = $route->getCallable();
+                if (is_callable($callable) || is_array($callable)) {
                     $newRewriteRule = 'index.php?' . $qs;
                 } else {
-                    $newRewriteRule = $route->getCallable();
+                    $newRewriteRule = $callable;
                     if (strpos($newRewriteRule, $this->routeVariable . '=' . $name) === false) {
                         $newRewriteRule .= '&' . $this->routeVariable . '=' . $name;
                     }
