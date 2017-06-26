@@ -28,6 +28,26 @@ class Router extends AbstractRouter
     }
 
     /**
+     * @return RouteServiceInterface[]
+     */
+    public function getServices()
+    {
+        return $this->services;
+    }
+
+    /**
+     * @param RouteServiceInterface[] $services
+     *
+     * @return static
+     */
+    public function setServices($services)
+    {
+        $this->services = $services;
+
+        return $this;
+    }
+
+    /**
      * Each plugin's own routing service is registered towards this router instance by calling this method
      *
      * @param RouteServiceInterface $routeService
@@ -46,9 +66,9 @@ class Router extends AbstractRouter
         if (!empty($this->services)) {
             foreach ($this->services as $service) {
                 /** @var RouteServiceInterface $service */
-                $serviceName   = get_class($service);
                 $serviceRoutes = $service->getRoutes();
                 if (!empty($serviceRoutes)) {
+                    $serviceName   = get_class($service);
                     foreach ($serviceRoutes as $i => $r) {
                         if (is_array($r)) {
                             $r = new Route($r);

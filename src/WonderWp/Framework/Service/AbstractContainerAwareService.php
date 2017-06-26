@@ -10,7 +10,10 @@ abstract class AbstractContainerAwareService extends AbstractService implements 
 {
     use ContainerAwareTrait;
 
-    /** Constructor */
+    /**
+     * Constructor
+     * @codeCoverageIgnore
+     */
     public function __construct()
     {
         $this->setContainer(Container::getInstance());

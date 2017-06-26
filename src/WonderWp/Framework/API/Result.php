@@ -27,6 +27,7 @@ class Result implements \JsonSerializable
     }
 
     /**
+     * @codeCoverageIgnore
      * @return int
      */
     public function getCode()
@@ -35,6 +36,7 @@ class Result implements \JsonSerializable
     }
 
     /**
+     * @codeCoverageIgnore
      * @param int $code
      */
     public function setCode($code)
@@ -45,7 +47,7 @@ class Result implements \JsonSerializable
     /**
      * @param string $key
      *
-     * @return array|mixed|null|string
+     * @return mixed|null
      */
     public function getData($key = '')
     {
@@ -57,6 +59,7 @@ class Result implements \JsonSerializable
     }
 
     /**
+     * @codeCoverageIgnore
      * @param string $data
      */
     public function setData($data)

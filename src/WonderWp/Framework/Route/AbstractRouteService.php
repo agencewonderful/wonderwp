@@ -41,6 +41,46 @@ abstract class AbstractRouteService implements RouteServiceInterface
     abstract public function getRoutes();
 
     /**
+     * @return AbstractPluginManager
+     */
+    public function getManager()
+    {
+        return $this->manager;
+    }
+
+    /**
+     * @param AbstractPluginManager $manager
+     *
+     * @return static
+     */
+    public function setManager($manager)
+    {
+        $this->manager = $manager;
+
+        return $this;
+    }
+
+    /**
+     * @return AbstractPluginManager
+     */
+    public function getPublicController()
+    {
+        return $this->publicController;
+    }
+
+    /**
+     * @param AbstractPluginManager $publicController
+     *
+     * @return static
+     */
+    public function setPublicController($publicController)
+    {
+        $this->publicController = $publicController;
+
+        return $this;
+    }
+
+    /**
      * Generate an url for a given route reference and parameters.
      *
      * @param string  $routeRef can be a reference in the manager, or a pattern

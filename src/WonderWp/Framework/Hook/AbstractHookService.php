@@ -14,17 +14,22 @@ abstract class AbstractHookService extends AbstractService implements HookServic
     protected $manager;
 
     /**
-     * Load Textdomain
+     * @param string $domain
+     * @param string $languageDir
+     *
+     * @return bool
      */
-    public function loadTextdomain()
+    public function loadTextdomain($domain = '', $locale = '', $languageDir = '')
     {
-        $domain      = $this->manager->getConfig('textDomain');
-        $locale      = apply_filters('plugin_locale', get_locale(), $domain);
-        $languageDir = $this->manager->getConfig('path.base') . '/languages/';
+        $domain      = $domain ?: $this->manager->getConfig('textDomain');
+        $locale      = $locale ?: apply_filters('plugin_locale', get_locale(), $domain);
+        $languageDir = $languageDir ?: $this->manager->getConfig('path.base') . '/languages/';
 
         // wp-content/languages/plugins/plugin-name-de_DE.mo
-        load_textdomain($domain, Container::getInstance()->offsetGet('wwp.path.defaultlanguagedir.plugins') . $domain . '-' . $locale . '.mo');
+        $genericLoaded = load_textdomain($domain, Container::getInstance()->offsetGet('wwp.path.defaultlanguagedir.plugins') . $domain . '-' . $locale . '.mo');
         // wp-content/plugins/plugin-name/languages/plugin-name-de_DE.mo
-        load_plugin_textdomain($domain, false, $languageDir);
+        $specificLoaded = load_plugin_textdomain($domain, false, $languageDir);
+
+        return $genericLoaded || $specificLoaded;
     }
 }

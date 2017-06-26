@@ -33,6 +33,7 @@ abstract class AbstractApiService extends AbstractService implements ApiServiceI
     }
 
     /**
+     * @codeCoverageIgnore
      * @param mixed $request
      */
     public function setRequest($request)

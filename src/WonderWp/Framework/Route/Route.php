@@ -28,6 +28,7 @@ class Route
 
     /**
      * @param $args
+     * @codeCoverageIgnore
      */
     public function __construct($args)
     {
@@ -40,6 +41,7 @@ class Route
 
     /**
      * @return string
+     * @codeCoverageIgnore
      */
     public function getPath()
     {
@@ -48,6 +50,7 @@ class Route
 
     /**
      * @param string $path
+     * @codeCoverageIgnore
      */
     public function setPath($path)
     {
@@ -56,6 +59,7 @@ class Route
 
     /**
      * @return callable
+     * @codeCoverageIgnore
      */
     public function getCallable()
     {
@@ -64,6 +68,7 @@ class Route
 
     /**
      * @param callable $callable
+     * @codeCoverageIgnore
      */
     public function setCallable($callable)
     {
@@ -72,6 +77,7 @@ class Route
 
     /**
      * @return string
+     * @codeCoverageIgnore
      */
     public function getMethod()
     {
@@ -80,6 +86,7 @@ class Route
 
     /**
      * @param string $method
+     * @codeCoverageIgnore
      */
     public function setMethod($method)
     {
