@@ -92,4 +92,15 @@ interface FormInterface
      * @return static
      */
     public function fill(array $data);
+
+    /**
+     * @return FormView
+     */
+    public function getView();
+
+    /** Render Form View
+     * @param array $opts ,opt to pass to the view
+     * @return string
+     */
+    public function renderView(array $opts = []);
 }
