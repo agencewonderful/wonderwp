@@ -16,7 +16,7 @@ final class DirectOutputLogger extends AbstractLogger implements LoggerInterface
      */
     public function emergency($message, array $context = array())
     {
-        $this->print('[' . strtoupper(AbstractLogger::EMERGENCY) . ']', $message);
+        $this->log(AbstractLogger::EMERGENCY, $message, $context);
     }
 
     /**
@@ -24,7 +24,7 @@ final class DirectOutputLogger extends AbstractLogger implements LoggerInterface
      */
     public function alert($message, array $context = array())
     {
-        $this->print('[' . strtoupper(AbstractLogger::ALERT) . ']', $message);
+        $this->log(AbstractLogger::ALERT, $message, $context);
     }
 
     /**
@@ -32,7 +32,7 @@ final class DirectOutputLogger extends AbstractLogger implements LoggerInterface
      */
     public function critical($message, array $context = array())
     {
-        $this->print('[' . strtoupper(AbstractLogger::CRITICAL) . ']', $message);
+        $this->log(AbstractLogger::CRITICAL, $message, $context);
     }
 
     /**
@@ -40,7 +40,7 @@ final class DirectOutputLogger extends AbstractLogger implements LoggerInterface
      */
     public function error($message, array $context = array())
     {
-        $this->print('[' . strtoupper(AbstractLogger::ERROR) . ']', $message);
+        $this->log(AbstractLogger::ERROR, $message, $context);
     }
 
     /**
@@ -48,7 +48,7 @@ final class DirectOutputLogger extends AbstractLogger implements LoggerInterface
      */
     public function warning($message, array $context = array())
     {
-        $this->print('[' . strtoupper(AbstractLogger::WARNING) . ']', $message);
+        $this->log(AbstractLogger::WARNING, $message, $context);
     }
 
     /**
@@ -56,7 +56,7 @@ final class DirectOutputLogger extends AbstractLogger implements LoggerInterface
      */
     public function notice($message, array $context = array())
     {
-        $this->print('[' . strtoupper(AbstractLogger::NOTICE) . ']', $message);
+        $this->log(AbstractLogger::NOTICE, $message, $context);
     }
 
     /**
@@ -64,7 +64,7 @@ final class DirectOutputLogger extends AbstractLogger implements LoggerInterface
      */
     public function info($message, array $context = array())
     {
-        $this->print('[' . strtoupper(AbstractLogger::INFO) . ']', $message);
+        $this->log(AbstractLogger::INFO, $message, $context);
     }
 
     /**
@@ -72,7 +72,7 @@ final class DirectOutputLogger extends AbstractLogger implements LoggerInterface
      */
     public function debug($message, array $context = array())
     {
-        $this->print('[' . strtoupper(AbstractLogger::DEBUG) . ']', $message);
+        $this->log(AbstractLogger::DEBUG, $message, $context);
     }
 
     /**
@@ -80,17 +80,7 @@ final class DirectOutputLogger extends AbstractLogger implements LoggerInterface
      */
     public function log($level, $message, array $context = array())
     {
-        $this->print('', $this->withDate($message));
-    }
-
-    /**
-     * Prints the message.
-     * @param string $prefix
-     * @param string $message
-     */
-    private function print($prefix, $message)
-    {
-        print_r($this->withDate($prefix) . PHP_EOL . $message);
+        print_r($this->withDate('[' . strtoupper($level) . ']') . PHP_EOL . $message);
     }
 
 }
