@@ -31,7 +31,7 @@ final class FileLogger extends AbstractLogger implements LoggerInterface
 
         fwrite(
             $file,
-            $this->withDate('[' . strtoupper($level) . ']') . PHP_EOL . $content . PHP_EOL
+            $this->withDate('[' . strtoupper($level) . ']') . PHP_EOL . $message . PHP_EOL
         );
 
         fclose($file);
