@@ -16,7 +16,7 @@ final class DirectOutputLogger extends AbstractLogger implements LoggerInterface
      */
     public function emergency($message, array $context = array())
     {
-        print_r('[EMERGENCY]' . $this->withDate($message));
+        $this->print('[' . strtoupper(AbstractLogger::EMERGENCY) . ']', $message);
     }
 
     /**
@@ -24,7 +24,7 @@ final class DirectOutputLogger extends AbstractLogger implements LoggerInterface
      */
     public function alert($message, array $context = array())
     {
-        print_r('[ALERT]' . $this->withDate($message));
+        $this->print('[' . strtoupper(AbstractLogger::ALERT) . ']', $message);
     }
 
     /**
@@ -32,7 +32,7 @@ final class DirectOutputLogger extends AbstractLogger implements LoggerInterface
      */
     public function critical($message, array $context = array())
     {
-        print_r('[CRITICAL]' . $this->withDate($message));
+        $this->print('[' . strtoupper(AbstractLogger::CRITICAL) . ']', $message);
     }
 
     /**
@@ -40,7 +40,7 @@ final class DirectOutputLogger extends AbstractLogger implements LoggerInterface
      */
     public function error($message, array $context = array())
     {
-        print_r('[ERROR]' . $this->withDate($message));
+        $this->print('[' . strtoupper(AbstractLogger::ERROR) . ']', $message);
     }
 
     /**
@@ -48,7 +48,7 @@ final class DirectOutputLogger extends AbstractLogger implements LoggerInterface
      */
     public function warning($message, array $context = array())
     {
-        print_r('[WARNING]' . $this->withDate($message));
+        $this->print('[' . strtoupper(AbstractLogger::WARNING) . ']', $message);
     }
 
     /**
@@ -56,7 +56,7 @@ final class DirectOutputLogger extends AbstractLogger implements LoggerInterface
      */
     public function notice($message, array $context = array())
     {
-        print_r('[NOTICE]' . $this->withDate($message));
+        $this->print('[' . strtoupper(AbstractLogger::NOTICE) . ']', $message);
     }
 
     /**
@@ -64,7 +64,7 @@ final class DirectOutputLogger extends AbstractLogger implements LoggerInterface
      */
     public function info($message, array $context = array())
     {
-        print_r('[INFO]' . $this->withDate($message));
+        $this->print('[' . strtoupper(AbstractLogger::INFO) . ']', $message);
     }
 
     /**
@@ -72,7 +72,7 @@ final class DirectOutputLogger extends AbstractLogger implements LoggerInterface
      */
     public function debug($message, array $context = array())
     {
-        print_r('[DEBUG]' . $this->withDate($message));
+        $this->print('[' . strtoupper(AbstractLogger::DEBUG) . ']', $message);
     }
 
     /**
@@ -80,7 +80,17 @@ final class DirectOutputLogger extends AbstractLogger implements LoggerInterface
      */
     public function log($level, $message, array $context = array())
     {
-        print_r($this->withDate($message));
+        $this->print('', $this->withDate($message));
+    }
+
+    /**
+     * Prints the message.
+     * @param string $prefix
+     * @param string $message
+     */
+    private function print($prefix, $message)
+    {
+        print_r($this->withDate($prefix) . PHP_EOL . $message);
     }
 
 }

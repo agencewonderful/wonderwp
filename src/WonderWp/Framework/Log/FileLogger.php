@@ -27,7 +27,7 @@ final class FileLogger extends AbstractLogger implements LoggerInterface
      */
     public function emergency($message, array $context = array())
     {
-        $this->write('[EMERGENCY]', $message);
+        $this->write('[' . strtoupper(AbstractLogger::EMERGENCY) . ']', $message);
     }
 
     /**
@@ -35,7 +35,7 @@ final class FileLogger extends AbstractLogger implements LoggerInterface
      */
     public function alert($message, array $context = array())
     {
-        $this->write('[ALERT]', $message);
+        $this->write('[' . strtoupper(AbstractLogger::ALERT) . ']', $message);
     }
 
     /**
@@ -43,7 +43,7 @@ final class FileLogger extends AbstractLogger implements LoggerInterface
      */
     public function critical($message, array $context = array())
     {
-        $this->write(['CRITICAL'], $message);
+        $this->write('[' . strtoupper(AbstractLogger::CRITICAL) . ']', $message);
     }
 
     /**
@@ -51,7 +51,7 @@ final class FileLogger extends AbstractLogger implements LoggerInterface
      */
     public function error($message, array $context = array())
     {
-        $this->write('[ERROR]', $message);
+        $this->write('[' . strtoupper(AbstractLogger::ERROR) . ']', $message);
     }
 
     /**
@@ -59,7 +59,7 @@ final class FileLogger extends AbstractLogger implements LoggerInterface
      */
     public function warning($message, array $context = array())
     {
-        $this->write('[WARNING]', $message);
+        $this->write('[' . strtoupper(AbstractLogger::WARNING) . ']', $message);
     }
 
     /**
@@ -67,7 +67,7 @@ final class FileLogger extends AbstractLogger implements LoggerInterface
      */
     public function notice($message, array $context = array())
     {
-        $this->write('[NOTICE]', $message);
+        $this->write('[' . strtoupper(AbstractLogger::NOTICE) . ']', $message);
     }
 
     /**
@@ -75,7 +75,7 @@ final class FileLogger extends AbstractLogger implements LoggerInterface
      */
     public function info($message, array $context = array())
     {
-        $this->write('[INFO]', $message);
+        $this->write('[' . strtoupper(AbstractLogger::INFO) . ']', $message);
     }
 
     /**
@@ -83,7 +83,7 @@ final class FileLogger extends AbstractLogger implements LoggerInterface
      */
     public function debug($message, array $context = array())
     {
-        $this->write('[DEBUG]', $message);
+        $this->write('[' . strtoupper(AbstractLogger::DEBUG) . ']', $message);
     }
 
     /**

@@ -11,6 +11,23 @@ use WonderWp\Framework\Log\LoggerInterface;
 abstract class AbstractLogger implements LoggerInterface
 {
 
+    /** @var string **/
+    const EMERGENCY = 'emergency';
+    /** @var string **/
+    const ALERT     = 'alert';
+    /** @var string **/
+    const CRITICAL  = 'critical';
+    /** @var string **/
+    const ERROR     = 'error';
+    /** @var string **/
+    const WARNING   = 'warning';
+    /** @var string **/
+    const NOTICE    = 'notice';
+    /** @var string **/
+    const INFO      = 'info';
+    /** @var string **/
+    const DEBUG     = 'debug';
+
     /**
      * @inheritDoc
      */
