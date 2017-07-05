@@ -31,42 +31,66 @@ abstract class AbstractLogger implements LoggerInterface
     /**
      * @inheritDoc
      */
-    abstract public function emergency($message, array $context = array());
+    public function emergency($message, array $context = array())
+    {
+        $this->log(AbstractLogger::EMERGENCY, $message, $context);
+    }
 
     /**
      * @inheritDoc
      */
-    abstract public function alert($message, array $context = array());
+    public function alert($message, array $context = array())
+    {
+        $this->log(AbstractLogger::ALERT, $message, $context);
+    }
 
     /**
      * @inheritDoc
      */
-    abstract public function critical($message, array $context = array());
+    public function critical($message, array $context = array())
+    {
+        $this->log(AbstractLogger::CRITICAL, $message, $context);
+    }
 
     /**
      * @inheritDoc
      */
-    abstract public function error($message, array $context = array());
+    public function error($message, array $context = array())
+    {
+        $this->log(AbstractLogger::ERROR, $message, $context);
+    }
 
     /**
      * @inheritDoc
      */
-    abstract public function warning($message, array $context = array());
+    public function warning($message, array $context = array())
+    {
+        $this->log(AbstractLogger::WARNING, $message, $context);
+    }
 
     /**
      * @inheritDoc
      */
-    abstract public function notice($message, array $context = array());
+    public function notice($message, array $context = array())
+    {
+        $this->log(AbstractLogger::NOTICE, $message, $context);
+    }
 
     /**
      * @inheritDoc
      */
-    abstract public function info($message, array $context = array());
+    public function info($message, array $context = array())
+    {
+        $this->log(AbstractLogger::INFO, $message, $context);
+    }
 
     /**
      * @inheritDoc
      */
-    abstract public function debug($message, array $context = array());
+    public function debug($message, array $context = array())
+    {
+        $this->log(AbstractLogger::INFO, $message, $context);
+    }
 
     /**
      * @inheritDoc
