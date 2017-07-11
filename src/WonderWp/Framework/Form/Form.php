@@ -28,16 +28,15 @@ class Form implements FormInterface
     }
 
     /** @inheritdoc */
-    public function renderView($opts = [])
+    public function renderView(array $opts = [])
     {
         $formView = $this->getView();
 
         return $formView->render($opts);
     }
 
-    /**
-     * @return FormView
-     */
+
+    /** @inheritdoc */
     public function getView()
     {
         $container = Container::getInstance();
