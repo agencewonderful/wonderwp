@@ -34,8 +34,8 @@ class TransientCache implements CacheInterface
     public function clear()
     {
         $wpdb = $this->getDb();
-        $res1 = $wpdb->query('DELETE FROM `'.$wpdb->prefix.'options` WHERE `option_name` LIKE (\'_transient_%\')');
-        $res2 = $wpdb->query('DELETE FROM `'.$wpdb->prefix.'options` WHERE `option_name` LIKE (\'_site_transient_%\');');
+        $res1 = $wpdb->query($wpdb->prepare('DELETE FROM `%s` WHERE `option_name` LIKE (\'_transient_%\')',$wpdb->prefix.'options'));
+        $res2 = $wpdb->query($wpdb->prepare('DELETE FROM `%s` WHERE `option_name` LIKE (\'_site_transient_%\');',$wpdb->prefix.'options'));
         return (!$res1 && !$res2);
     }
 
@@ -81,7 +81,7 @@ class TransientCache implements CacheInterface
     public function has($key)
     {
         $wpdb = $this->getDb();
-        $res = $wpdb->query('SELECT * FROM `'.$wpdb->prefix.'options` WHERE `option_name` LIKE (\'_transient_'.$key.'\')');
+        $res = $wpdb->query($wpdb->prepare('SELECT * FROM `%s` WHERE `option_name` LIKE (\'%s\')',$wpdb->prefix.'options','_transient_'.$key));
         return !empty($res);
     }
 
