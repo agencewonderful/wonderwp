@@ -14,9 +14,9 @@ class DisabledCache implements CacheInterface
      * @inheritDoc
      * @codeCoverageIgnore
      */
-    public function get($key)
+    public function get($key, $default = null)
     {
-        return false;
+        return !empty($default) ? $default : false;
     }
 
     /**
@@ -25,7 +25,7 @@ class DisabledCache implements CacheInterface
      */
     public function set($key, $val, $duration = 0)
     {
-        return $this;
+        return true;
     }
 
     /**
@@ -34,7 +34,52 @@ class DisabledCache implements CacheInterface
      */
     public function delete($key)
     {
-        return $this;
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     * @codeCoverageIgnore
+     */
+    public function clear()
+    {
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     * @codeCoverageIgnore
+     */
+    public function getMultiple($keys, $default = null)
+    {
+        return [];
+    }
+
+    /**
+     * @inheritDoc
+     * @codeCoverageIgnore
+     */
+    public function setMultiple($values, $ttl = null)
+    {
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     * @codeCoverageIgnore
+     */
+    public function deleteMultiple($keys)
+    {
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     * @codeCoverageIgnore
+     */
+    public function has($key)
+    {
+        return false;
     }
 
 }
