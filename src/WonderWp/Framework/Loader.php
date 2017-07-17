@@ -10,6 +10,7 @@ use WonderWp\Framework\Cache\TransientCache;
 use WonderWp\Framework\DependencyInjection\Container;
 use WonderWp\Framework\DependencyInjection\SingletonInterface;
 use WonderWp\Framework\DependencyInjection\SingletonTrait;
+use WonderWp\Framework\Filter\FilterFormService;
 use WonderWp\Framework\Form\Form;
 use WonderWp\Framework\Form\FormValidator;
 use WonderWp\Framework\Form\FormView;
@@ -178,6 +179,11 @@ class Loader implements SingletonInterface
         //Log
         $container['wwp.log.log'] = function () {
             return new DirectOutputLogger();
+        };
+
+        //Filters
+        $container['wwp.filter.formService'] = function(){
+          return new FilterFormService();
         };
 
         /**

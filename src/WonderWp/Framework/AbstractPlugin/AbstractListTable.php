@@ -3,6 +3,8 @@
 namespace WonderWp\Framework\AbstractPlugin;
 
 use function WonderWp\Framework\array_merge_recursive_distinct;
+use WonderWp\Framework\Filter\FilterFormService;
+use WonderWp\Framework\Filter\FilterFormServiceInterface;
 use WonderWp\Framework\HttpFoundation\Request;
 
 if (!class_exists('WP_List_Table')) {
@@ -16,6 +18,9 @@ abstract class AbstractListTable extends \WP_List_Table
     /** @var string */
     protected $textDomain;
 
+    /** @var  FilterFormServiceInterface */
+    protected $filterFormService;
+
     /**
      * @param array $args
      */
@@ -26,6 +31,26 @@ abstract class AbstractListTable extends \WP_List_Table
         }
 
         parent::__construct($args);
+    }
+
+    /**
+     * @return FilterFormServiceInterface
+     */
+    public function getFilterFormService()
+    {
+        return $this->filterFormService;
+    }
+
+    /**
+     * @param FilterFormServiceInterface $filterFormService
+     *
+     * @return static
+     */
+    public function setFilterFormService($filterFormService)
+    {
+        $this->filterFormService = $filterFormService;
+
+        return $this;
     }
 
     /**
@@ -95,17 +120,56 @@ abstract class AbstractListTable extends \WP_List_Table
      */
     public function extra_tablenav($which, $showAdd = true, $givenEditParams = [])
     {
+        $request           = Request::getInstance();
+        $defaultPageParams = [
+            'page'   => $request->get('page'),
+        ];
+
+        if ($which === 'top') {
+            $filtersView = $this->getFiltersView($request->query->all());
+            if (!empty($filtersView)) {
+                echo '<div class="wp-filter">
+                    <div class="filter-items">
+                        ' . $filtersView . '                        
+                    </div>
+                    <a href="' . admin_url('/admin.php?' . http_build_query($defaultPageParams)) . '" title="' . __('Clear Filters') . '" class="clear-filters">&times;</a>
+                </div>';
+            }
+        }
+
         if ($showAdd) {
-            $request           = Request::getInstance();
-            $defaultEditParams = [
-                'page'   => $request->get('page'),
-                'action' => 'edit',
-            ];
-            $editParams        = array_merge_recursive_distinct($defaultEditParams, $givenEditParams);
-            $editPage          = admin_url('/admin.php?' . http_build_query($editParams));
-            $addBtn            = '<a href="' . $editPage . '" class="button action noewpaddrecordbtn">' . esc_html_x('Add New', 'link') . '</a>';
+            $defaultEditParams           = $defaultPageParams;
+            $defaultEditParams['action'] = 'edit';
+            $editParams                  = array_merge_recursive_distinct($defaultEditParams, $givenEditParams);
+            $editPage                    = admin_url('/admin.php?' . http_build_query($editParams));
+            $addBtn                      = '<a href="' . $editPage . '" class="button action noewpaddrecordbtn">' . esc_html_x('Add New', 'link') . '</a>';
             echo $addBtn;
         }
+
+    }
+
+    public function bulk_actions($which = '')
+    {
+        if (empty($this->get_bulk_actions())) {
+            return;
+        } else {
+            echo '<form id="list_class_bulk_actions" method="post">';
+            parent::bulk_actions($which);
+            echo '</form>';
+        }
+    }
+
+    public function getFiltersView($formData = [])
+    {
+        $filtersView = null;
+        if ($this->filterFormService instanceof FilterFormServiceInterface) {
+            /** @var FilterFormService $filterFormService */
+            $filterForm  = $this->filterFormService->buildFiltersForm($formData);
+            $viewParams  = $this->filterFormService->getFormViewParams();
+            $filtersView = $filterForm->renderView($viewParams);
+        }
+
+        return $filtersView;
     }
 
     /**
@@ -139,7 +203,7 @@ abstract class AbstractListTable extends \WP_List_Table
             $val = $item[$columnName];
         }
 
-        if(is_string($val)){
+        if (is_string($val)) {
             $val = stripslashes($val);
         }
 
@@ -157,7 +221,7 @@ abstract class AbstractListTable extends \WP_List_Table
             $val = $val->format('d/m/Y H:i');
         }
 
-        if(is_array($val) || is_object($val)){
+        if (is_array($val) || is_object($val)) {
             return json_encode($val);
         }
 

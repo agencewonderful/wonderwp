@@ -31,6 +31,7 @@ function trace()
 }
 
 /**
+ *
  * @param array $array1
  * @param array $array2
  *
@@ -52,38 +53,53 @@ function array_merge_recursive_distinct(array &$array1, array &$array2)
 }
 
 /**
- * @param string $url
- */
-function redirect($url)
-{
-    if (!headers_sent()) {
-        wp_redirect($url);
-    } else {
-        echo '<script>window.location.href="' . $url . '"</script>';
-    }
-}
-
-/**
- * @param array $params
+ * array_diff but recursive
+ * @param array $aArray1
+ * @param array $aArray2
  *
- * @return string
+ * @return array
  */
-function paramsToHtml(array $params)
-{
-    $html = '';
+function array_diff_recursive(array $aArray1, array $aArray2) {
+    $aReturn = array();
 
-    foreach ($params as $key => $val) {
-        if (is_array($val)) {
-            $val = implode(' ', $val);
+    foreach ($aArray1 as $mKey => $mValue) {
+        if (array_key_exists($mKey, $aArray2)) {
+            if (is_array($mValue)) {
+                $aRecursiveDiff = array_diff_recursive($mValue, $aArray2[$mKey]);
+                if (count($aRecursiveDiff)) { $aReturn[$mKey] = $aRecursiveDiff; }
+            } else {
+                if ($mValue != $aArray2[$mKey]) {
+                    $aReturn[$mKey] = $mValue;
+                }
+            }
+        } else {
+            $aReturn[$mKey] = $mValue;
         }
-
-        $html .= " {$key}=\"{$val}\"";
     }
-
-    return $html;
+    return $aReturn;
 }
 
 /**
+ * array_filter, but recursive
+ * @param array $input
+ *
+ * @return array
+ */
+function array_filter_recursive(array $input)
+{
+    foreach ($input as &$value)
+    {
+        if (is_array($value))
+        {
+            $value = array_filter_recursive($value);
+        }
+    }
+
+    return array_filter($input);
+}
+
+/**
+ * implode, but recursive
  * @param string $glue
  * @param array  $array
  *
@@ -107,6 +123,43 @@ function implode_recursive($glue, array $array)
 }
 
 /**
+ * Redirect to a url either via the back end if headers have not been sent, or via the frontend otherwise
+ * @param string $url
+ */
+function redirect($url)
+{
+    if (!headers_sent()) {
+        wp_redirect($url);
+    } else {
+        echo '<script>window.location.href="' . $url . '"</script>';
+    }
+}
+
+/**
+ * Takes an array of params and builds html arguments with them
+ * @param array $params
+ *
+ * @return string
+ */
+function paramsToHtml(array $params)
+{
+    $html = '';
+
+    foreach ($params as $key => $val) {
+        if (is_array($val)) {
+            $val = implode(' ', $val);
+        }
+
+        $html .= " {$key}=\"{$val}\"";
+    }
+
+    return $html;
+}
+
+/**
+ * Locates and returns plugin file path,
+ * either in the theme if the override version exists, or in the plugin directory otherwise
+ *
  * @param string $pluginRoot
  * @param string $filePath
  *
