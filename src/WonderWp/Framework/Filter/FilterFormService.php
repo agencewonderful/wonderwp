@@ -100,17 +100,13 @@ class FilterFormService implements FilterFormServiceInterface
         $originalFields = [];
 
         //Aditional fields not to loose existing get parameters
-        $queryParams     = Request::getInstance()->query->all();
-        $extracted       = $this->extractFilters($queryParams, true);
+        $queryParams = Request::getInstance()->query->all();
+        $extracted   = $this->extractFilters($queryParams, true);
 
         $nativeGetParams = array_diff_recursive(
             $queryParams,
             $extracted
         );
-
-        /*dump($queryParams);
-        dump($extracted);
-        dump($nativeGetParams);*/
 
         if (!empty($nativeGetParams)) {
             foreach ($nativeGetParams as $key => $val) {
@@ -129,11 +125,11 @@ class FilterFormService implements FilterFormServiceInterface
         if (!empty($filters)) {
             foreach ($filters as $f) {
                 /** @var Filter $f */
-                $path = $f->getAttributePath();
-                $pathFrags = explode('.',$path);
-                $name = reset($pathFrags);
+                $path      = $f->getAttributePath();
+                $pathFrags = explode('.', $path);
+                $name      = reset($pathFrags);
 
-                if($strict){
+                if ($strict) {
                     $extracted[$name] = !empty($data[$name]) ? $data[$name] : null;
                 } else {
                     if (isset($data[$name]) && is_array($data[$name])) {
