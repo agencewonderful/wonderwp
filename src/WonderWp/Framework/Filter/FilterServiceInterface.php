@@ -24,4 +24,11 @@ interface FilterServiceInterface
      * @return static
      */
     public function setFilters($filters);
+
+    /**
+     * @param Filter $filter
+     *
+     * @return static
+     */
+    public function addFilter(Filter $filter);
 }

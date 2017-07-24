@@ -10,13 +10,13 @@ namespace WonderWp\Framework\Filter;
 
 abstract class AbstractFilterService implements FilterServiceInterface
 {
-    
+
     /**
      * @var Filter[]
      */
     protected $filters;
 
-    #/** @inheritdoc */
+    /** @inheritdoc */
     public function getFilters()
     {
         return $this->filters;
@@ -26,6 +26,14 @@ abstract class AbstractFilterService implements FilterServiceInterface
     public function setFilters($filters)
     {
         $this->filters = $filters;
+
+        return $this;
+    }
+
+    /** @inheritdoc */
+    public function addFilter(Filter $filter)
+    {
+        $this->filters[] = $filter;
 
         return $this;
     }
