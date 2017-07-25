@@ -107,8 +107,21 @@ abstract class AbstractLogger implements LoggerInterface
         return sprintf(
             '%s %s',
             $message,
-            (new DateTime('now'))->format('d/m/Y H:i')
+            (new DateTime('now'))->format('d/m/Y H:i:s')
         );
     }
 
+    /**
+     * Adds the current date to the message.
+     * @param  string $message
+     * @return string
+     */
+    protected function withTime($message)
+    {
+        return sprintf(
+            '%s %s',
+            $message,
+            (new DateTime('now'))->format('H:i:s')
+        );
+    }
 }
