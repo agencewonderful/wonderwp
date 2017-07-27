@@ -27,6 +27,7 @@ class Container extends PimpleContainer implements SingletonInterface
 
     /**
      * Dumps the container for IDE auto-completion purposes
+     * @codeCoverageIgnore
      */
     public function dump()
     {
@@ -41,6 +42,7 @@ class Container extends PimpleContainer implements SingletonInterface
 
     /**
      * Generate a mapping of the container's values
+     * @codeCoverageIgnore
      *
      * @param Container $container
      *
@@ -61,6 +63,7 @@ class Container extends PimpleContainer implements SingletonInterface
 
     /**
      * Parse the item's type and value
+     * @codeCoverageIgnore
      *
      * @param Container $container
      * @param string    $name
@@ -126,6 +129,7 @@ class Container extends PimpleContainer implements SingletonInterface
 
     /**
      * Dump mapping to file
+     * @codeCoverageIgnore
      *
      * @param array  $map
      * @param string $fileName

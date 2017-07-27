@@ -61,7 +61,7 @@ class Medias
 
         return $imgUrl;
     }
-    
+
     /**
      * @param array  $file     the array from $_FILES for a specific file
      * @param string $dest     new upload folder within the upload base dir
@@ -69,7 +69,7 @@ class Medias
      *
      * @return Result
      */
-    public static function uploadTo(array $file, $dest = '', $fileName = null)
+    public static function uploadTo(array $file = null, $dest = '', $fileName = null)
     {
         if (empty($file)) {
             return new Result(403, ['msg' => 'file.is.empty']);
@@ -103,6 +103,7 @@ class Medias
 
     /**
      * Filter to change upload dirs on the fly
+     *
      * @param array $dirs
      *
      * @return array
@@ -117,5 +118,5 @@ class Medias
         }
 
         return $dirs;
-    }    
+    }
 }
