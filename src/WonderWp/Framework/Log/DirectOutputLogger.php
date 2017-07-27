@@ -14,9 +14,9 @@ final class DirectOutputLogger extends AbstractLogger implements LoggerInterface
     /**
      * @inheritDoc
      */
-    public function log($level, $message, array $context = array())
+    public function log($level, $message, array $context = [])
     {
-        dump($this->withDate('[' . strtoupper($level) . ']') . PHP_EOL . $message);
+        echo($this->withTime('[' . strtoupper($level) . ']') . ' ' . $message . PHP_EOL);
     }
 
 }

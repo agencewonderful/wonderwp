@@ -16,13 +16,6 @@
     }
 
     //Table of elements
-    $bulk_actions = $wp_list_table->get_bulk_actions();
-    if (!empty($bulk_actions)) {
-        echo '<form id="list_class_bulk_actions" method="post">';
-    }
     $wp_list_table->display();
-    if (!empty($bulk_actions)) {
-        echo '</form>';
-    }
     ?>
 </div>
