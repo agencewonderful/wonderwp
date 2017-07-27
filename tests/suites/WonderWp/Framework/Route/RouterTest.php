@@ -20,7 +20,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->router = new Router();
     }
 
-    public function testAddService(){
+    public function testAddServiceShouldAdd(){
         $this->router->setServices([]);
         $fakeRouteService = new FakeRouteService();
         $expected = [$fakeRouteService];
@@ -46,7 +46,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(Route::class,reset($computedRoutes));
     }
 
-    public function testRegisterQueryVars(){
+    public function testRegisterQueryVarsWithVarShouldAddVar(){
         $this->resetRouteServices();
         $vars = ['key1'];
         $vars = $this->router->registerQueryVars($vars);
@@ -54,7 +54,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected,$vars);
     }
 
-    public function testRegisterRules(){
+    public function testRegisterRulesWithRouteServiceShouldAddRule(){
         global $wp_rewrite;
         $wp_rewrite = new \WP_Rewrite();
         global $wp;

@@ -26,7 +26,7 @@ class AbstractApiServiceTest extends \PHPUnit_Framework_TestCase
         $this->apiService->setRequest($request);
     }
 
-    public function testRequestParameterWithAllKey()
+    public function testRequestParameterWithAllKeyShouldReturnAll()
     {
         $expected = [
             'key1' => 'value1',
@@ -35,7 +35,7 @@ class AbstractApiServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $this->apiService->requestParameter('all'));
     }
 
-    public function testRequestParameterWithSpecificKey()
+    public function testRequestParameterWithSpecificKeyShouldReturnIt()
     {
         $this->assertEquals('value1', $this->apiService->requestParameter('key1'));
     }

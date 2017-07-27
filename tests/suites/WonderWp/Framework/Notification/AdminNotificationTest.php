@@ -11,14 +11,14 @@ namespace WonderWp\Framework\Notification;
 class AdminNotificationTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function testGetMarkupSuccess()
+    public function testGetMarkupSuccessShouldBuildNotif()
     {
         $notification = new AdminNotification('success','testMessage');
         $mk = $notification->getMarkup();
         $this->assertNotEmpty($mk);
     }
 
-    public function testGetMarkupDismissible()
+    public function testGetMarkupDismissibleShouldBeDismissible()
     {
         $notification = new AdminNotification('success','testMessage');
         $notification->setDismissible(true);

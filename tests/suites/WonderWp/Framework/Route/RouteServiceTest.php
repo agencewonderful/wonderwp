@@ -26,7 +26,7 @@ class RouteServiceTest extends \PHPUnit_Framework_TestCase
         $this->routeService->setManager($fakeManager);
     }
 
-    public function testGenerateUrl(){
+    public function testGenerateUrlWithRouteAndParamsShouldGenerateParameterizedUrl(){
         $url = $this->routeService->generateUrl('testkey',['testkey2'=>'testval2'],'fr_FR');
         $this->assertEquals('/testurl/testval2',$url);
     }

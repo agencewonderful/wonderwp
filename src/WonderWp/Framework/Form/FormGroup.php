@@ -94,6 +94,16 @@ class FormGroup
     }
 
     /**
+     * @param $name
+     *
+     * @return null|FieldInterface
+     */
+    public function getField($name)
+    {
+        return !empty($this->fields[$name]) ? $this->fields[$name] : null;
+    }
+
+    /**
      * @return array
      */
     public function getDisplayRules()

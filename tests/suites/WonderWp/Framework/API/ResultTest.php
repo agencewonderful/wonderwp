@@ -16,14 +16,14 @@ namespace WonderWp\Framework\API;
 class ResultTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function testGetDataWithNoKey()
+    public function testGetDataWithNoKeyShouldReturnAllValues()
     {
         $expected = ['msg'=>'test msg'];
         $result = new Result(200,$expected);
         $this->assertEquals($expected,$result->getData());
     }
 
-    public function testGetDataWithKey()
+    public function testGetDataWithKeyShouldReturnAssociatedValue()
     {
         $data = ['msg'=>'test msg'];
         $result = new Result(200,$data);
