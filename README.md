@@ -89,3 +89,14 @@ There's also a plugin generator to help you quick start your plugin development.
 ## Documentation
 
 You can find much more detailled documentation within the documentation folder.
+
+## Tests
+
+Command to launch the tests : 
+
+`vendor/bin/phpunit tests/suites --bootstrap tests/bootstrap.php  --coverage-html tests/reports/coverage.html --whitelist src/WonderWp/Framework --log-junit tests/reports/phunit.xml`
+
+## Contributing
+
+- You can contribute to this project by forking this repository and proposing pull requests
+- We're looking for unit test contributors
