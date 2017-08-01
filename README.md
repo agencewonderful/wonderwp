@@ -14,12 +14,13 @@ This framework could interest you if
 - You are faced with projects that are a true fit for a CMS but also include serious code challenges.
 - You have industrial development needs such as high production volumes, repeatable solutions, in house production teams. 
 - You are looking at capitalizing on previous projects to build up reusable plugins and themes. Plugins and themes produced with wonderwp are meant to be full object, consistent, predictable, composerable, testable, and durable.
+- You are used to frameworks and less to CMSs
 
 ## What does wonderwp add to WordPress?
 
 ### Overview
 
-- Composer capabilities & Autoloading
+- Composer capabilities / Autoloading
 - Dependency injection container
 - Convert procedurals concepts into Object Oriented Interfaces, and PSRs, and implementations such as
 	- Routing
