@@ -3,12 +3,17 @@
 namespace WonderWp\Framework\Asset;
 
 use WonderWp\Framework\DependencyInjection\Container;
-use WP_CLI;
+use WonderWp\Framework\Log\AbstractLogger;
+use WonderWp\Framework\Log\DirectOutputLogger;
 
 abstract class AbstractAssetExporter implements AssetExporterInterface
 {
     /** @var Container */
     protected $container;
+
+    /** @var DirectOutputLogger */
+    protected $logger;
+
 
     /** @inheritdoc */
     public function __invoke($args)
@@ -22,11 +27,12 @@ abstract class AbstractAssetExporter implements AssetExporterInterface
      */
     public function respond($res)
     {
+        $this->logger = new DirectOutputLogger();
         if (is_array($res) && $res['code'] && $res['code'] == 200) {
-            WP_CLI::success($res['data']['msg']);
+            $this->logger->log(AbstractLogger::SUCCESS, $res['data']['msg']);
         } else {
             $errorMsg = (is_array($res) && $res['data'] && $res['data']['msg']) ? $res['data']['msg'] : 'error';
-            WP_CLI::error($errorMsg);
+            $this->logger->log(AbstractLogger::ERROR, $errorMsg);
         }
     }
 }
