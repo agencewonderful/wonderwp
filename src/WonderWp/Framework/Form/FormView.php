@@ -304,7 +304,9 @@ class FormView implements FormViewInterface
         }
 
         //Add input parameters
-        $markup .= ' ' . paramsToHtml($attributes);
+        if($tag!='div') {
+            $markup .= ' ' . paramsToHtml($attributes);
+        }
 
         //Close opening tag
         if ($tag != 'input') {
@@ -376,6 +378,10 @@ class FormView implements FormViewInterface
             foreach ($opts as $key => $val) {
                 $markup .= $this->buildSelectOption($field, $val, $key, $isMultiple);
             }
+        }
+
+        if ($tag === 'div') {
+            $markup .= $val;
         }
 
         return $markup;
