@@ -45,7 +45,7 @@ class Medias
      *
      * @return string
      */
-    public static function getFeaturedImage($postId = null)
+    public static function getFeaturedImage($postId = null, $short = true)
     {
         global $post;
         if (empty($postId) && $post) {
@@ -53,7 +53,10 @@ class Medias
         }
         $imgUrl = '';
         if (!empty($postId)) {
-            $imgUrl = str_replace(get_bloginfo('url'), '', wp_get_attachment_url(get_post_thumbnail_id($postId)));
+            $imgUrl = wp_get_attachment_url(get_post_thumbnail_id($postId));
+            if($short){
+                $imgUrl = str_replace(get_bloginfo('url'), '', $imgUrl);
+            }
             if ($imgUrl === false) {
                 $imgUrl = '';
             }
