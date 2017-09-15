@@ -304,9 +304,12 @@ class FormView implements FormViewInterface
         }
 
         //Add input parameters
-        if($tag!='div') {
-            $markup .= ' ' . paramsToHtml($attributes);
+        if($tag=='div') {
+            if(isset($attributes['name'])){
+                unset($attributes['name']);
+            }
         }
+        $markup .= ' ' . paramsToHtml($attributes);
 
         //Close opening tag
         if ($tag != 'input') {
