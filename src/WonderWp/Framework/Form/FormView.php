@@ -207,7 +207,13 @@ class FormView implements FormViewInterface
             $wrapAttributes['class'][] = 'has-error';
         }
 
-        $markup = '<div ' . paramsToHtml($wrapAttributes) . '>';
+        $markup = '';
+
+        if (!empty($displayRules['before-wrap'])) {
+            $markup .= $displayRules['before-wrap'];
+        }
+
+        $markup .= '<div ' . paramsToHtml($wrapAttributes) . '>';
 
         if (!empty($displayRules['before'])) {
             $markup .= $displayRules['before'];
@@ -526,7 +532,13 @@ class FormView implements FormViewInterface
             return '';
         }
 
-        return '</div>';
+        $markup = '</div>';
+
+        if (!empty($displayRules['after-wrap'])) {
+            $markup .= $displayRules['after-wrap'];
+        }
+
+        return $markup;
     }
 
     /** @inheritdoc */
