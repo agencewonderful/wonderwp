@@ -390,7 +390,9 @@ class FormView implements FormViewInterface
         }
 
         if ($tag === 'div') {
-            $markup .= $val;
+            if(is_string($val)) {
+                $markup .= $val;
+            }
         }
 
         return $markup;
