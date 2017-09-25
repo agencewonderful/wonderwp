@@ -204,7 +204,11 @@ abstract class AbstractListTable extends \WP_List_Table
         }
 
         if (is_string($val)) {
-            $val = utf8_encode(stripslashes($val));
+            $val = stripslashes($val);
+        }
+
+        if (!preg_match('!!u', $val)) {
+            $val = utf8_encode($val);
         }
 
         return $val;
