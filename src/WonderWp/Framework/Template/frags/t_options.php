@@ -92,7 +92,7 @@ if ($request->getMethod() == 'POST' && !empty($request->request->get('saveOption
                     <?php foreach ($value['options'] as $key => $option) {
                         $radio_setting = get_option($value['id']);
                         if ($radio_setting != '') {
-                            if ($key == str_replace('\\', '\\\\', get_option($value['id']))) {
+                            if ($key == get_option($value['id'])) {
                                 $checked = "checked=\"checked\"";
                             } else {
                                 $checked = "";
