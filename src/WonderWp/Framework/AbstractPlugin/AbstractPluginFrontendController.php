@@ -56,24 +56,35 @@ abstract class AbstractPluginFrontendController
     public function renderView($viewName, array $params = [])
     {
         $viewContent = '';
-        $pluginRoot  = $this->manager->getConfig('path.root');
+
+        $viewFile = $this->locateView($viewName);
+
+        if (file_exists($viewFile)) {
+            ob_start();
+            // Spread attributes
+            extract($params);
+            include $viewFile;
+
+            return ob_get_clean();
+        }
+
+        return $viewContent;
+    }
+
+    public function locateView($viewName)
+    {
+        $pluginRoot = $this->manager->getConfig('path.root');
+
+        $viewFile = '';
 
         if (!empty($pluginRoot)) {
             $viewFile = get_plugin_file($pluginRoot, DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . $viewName . '.php');
             if (!file_exists($viewFile)) {
                 $viewFile = $pluginRoot . '/public/views/' . $viewName . '.php';
             }
-
-            if (file_exists($viewFile)) {
-                ob_start();
-                // Spread attributes
-                extract($params);
-                include $viewFile;
-                return ob_get_clean();
-            }
         }
 
-        return $viewContent;
+        return $viewFile;
     }
 
     /**

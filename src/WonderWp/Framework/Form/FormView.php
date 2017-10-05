@@ -207,7 +207,13 @@ class FormView implements FormViewInterface
             $wrapAttributes['class'][] = 'has-error';
         }
 
-        $markup = '<div ' . paramsToHtml($wrapAttributes) . '>';
+        $markup = '';
+
+        if (!empty($displayRules['before-wrap'])) {
+            $markup .= $displayRules['before-wrap'];
+        }
+
+        $markup .= '<div ' . paramsToHtml($wrapAttributes) . '>';
 
         if (!empty($displayRules['before'])) {
             $markup .= $displayRules['before'];
@@ -304,6 +310,11 @@ class FormView implements FormViewInterface
         }
 
         //Add input parameters
+        if($tag=='div') {
+            if(isset($attributes['name'])){
+                unset($attributes['name']);
+            }
+        }
         $markup .= ' ' . paramsToHtml($attributes);
 
         //Close opening tag
@@ -375,6 +386,12 @@ class FormView implements FormViewInterface
 
             foreach ($opts as $key => $val) {
                 $markup .= $this->buildSelectOption($field, $val, $key, $isMultiple);
+            }
+        }
+
+        if ($tag === 'div') {
+            if(is_string($val)) {
+                $markup .= $val;
             }
         }
 
@@ -517,7 +534,13 @@ class FormView implements FormViewInterface
             return '';
         }
 
-        return '</div>';
+        $markup = '</div>';
+
+        if (!empty($displayRules['after-wrap'])) {
+            $markup .= $displayRules['after-wrap'];
+        }
+
+        return $markup;
     }
 
     /** @inheritdoc */
