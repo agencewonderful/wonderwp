@@ -52,13 +52,21 @@ class Medias
             $postId = $post;
         }
         $imgUrl = '';
-        if (!empty($postId)) {
-            $imgUrl = wp_get_attachment_url(get_post_thumbnail_id($postId));
+        if (!empty($post->post_featured_image)) {
+            $imgUrl = $post->post_featured_image;
             if($short){
                 $imgUrl = str_replace(get_bloginfo('url'), '', $imgUrl);
             }
-            if ($imgUrl === false) {
-                $imgUrl = '';
+        }
+        else {
+            if (!empty($postId)) {
+                $imgUrl = wp_get_attachment_url(get_post_thumbnail_id($postId));
+                if($short){
+                    $imgUrl = str_replace(get_bloginfo('url'), '', $imgUrl);
+                }
+                if ($imgUrl === false) {
+                    $imgUrl = '';
+                }
             }
         }
 
