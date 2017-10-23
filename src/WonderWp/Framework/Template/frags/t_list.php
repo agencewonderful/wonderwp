@@ -1,8 +1,10 @@
 <?php if (!empty($notifications)) {
     echo implode("\n", $notifications);
 } ?>
-
-<div class="list-table-wrap">
+<?php
+$screen = get_current_screen();
+?>
+<div class="list-table-wrap" data-screen="<?php echo $screen->id; ?>">
     <?php
     /** @var \WonderWp\Framework\AbstractPlugin\AbstractListTable $listTableInstance */
     $wp_list_table = $listTableInstance;
