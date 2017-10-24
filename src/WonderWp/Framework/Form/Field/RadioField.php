@@ -33,12 +33,12 @@ class RadioField extends FieldGroup
         if (!empty($this->options)) {
             $i = 0;
             foreach ($this->options as $val => $label) {
-                $optFieldName           = $name . '.' . $val . '';
+                $optFieldName           = $name . '__' . $val . '';
                 $defaultOptDisplayRules = [
                     'label'           => $label,
                     'inputAttributes' => [
                         'name'  => $name,
-                        'id'    => $name . '.' . $val,
+                        'id'    => $name . '__' . $val,
                         'value' => $val,
                     ],
                     'wrapAttributes'  => [
