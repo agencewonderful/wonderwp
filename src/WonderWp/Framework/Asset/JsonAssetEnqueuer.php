@@ -40,22 +40,11 @@ class JsonAssetEnqueuer extends AbstractAssetEnqueuer
     {
         $env        = WP_ENV;
         $versionNum = $this->getVersion();
-
         foreach ($groupNames as $group) {
-            if (array_key_exists($group, $this->manifest->js)) {
-                if ($env == 'production' || $env == 'staging') {
-                    $src = $this->blogUrl . str_replace($this->container['wwp.assets.folder.prefix'], '', $this->manifest->site->assets_dest) . '/js/' . $group . $versionNum . '.js';
-                    wp_enqueue_script($group, $src, [], null, true);
-                } else {
-                    if (!empty($this->manifest->js->$group)) {
-                        foreach ($this->manifest->js->$group as $i => $jsFile) {
-                            $src    = $this->blogUrl . str_replace($this->container['wwp.assets.folder.prefix'], '', $jsFile);
-                            $handle = $group . '_' . $i;
-                            wp_enqueue_script($handle, $src, [], null, true);
-                        }
-                    }
-                }
-            }
+            //if (array_key_exists($group, $this->manifest->js)) {
+                $src = $this->blogUrl . str_replace($this->container['wwp.assets.folder.prefix'], '', $this->manifest->site->assets_dest) . '/js/' . $group  . $versionNum . '.js';
+                wp_enqueue_script($group, $src, [], null, true);
+            // }
         }
     }
 
