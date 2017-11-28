@@ -214,7 +214,16 @@ class Form implements FormInterface
                     }
                 }
             }
-            $f->setValue($data);
+
+            if ($f instanceof FieldGroup && is_array($data)) {
+                foreach ($f->getGroup() as $subField) {
+                    if (isset($data[$subField->getName()])) {
+                        $subField->setValue($data[$subField->getName()]);
+                    }
+                }
+            } else {
+                $f->setValue($data);
+            }
         }
 
         return $this;
