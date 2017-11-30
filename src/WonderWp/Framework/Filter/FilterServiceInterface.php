@@ -12,7 +12,7 @@ interface FilterServiceInterface
 {
 
     const HANDLED_CLASS = null;
-
+    const FILTER_SERVICE_NAME = 'filter';
     /**
      * @return Filter[]
      */
