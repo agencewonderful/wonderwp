@@ -389,7 +389,7 @@ class FormView implements FormViewInterface
             }
         }
 
-        if ($tag === 'div') {
+        if ($tag === 'div' && !$field instanceof FieldGroupInterface) {
             if(is_string($val)) {
                 $markup .= $val;
             }
