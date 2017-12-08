@@ -103,4 +103,9 @@ interface FormInterface
      * @return string
      */
     public function renderView(array $opts = []);
+
+    /**
+     * @return array
+     */
+    public function getValues();
 }
