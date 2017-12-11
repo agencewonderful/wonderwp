@@ -310,8 +310,8 @@ class FormView implements FormViewInterface
         }
 
         //Add input parameters
-        if($tag=='div') {
-            if(isset($attributes['name'])){
+        if ($tag == 'div') {
+            if (isset($attributes['name'])) {
                 unset($attributes['name']);
             }
         }
@@ -390,7 +390,7 @@ class FormView implements FormViewInterface
         }
 
         if ($tag === 'div' && !$field instanceof FieldGroupInterface) {
-            if(is_string($val)) {
+            if (is_string($val)) {
                 $markup .= $val;
             }
         }
@@ -552,21 +552,27 @@ class FormView implements FormViewInterface
             'showFormTag'   => true,
             'showSubmit'    => true,
             'submitLabel'   => __('submit'),
+            'showReset'     => false,
+            'resetLabel'    => __('reset'),
             'btnAttributes' => [
                 'type'  => 'submit',
                 'class' => 'btn button',
+            ],
+            'resetbtnAttributes' => [
+                'type'  => 'reset',
+                'class' => 'btn button btn-secondary',
             ],
         ];
 
         $options = array_merge_recursive_distinct($defaultOptions, $optsEnd);
 
         if ($options['showSubmit']) {
-            $btnAttributes = paramsToHtml($options['btnAttributes']);
-            $markup        .= '<div class="submitFormField">';
-            $markup        .= "<button {$btnAttributes}>";
-            $markup        .= $options['submitLabel'];
-            $markup        .= '</button>';
-            $markup        .= '</div>';
+            $markup        .= '<div class="submitFormField">
+                <button ' . paramsToHtml($options['btnAttributes']) . '>' . $options['submitLabel'] . '</button>';
+            if ($options['showReset']) {
+                $markup.='  <button '.paramsToHtml($options['resetbtnAttributes']).'>'.$options['resetLabel'].'</button>';
+            }
+            $markup .= '</div>';
         }
 
         if ($options['showFormTag']) {
