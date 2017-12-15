@@ -48,6 +48,42 @@ abstract class AbstractPluginFrontendController
     }
 
     /**
+     * Render view as a full page.
+     *
+     * @param  string $viewName
+     * @param  array  $params
+     */
+    protected function renderPage($viewName, $params)
+    {
+        $post                      = new \stdClass();
+        $title                     = $params['title'];
+        $post->post_title          = $title;
+        $post->post_name           = sanitize_title($title);
+
+        $post->ID                  = 0;
+        $post->post_content        = $this->renderView($viewName, $params);
+
+        if (!empty($params['image'])) {
+            $post->post_featured_image = $params['image'];
+        }
+        if (!empty($params['excerpt'])) {
+            $post->post_excerpt = $params['excerpt'];
+        }
+
+        if (isset($params['metas'])) {
+            $metas = new \stdClass();
+            if (isset($params['metas']['title'])) {
+                $metas->seopaneltitle = [$params['metas']['title']];
+                unset($params['metas']['title']);
+            }
+            $metas->seopanel = [$params['metas']];
+            $post->metas     = $metas;
+        }
+        $qs = wwp_get_theme_service('query');
+        $qs->resetPost($post);
+    }
+
+    /**
      * @param string $viewName
      * @param array  $params
      *
