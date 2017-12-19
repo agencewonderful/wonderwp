@@ -68,7 +68,8 @@ class WpMailer extends AbstractMailer
         $sent    = wp_mail($to, $subject, $message, $headers);
         $code    = $sent ? 200 : 500;
 
-        return new Result($code);
+        $result = new Result($code);
+        return apply_filters('wwp.mailer.send.result',$result);
     }
 
     /**

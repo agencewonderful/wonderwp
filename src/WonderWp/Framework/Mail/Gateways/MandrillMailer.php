@@ -12,6 +12,13 @@ class MandrillMailer extends AbstractMailer
     /** @var \Mandrill */
     protected $mandrill;
 
+    public function __construct() {
+        parent::__construct();
+        if (empty($this->mandrill)) {
+            $this->mandrill = new \Mandrill(Container::getInstance()->offsetGet('mandrill_api_key'));
+        }
+    }
+
     /**
      * @param array $opts
      *
@@ -20,9 +27,6 @@ class MandrillMailer extends AbstractMailer
     public function send(array $opts = [])
     {
         $container = Container::getInstance();
-        if (empty($this->mandrill)) {
-            $this->mandrill = new \Mandrill($container->offsetGet('mandrill_api_key'));
-        }
 
         $jsonPayLoad = $this->computeJsonPayload($opts);
 
@@ -55,7 +59,7 @@ class MandrillMailer extends AbstractMailer
 
         $result = new Result($code, ['res' => $res, 'successes' => $successes, 'failures' => $failures]);
 
-        return $result;
+        return apply_filters('wwp.mailer.send.result',$result);
     }
 
     /**
@@ -168,7 +172,7 @@ class MandrillMailer extends AbstractMailer
                 ],
             'async'   => false,
             'ip_pool' => 'Main Pool',
-            'send_at' => date('Y-m-d H:i:s'),
+            //'send_at' => date('Y-m-d H:i:s'),
         ];
 
         //template ?
@@ -197,6 +201,30 @@ class MandrillMailer extends AbstractMailer
 
         $payload = array_merge_recursive_distinct($defaultOpts, $opts);
 
+        $this->correctEncodingRecursive($payload);
+
         return $payload;
+    }
+
+    private function correctEncodingRecursive(&$array){
+
+        if(!empty($array)){
+            foreach($array as $key=>$val){
+                if(is_array($val)){
+                    $array[$key] = $this->correctEncodingRecursive($val);
+                } else {
+                    $array[$key] = $this->correctEncoding($val);
+                }
+            }
+        }
+
+        return $array;
+    }
+
+    private function correctEncoding($str){
+        if (!preg_match('!!u', $str)){
+            $str = utf8_encode($str);
+        }
+        return $str;
     }
 }

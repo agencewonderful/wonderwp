@@ -93,7 +93,7 @@ class Loader implements SingletonInterface
         };
         $container['wwp.assets.folder.prefix'] = './';
         $container['wwp.assets.folder.dest']   = '';
-        $container['wwp.assets.folder.path']   = str_replace(get_bloginfo('url'), '', str_replace(network_site_url(), '', get_stylesheet_directory_uri()));
+        $container['wwp.assets.folder.path']   = str_replace(trim(get_bloginfo('url'),'/'), '', str_replace(trim(network_site_url(),'/'), '', get_stylesheet_directory_uri()));
 
         //Forms
         $container['wwp.forms.form']              = $container->factory(function () {

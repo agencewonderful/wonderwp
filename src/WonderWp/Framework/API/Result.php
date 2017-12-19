@@ -67,6 +67,17 @@ class Result implements \JsonSerializable
         $this->data = $data;
     }
 
+    /**
+     * @param array $newData
+     *
+     * @return $this
+     */
+    public function addData(array $newData){
+        $this->data = $this->data + $newData;
+
+        return $this;
+    }
+
     /** @inheritdoc */
     public function jsonSerialize()
     {

@@ -2,6 +2,7 @@
 
 namespace WonderWp\Framework\Form;
 
+use function WonderWp\Framework\array_merge_recursive_distinct;
 use WonderWp\Framework\DependencyInjection\Container;
 use WonderWp\Framework\Form\Field\FieldGroup;
 use WonderWp\Framework\Form\Field\FieldInterface;
@@ -155,6 +156,10 @@ class Form implements FormInterface
     /** @inheritdoc */
     public function fill(array $data)
     {
+
+        $formData = $this->getValues();
+        $data = array_merge_recursive_distinct($formData,$data);
+
         $fields = $this->getFields();
         if (!empty($fields)) {
             foreach ($fields as $f) {
@@ -214,9 +219,55 @@ class Form implements FormInterface
                     }
                 }
             }
-            $f->setValue($data);
+
+            if ($f instanceof FieldGroup && is_array($data)) {
+                foreach ($f->getGroup() as $subField) {
+                    if (isset($data[$subField->getName()])) {
+                        $subField->setValue($data[$subField->getName()]);
+                    }
+                }
+            } else {
+                $f->setValue($data);
+            }
         }
 
         return $this;
+    }
+
+    /** @inheritdoc */
+    public function getValues(){
+        $values = [];
+
+        $fields = $this->getFields();
+        if (!empty($fields)) {
+            foreach ($fields as $f) {
+                $values[$f->getName()] = $f->getValue();
+            }
+        }
+
+        $groups = $this->getGroups();
+        /** @var $group FormGroup */
+        if (!empty($groups)) {
+            foreach ($groups as $group) {
+                $fields = $group->getFields();
+                if (!empty($fields)) {
+                    foreach ($fields as $f) {
+                        if ($f instanceof FieldGroup) {
+                            $groupedFields = $f->getGroup();
+                            if (!empty($groupedFields)) {
+                                foreach ($groupedFields as $groupedField) {
+                                    $values[$groupedField->getName()] = $groupedField->getValue();
+                                }
+                            }
+                        } else {
+                            $values[$f->getName()] = $f->getValue();
+                        }
+                    }
+                }
+            }
+        }
+
+
+        return $values;
     }
 }

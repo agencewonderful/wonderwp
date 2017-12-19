@@ -25,4 +25,17 @@ trait OptionsFieldTrait
 
         return $this;
     }
+
+    /**
+     * @param string|int $key
+     * @param string|int $val
+     *
+     * @return $this
+     */
+    public function addOption($key, $val)
+    {
+        $this->options[$key] = $val;
+
+        return $this;
+    }
 }
