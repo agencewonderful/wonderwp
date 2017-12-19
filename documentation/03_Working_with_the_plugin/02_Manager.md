@@ -1,6 +1,6 @@
 # The Plugin Manager
 
-The manager is an essential file for your plugin. It's inside this file that you register your files towards the auto loader, that you register your controllers, your services, your plugin configuration.
+The manager is an essential file for your plugin. It's inside this file that you register your controllers, your services, your plugin configuration.
 
 ## Autoloading your plugin files
 ### Needs
@@ -10,7 +10,7 @@ The manager is an essential file for your plugin. It's inside this file that you
 
 ### Proposal
 - Using composer
-- Composer works with composer.json objects, that are parsed when running composer install|update
+- Composer works with composer.json objects, that are parsed when running composer install / update
 - Then it creates an autoloader file dynamically under vendor/autoload.php.
 
 #### Proposed solution 1:

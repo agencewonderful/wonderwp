@@ -18,3 +18,4 @@ class MyPluginDeactivator implements DeactivatorInterface{
 
 }
 ```
+The code within the deactivate method will be executed upon plugin deactivation

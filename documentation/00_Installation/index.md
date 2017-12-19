@@ -15,4 +15,4 @@ Call the WonderWp Framework Loader
 \WonderWp\Loader::getInstance();
 ```
 
-That initializes the autoload, getting you access to everything the framework can do. You would typically put this in your theme or one of your plugin.
+That initializes the autoload, getting you access to everything the framework can do. You would typically put this in a must-use plugin.
