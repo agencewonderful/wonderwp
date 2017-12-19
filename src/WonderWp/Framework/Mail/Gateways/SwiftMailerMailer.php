@@ -78,6 +78,6 @@ class SwiftMailerMailer extends AbstractMailer
         $code      = $nbSent > 0 ? 200 : 500;
         $result    = new Result($code, ['res' => $nbSent, 'successes' => $nbSent, 'failures' => null]);
 
-        return $result;
+        return apply_filters('wwp.mailer.send.result',$result);
     }
 }
