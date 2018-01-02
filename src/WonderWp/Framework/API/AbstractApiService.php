@@ -10,6 +10,11 @@ abstract class AbstractApiService extends AbstractService implements ApiServiceI
     /** @var Request */
     protected $request;
 
+    protected function enableErrors(){
+        error_reporting(E_ALL);
+        ini_set('display_errors','on');
+    }
+
     /** @inheritdoc */
     public function registerEndpoints()
     {
