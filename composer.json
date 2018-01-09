@@ -10,6 +10,7 @@
         }
     ],
     "require": {
+        "wonderwp/autoloader":"^1.0",
         "johnpbloch/wordpress": "^4.7",
         "pimple/pimple": "~3.0",
         "respect/validation": "^1.1",
