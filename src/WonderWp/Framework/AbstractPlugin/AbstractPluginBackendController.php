@@ -56,7 +56,16 @@ abstract class AbstractPluginBackendController
      */
     public function defaultAction()
     {
-        $this->listAction();
+        $container = Container::getInstance();
+        $prefix    = $this->manager->getConfig('prefix');
+        $container
+            ->offsetGet('wwp.views.baseAdmin')
+            ->registerFrags($prefix)
+            ->render([
+                'title' => get_admin_page_title(),
+                'tabs'  => $this->getTabs(),
+            ])
+        ;
     }
 
     /**
@@ -122,7 +131,6 @@ abstract class AbstractPluginBackendController
         if ($listTable === null) {
             $listTable = $this->manager->getService(ServiceInterface::LIST_TABLE_SERVICE_NAME);
         }
-
 
         if (!$listTable instanceof AbstractListTable) {
             return null;
