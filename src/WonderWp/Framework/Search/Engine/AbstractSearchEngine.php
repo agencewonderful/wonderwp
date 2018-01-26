@@ -35,7 +35,7 @@ abstract class AbstractSearchEngine implements SearchEngineInterface
     /** @inheritdoc*/
     public function addService(SearchServiceInterface $service)
     {
-        $this->services[] = $service;
+        $this->services[$service->getName()] = $service;
 
         return $this;
     }

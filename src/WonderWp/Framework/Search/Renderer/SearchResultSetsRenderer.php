@@ -2,6 +2,7 @@
 
 namespace WonderWp\Framework\Search\Renderer;
 
+use WonderWp\Framework\DependencyInjection\Container;
 use WonderWp\Framework\Search\ResultSet\SearchResultSetInterface;
 
 class SearchResultSetsRenderer implements SearchResultsRendererInterface
@@ -50,21 +51,31 @@ class SearchResultSetsRenderer implements SearchResultsRendererInterface
 
     /**
      * @param SearchResultSetInterface $set
-     * @param string $query
-     * @param array $opts
+     * @param string                   $query
+     * @param array                    $opts
      *
      * @return string
      */
     public function getSetMarkup(SearchResultSetInterface $set, $query, array $opts = [])
     {
-        if ($set->getTotalCount() <= 0) {
+        $totalCount = $set->getTotalCount();
+
+        if ($totalCount <= 0) {
             return '';
         }
 
-        $markup = '';
+        $markup  = '';
         $results = $set->getCollection();
         if (!empty($results)) {
-            $markup .= '<ul>';
+
+            $markup .=
+                '<div class="search-result-set search-result-set-'.(!empty($opts['view']) ? $opts['view'] : 'extrait').' search-result-set-'.sanitize_title($set->getName()).'">
+                <div class="seat-head"> ' .
+                '<span class="set-total">' . (int)$totalCount . '</span> ' .
+                '<span class="set-title">' . $set->getLabel() . '</span>
+                </div>
+                <ul class="set-results">';
+
             foreach ($results as $res) {
                 $markup .= '<li>';
                 if (!empty($res->getLink())) {
@@ -73,7 +84,7 @@ class SearchResultSetsRenderer implements SearchResultsRendererInterface
                 $markup .= '<span class="res-title">' . $res->getTitle() . '</span>';
 
                 if (!empty($res->getContent())) {
-                    $markup .= '<div class="res-content">' . $res->getContent() . '</div>';
+                    $markup .= '<div class="res-content">' . $this->getMeaningFulContent($res->getContent(), $query) . '</div>';
                 }
 
                 if (!empty($res->getLink())) {
@@ -81,7 +92,37 @@ class SearchResultSetsRenderer implements SearchResultsRendererInterface
                 }
                 $markup .= '</li>';
             }
-            $markup .= '</ul>';
+
+            $markup .= '
+                </ul>';
+
+            $isListView = isset($opts['view']) && $opts['view'] === 'list';
+
+            $baseQueryComponents = [
+                's' => urlencode($query),
+                't' => $opts['search_service'],
+                'v' => 'list',
+            ];
+
+            if ($isListView) {
+                $container           = Container::getInstance();
+                $paginationComponent = $container['wwp.theme.component.pagination'];
+                $markup              .= $paginationComponent->getMarkup([
+                    'nbObjects'     => $totalCount,
+                    'perPage'       => $opts['limit'],
+                    'paginationUrl' => '/?' . http_build_query($baseQueryComponents + ['pageno' => '{pageno}']),
+                    'currentPage'   => $opts['page'],
+                ]);
+            } else {
+                if (!isset($opts['limit']) || (isset($opts['limit']) && $totalCount > $opts['limit'])) {
+                    $markup .= '<a href="/?' . http_build_query($baseQueryComponents) . '">' . __('see.all.results', WWP_THEME_TEXTDOMAIN) . '</a>';
+                }
+            }
+
+            $markup .=
+                '</div>' .
+                '</div>';
+
         }
 
         return $markup;
@@ -95,5 +136,10 @@ class SearchResultSetsRenderer implements SearchResultsRendererInterface
     public function getNoResultMarkup(array $opts = [])
     {
         return apply_filters('wwp.search.noresult', 'No result');
+    }
+
+    protected function getMeaningFulContent($content, $query)
+    {
+        return substr(strip_tags(trim($content)), 0, 140);
     }
 }
