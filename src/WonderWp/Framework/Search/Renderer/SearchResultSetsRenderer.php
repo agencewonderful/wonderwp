@@ -1,12 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: jeremydesvaux
- * Date: 11/04/2017
- * Time: 20:54
- */
 
-namespace WonderWp\Framework\Search;
+namespace WonderWp\Framework\Search\Renderer;
+
+use WonderWp\Framework\Search\ResultSet\SearchResultSetInterface;
 
 class SearchResultSetsRenderer implements SearchResultsRendererInterface
 {
@@ -36,14 +32,14 @@ class SearchResultSetsRenderer implements SearchResultsRendererInterface
     }
 
     /** @inheritdoc */
-    public function getMarkup(array $results, array $opts = [])
+    public function getMarkup(array $results, $query, array $opts = [])
     {
         $this->setSets($results);
 
         $markup = '';
         if (!empty($this->sets)) {
             foreach ($this->sets as $set) {
-                $markup .= $this->getSetMarkup($set);
+                $markup .= $this->getSetMarkup($set, $query, $opts);
             }
         } else {
             $markup = $this->getNoResultMarkup($opts);
@@ -54,10 +50,12 @@ class SearchResultSetsRenderer implements SearchResultsRendererInterface
 
     /**
      * @param SearchResultSetInterface $set
+     * @param string $query
+     * @param array $opts
      *
      * @return string
      */
-    public function getSetMarkup(SearchResultSetInterface $set)
+    public function getSetMarkup(SearchResultSetInterface $set, $query, array $opts = [])
     {
         if ($set->getTotalCount() <= 0) {
             return '';

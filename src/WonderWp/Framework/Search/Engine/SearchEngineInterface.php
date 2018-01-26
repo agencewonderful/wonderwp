@@ -1,6 +1,8 @@
 <?php
 
-namespace WonderWp\Framework\Search;
+namespace WonderWp\Framework\Search\Engine;
+
+use WonderWp\Framework\Search\Service\SearchServiceInterface;
 
 /**
  * Created by PhpStorm.

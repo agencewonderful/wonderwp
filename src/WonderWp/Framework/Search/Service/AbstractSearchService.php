@@ -1,12 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: jeremydesvaux
- * Date: 11/04/2017
- * Time: 20:38
- */
 
-namespace WonderWp\Framework\Search;
+namespace WonderWp\Framework\Search\Service;
 
 abstract class AbstractSearchService implements SearchServiceInterface
 {
@@ -30,8 +24,6 @@ abstract class AbstractSearchService implements SearchServiceInterface
     }
 
     /** @inheritdoc*/
-    public function getMarkup($query, array $opts = [])
-    {
-        return '';
-    }
+    abstract function getMarkup($query, array $opts = []);
+
 }
