@@ -120,7 +120,6 @@ class SearchResultSetsRenderer implements SearchResultsRendererInterface
             }
 
             $markup .=
-                '</div>' .
                 '</div>';
 
         }
