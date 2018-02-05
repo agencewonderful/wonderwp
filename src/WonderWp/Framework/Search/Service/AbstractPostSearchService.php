@@ -134,7 +134,7 @@ abstract class AbstractPostSearchService extends AbstractSetSearchService
 
         $res->setTitle($post->post_title);
         $res->setThumb(Medias::getFeaturedImage($post));
-        $res->setContent($post->post_content);
+        $res->setContent(apply_filters('the_content',$post->post_content));
         $post->filter = 'sample';
         $res->setLink(get_permalink($post));
 
