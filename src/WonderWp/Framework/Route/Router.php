@@ -23,7 +23,7 @@ class Router extends AbstractRouter
         add_action('init', [$this, 'registerRules']);
         add_action('admin_init', [$this, 'flushRules']);
         add_action('parse_request', [$this, 'matchRequest']);
-        add_action('template_redirect', [$this, 'callRouteHook']);
+        add_action('template_redirect', [$this, 'callRouteHook'],5);
         add_filter('query_vars', [$this, 'registerQueryVars']);
     }
 
@@ -237,6 +237,7 @@ class Router extends AbstractRouter
     public function callRouteHook()
     {
         if (!empty($this->matchedRoute)) {
+
             if (is_callable($this->matchedRoute->getCallable())) {
                 call_user_func_array($this->matchedRoute->getCallable(), $this->matchedRouteParams);
             }
