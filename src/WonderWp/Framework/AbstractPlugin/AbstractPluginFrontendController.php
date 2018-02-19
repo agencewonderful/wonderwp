@@ -55,13 +55,13 @@ abstract class AbstractPluginFrontendController
      */
     protected function renderPage($viewName, $params)
     {
-        $post                      = new \stdClass();
-        $title                     = $params['title'];
-        $post->post_title          = $title;
-        $post->post_name           = sanitize_title($title);
+        $post             = new \stdClass();
+        $title            = $params['title'];
+        $post->post_title = $title;
+        $post->post_name  = sanitize_title($title);
 
-        $post->ID                  = 0;
-        $post->post_content        = $this->renderView($viewName, $params);
+        $post->ID           = 0;
+        $post->post_content = $this->renderView($viewName, $params);
 
         if (!empty($params['image'])) {
             $post->post_featured_image = $params['image'];
@@ -71,13 +71,7 @@ abstract class AbstractPluginFrontendController
         }
 
         if (isset($params['metas'])) {
-            $metas = new \stdClass();
-            if (isset($params['metas']['title'])) {
-                $metas->seopaneltitle = [$params['metas']['title']];
-                unset($params['metas']['title']);
-            }
-            $metas->seopanel = [$params['metas']];
-            $post->metas     = $metas;
+            $post->metas = $params['metas'];
         }
         $qs = wwp_get_theme_service('query');
         $qs->resetPost($post);
