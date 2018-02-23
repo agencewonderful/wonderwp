@@ -140,7 +140,7 @@ class SearchResultSetsRenderer implements SearchResultsRendererInterface
     protected function getMeaningFulContent($content, $query)
     {
 
-        $text    = str_replace(["\r\n", "\r"], "", strip_tags($content));
+        $text    = str_replace(["\r\n", "\r"], " ", strip_tags($content));
         $testpos = strpos(strtolower($text), strtolower($query));
         $size    = 140;
         $half    = ceil($size / 2);
