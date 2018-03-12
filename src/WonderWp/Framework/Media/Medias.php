@@ -18,7 +18,7 @@ class Medias
         global $wpdb;
         //Url to ID
         $attachmentCol = $wpdb->get_col($wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE guid='%s';", $mediaUrl));
-        $imgId         = !empty($attachmentCol[0]) ? $attachmentCol[0] : 0;
+        $imgId = !empty($attachmentCol[0]) ? $attachmentCol[0] : 0;
 
         return $imgId;
     }
@@ -28,7 +28,7 @@ class Medias
      *
      * @param string $mediaUrl
      * @param string||array $size
-     * @param bool   $icon
+     * @param bool $icon
      * @param string $attr
      *
      * @return string
@@ -54,14 +54,13 @@ class Medias
         $imgUrl = '';
         if (!empty($post->post_featured_image)) {
             $imgUrl = $post->post_featured_image;
-            if($short){
+            if ($short) {
                 $imgUrl = str_replace(get_bloginfo('url'), '', $imgUrl);
             }
-        }
-        else {
+        } else {
             if (!empty($postId)) {
                 $imgUrl = wp_get_attachment_url(get_post_thumbnail_id($postId));
-                if($short){
+                if ($short) {
                     $imgUrl = str_replace(get_bloginfo('url'), '', $imgUrl);
                 }
                 if ($imgUrl === false) {
@@ -74,9 +73,23 @@ class Medias
     }
 
     /**
-     * @param array  $file     the array from $_FILES for a specific file
-     * @param string $dest     new upload folder within the upload base dir
-     * @param null   $fileName you can specify a new name for the file
+     *
+     * @param int|\WP_Post $postId
+     * @param string||array $size
+     * @param bool $icon
+     * @param string $attr
+     *
+     * @return string
+     */
+    public static function mediaAtSizeFromPostId($postId, $size, $icon = false, $attr = '')
+    {
+        return wp_get_attachment_image(get_post_thumbnail_id($postId), $size, $icon, $attr);
+    }
+
+    /**
+     * @param array $file the array from $_FILES for a specific file
+     * @param string $dest new upload folder within the upload base dir
+     * @param null $fileName you can specify a new name for the file
      *
      * @return Result
      */
@@ -94,7 +107,7 @@ class Medias
             $file['name'] = $fileName;
         }
 
-        $container                        = Container::getInstance();
+        $container = Container::getInstance();
         $container['upload_dir_override'] = $dest;
         add_filter('upload_dir', [self::class, 'wpse183245UploadDir']);
         $movefile = wp_handle_upload($file, $upload_overrides);
@@ -124,8 +137,8 @@ class Medias
         $container = Container::getInstance();
         if ($container->offsetExists('upload_dir_override')) {
             $dirs['subdir'] = $container['upload_dir_override'];
-            $dirs['path']   = $dirs['basedir'] . $container['upload_dir_override'];
-            $dirs['url']    = $dirs['baseurl'] . $container['upload_dir_override'];
+            $dirs['path'] = $dirs['basedir'] . $container['upload_dir_override'];
+            $dirs['url'] = $dirs['baseurl'] . $container['upload_dir_override'];
         }
 
         return $dirs;
