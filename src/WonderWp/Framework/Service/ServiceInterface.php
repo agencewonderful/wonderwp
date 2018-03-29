@@ -17,4 +17,7 @@ interface ServiceInterface
     const SEARCH_SERVICE_NAME           = 'search';
     const SHORT_CODE_SERVICE_NAME       = 'shortCode';
     const VIEW_SERVICE_NAME             = 'view';
+    const REPOSITORY_SERVICE_NAME       = 'repository';
+    const PAGINATION_SERVICE_NAME       = 'pagination';
+    const VIEWMAP_SERVICE_NAME          = 'viewmap';
 }
