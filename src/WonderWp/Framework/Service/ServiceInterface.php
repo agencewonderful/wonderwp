@@ -20,4 +20,5 @@ interface ServiceInterface
     const REPOSITORY_SERVICE_NAME       = 'repository';
     const PAGINATION_SERVICE_NAME       = 'pagination';
     const VIEWMAP_SERVICE_NAME          = 'viewmap';
+    const FILTER_SERVICE_NAME           = 'filterservice';
 }
