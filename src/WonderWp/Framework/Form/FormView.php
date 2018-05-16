@@ -28,7 +28,7 @@ class FormView implements FormViewInterface
         $this->container = Container::getInstance();
     }
 
-    /** @inheritdoc */
+    /** {@inheritdoc} */
     public function setFormInstance(FormInterface $form)
     {
         $this->formInstance = $form;
@@ -36,23 +36,25 @@ class FormView implements FormViewInterface
         return $this;
     }
 
-    /** @inheritdoc */
+    /** {@inheritdoc} */
     public function getFormInstance()
     {
         return $this->formInstance;
     }
 
-    /** @inheritdoc */
+    /** {@inheritdoc} */
     public function render(array $opts = [])
     {
-        $markup    = '';
+        $markup = '';
         $optsStart = array_key_exists('formStart', $opts) ? $opts['formStart'] : [];
-        $optsEnd   = array_key_exists('formEnd', $opts) ? $opts['formEnd'] : [];
+        $optsBeforeFields = array_key_exists('formBeforeFields', $opts) ? $opts['formBeforeFields'] : [];
+        $optsEnd = array_key_exists('formEnd', $opts) ? $opts['formEnd'] : [];
 
         $markup .= $this->formStart($optsStart);
         $markup .= $this->formErrors();
+        $markup .= $this->formBeforeFields($optsBeforeFields);
 
-        $fields        = $this->getFormInstance()->getFields();
+        $fields = $this->getFormInstance()->getFields();
         $allowedFields = array_key_exists('allowFields', $opts) ? $opts['allowFields'] : array_keys($fields);
 
         if (array_key_exists('excludeFields', $opts)) {
@@ -76,14 +78,14 @@ class FormView implements FormViewInterface
         return $markup;
     }
 
-    /** @inheritdoc */
+    /** {@inheritdoc} */
     public function formStart(array $optsStart = [])
     {
         $defaultOptions = [
             'showFormTag' => true,
-            'method'      => 'post',
-            'enctype'     => 'multipart/form-data',
-            'class'       => ['wwpform', $this->formInstance->getName()],
+            'method' => 'post',
+            'enctype' => 'multipart/form-data',
+            'class' => ['wwpform', $this->formInstance->getName()],
         ];
 
         $options = array_merge_recursive_distinct($defaultOptions, $optsStart);
@@ -99,7 +101,7 @@ class FormView implements FormViewInterface
         return "<form {$htmlOptions}>";
     }
 
-    /** @inheritdoc */
+    /** {@inheritdoc} */
     public function formErrors()
     {
         $markup = '';
@@ -112,7 +114,26 @@ class FormView implements FormViewInterface
         return $markup;
     }
 
-    /** @inheritdoc */
+     /** {@inheritdoc} */
+    public function formBeforeFields($optsBeforeFields = [])
+    {
+        // Init
+        $markup = '';
+
+        // Options given
+        if (count($optsBeforeFields) > 0) {
+            $markup .= '<div class="form-before-fields">';
+            foreach ($optsBeforeFields as $str) {
+                $markup .= $str;
+            }
+            $markup .= '</div>';
+        }
+
+        // Result
+        return $markup;
+    }
+
+    /** {@inheritdoc} */
     public function renderGroup(FormGroup $group)
     {
         $markup = '';
@@ -120,11 +141,11 @@ class FormView implements FormViewInterface
 
         if (!empty($fields)) {
             $displayRules = paramsToHtml($group->getDisplayRules());
-            $markup       .= "<fieldset {$displayRules}>";
-            $markup       .= '<legend class="hndle ui-sortable-handle">';
-            $markup       .= $group->getTitle();
-            $markup       .= '</legend>';
-            $markup       .= '<div class="inside">';
+            $markup .= "<fieldset {$displayRules}>";
+            $markup .= '<legend class="hndle ui-sortable-handle">';
+            $markup .= $group->getTitle();
+            $markup .= '</legend>';
+            $markup .= '<div class="inside">';
 
             foreach ($fields as $field) {
                 $markup .= $this->renderField($field);
@@ -137,20 +158,20 @@ class FormView implements FormViewInterface
         return $markup;
     }
 
-    /** @inheritdoc */
+    /** {@inheritdoc} */
     public function renderField($field)
     {
         if (is_string($field)) {
             $field = $this->formInstance->getField($field);
         }
 
-        if ($field === null || $field->isRendered()) {
+        if (null === $field || $field->isRendered()) {
             return '';
         }
 
         $field->setRendered(true);
 
-        $type   = $field->getType();
+        $type = $field->getType();
         $markup = $this->fieldWrapStart($field);
 
         if (!in_array($type, ['radio', 'checkbox'], true)) {
@@ -172,18 +193,18 @@ class FormView implements FormViewInterface
         return $markup;
     }
 
-    /** @inheritdoc */
+    /** {@inheritdoc} */
     public function fieldWrapStart($field)
     {
         if (is_string($field)) {
             $field = $this->formInstance->getField($field);
         }
 
-        if ($field === null) {
+        if (null === $field) {
             return '';
         }
 
-        $displayRules   = $field->getDisplayRules();
+        $displayRules = $field->getDisplayRules();
         $wrapAttributes = array_key_exists('wrapAttributes', $displayRules) ? $displayRules['wrapAttributes'] : [];
 
         if (array_key_exists('no-wrap', $wrapAttributes) && $wrapAttributes['no-wrap']) {
@@ -213,7 +234,7 @@ class FormView implements FormViewInterface
             $markup .= $displayRules['before-wrap'];
         }
 
-        $markup .= '<div ' . paramsToHtml($wrapAttributes) . '>';
+        $markup .= '<div '.paramsToHtml($wrapAttributes).'>';
 
         if (!empty($displayRules['before'])) {
             $markup .= $displayRules['before'];
@@ -222,59 +243,59 @@ class FormView implements FormViewInterface
         return $markup;
     }
 
-    /** @inheritdoc */
+    /** {@inheritdoc} */
     public function fieldLabel($field)
     {
         if (is_string($field)) {
             $field = $this->formInstance->getField($field);
         }
 
-        if ($field === null) {
+        if (null === $field) {
             return '';
         }
 
         // Fields that  use the label differently:
-        if ($field->getTag() === 'button') {
+        if ('button' === $field->getTag()) {
             return '';
         }
 
         $displayRules = $field->getDisplayRules();
 
-        if (!array_key_exists('label', $displayRules) || $displayRules['label'] === false) {
+        if (!array_key_exists('label', $displayRules) || false === $displayRules['label']) {
             return '';
         }
 
-        $validationRules      = $field->getValidationRules();
-        $attributes           = array_key_exists('labelAttributes', $displayRules) ? $displayRules['labelAttributes'] : [];
+        $validationRules = $field->getValidationRules();
+        $attributes = array_key_exists('labelAttributes', $displayRules) ? $displayRules['labelAttributes'] : [];
         $validationAttributes = $this->getValidationLabelAttributes($validationRules);
-        $attributes           = array_merge_recursive_distinct($validationAttributes, $attributes);
+        $attributes = array_merge_recursive_distinct($validationAttributes, $attributes);
 
         $htmlAttributes = paramsToHtml($attributes);
-        $markup         = "<label {$htmlAttributes}>";
-        $markup         .= $this->getValidationLabelContent($displayRules['label'], $field);
-        $markup         .= '</label>';
+        $markup = "<label {$htmlAttributes}>";
+        $markup .= $this->getValidationLabelContent($displayRules['label'], $field);
+        $markup .= '</label>';
 
         return $markup;
     }
 
-    /** @inheritdoc */
+    /** {@inheritdoc} */
     public function fieldStart($field)
     {
         if (is_string($field)) {
             $field = $this->formInstance->getField($field);
         }
 
-        if ($field === null) {
+        if (null === $field) {
             return '';
         }
 
-        $tag                  = $field->getTag();
-        $type                 = $field->getType();
-        $displayRules         = $field->getDisplayRules();
-        $validationRules      = $field->getValidationRules();
-        $attributes           = array_key_exists('inputAttributes', $displayRules) ? $displayRules['inputAttributes'] : [];
+        $tag = $field->getTag();
+        $type = $field->getType();
+        $displayRules = $field->getDisplayRules();
+        $validationRules = $field->getValidationRules();
+        $attributes = array_key_exists('inputAttributes', $displayRules) ? $displayRules['inputAttributes'] : [];
         $validationAttributes = $this->getValidationInputAttributes($validationRules);
-        $attributes           = array_merge_recursive_distinct($validationAttributes, $attributes);
+        $attributes = array_merge_recursive_distinct($validationAttributes, $attributes);
 
         //Classes
         if (empty($attributes['class'])) {
@@ -283,7 +304,7 @@ class FormView implements FormViewInterface
 
         $attributes['class'][] = 'form-control';
 
-        if ($tag === 'input') {
+        if ('input' === $tag) {
             $attributes['class'][] = $type;
         }
 
@@ -292,7 +313,7 @@ class FormView implements FormViewInterface
         }
 
         $markup = '';
-        if ($tag === 'select') {
+        if ('select' === $tag) {
             $markup .= '<div class="select-style">';
         }
 
@@ -300,7 +321,7 @@ class FormView implements FormViewInterface
         $markup .= "<{$tag}";
 
         //Type
-        if ($tag === 'input') {
+        if ('input' === $tag) {
             $markup .= " type=\"{$field->getType()}\" ";
         }
 
@@ -310,37 +331,37 @@ class FormView implements FormViewInterface
         }
 
         //Add input parameters
-        if ($tag == 'div') {
+        if ('div' == $tag) {
             if (isset($attributes['name'])) {
                 unset($attributes['name']);
             }
         }
-        $markup .= ' ' . paramsToHtml($attributes);
+        $markup .= ' '.paramsToHtml($attributes);
 
         //Close opening tag
-        if ($tag != 'input') {
+        if ('input' != $tag) {
             $markup .= '>';
         }
 
         return $markup;
     }
 
-    /** @inheritdoc */
+    /** {@inheritdoc} */
     public function fieldBetween($field)
     {
         if (is_string($field)) {
             $field = $this->formInstance->getField($field);
         }
 
-        if ($field === null) {
+        if (null === $field) {
             return '';
         }
 
-        $markup       = '';
+        $markup = '';
         $displayRules = $field->getDisplayRules();
 
-        $tag  = $field->getTag();
-        $val  = $field->getValue();
+        $tag = $field->getTag();
+        $val = $field->getValue();
         $type = $field->getType();
 
         //If group -> recurse
@@ -357,31 +378,31 @@ class FormView implements FormViewInterface
         }
 
         //Value
-        if ($tag === 'input') {
+        if ('input' === $tag) {
             if (is_array($val) || is_object($val)) {
                 $val = json_encode($val);
             }
 
             $markup .= " value=\"{$val}\" ";
 
-            if ($type === 'checkbox') {
+            if ('checkbox' === $type) {
                 $cbValue = $displayRules['inputAttributes']['value'];
-                $markup  .= \checked($field->getValue(), $cbValue, false);
+                $markup .= \checked($field->getValue(), $cbValue, false);
             }
         }
 
-        if ($tag === 'textarea') {
+        if ('textarea' === $tag) {
             $markup .= $val;
         }
 
-        if ($tag === 'button' && array_key_exists('label', $displayRules) && $displayRules['label'] !== false) {
+        if ('button' === $tag && array_key_exists('label', $displayRules) && false !== $displayRules['label']) {
             $markup .= $displayRules['label'];
         }
 
         //Select Options
-        if ($tag === 'select') {
+        if ('select' === $tag) {
             /** @var $field SelectField */
-            $opts       = $field->getOptions();
+            $opts = $field->getOptions();
             $isMultiple = !empty($displayRules['inputAttributes']['multiple']);
 
             foreach ($opts as $key => $val) {
@@ -389,7 +410,7 @@ class FormView implements FormViewInterface
             }
         }
 
-        if ($tag === 'div' && !$field instanceof FieldGroupInterface) {
+        if ('div' === $tag && !$field instanceof FieldGroupInterface) {
             if (is_string($val)) {
                 $markup .= $val;
             }
@@ -429,29 +450,29 @@ class FormView implements FormViewInterface
         return "<option value=\"{$value}\" {$selected}>{$label}</option>";
     }
 
-    /** @inheritdoc */
+    /** {@inheritdoc} */
     public function fieldEnd($field)
     {
         if (is_string($field)) {
             $field = $this->formInstance->getField($field);
         }
 
-        if ($field === null) {
+        if (null === $field) {
             return '';
         }
 
-        $tag          = $field->getTag();
+        $tag = $field->getTag();
         $displayRules = $field->getDisplayRules();
 
         $markup = '';
 
-        if ($tag === 'input') {
+        if ('input' === $tag) {
             $markup .= ' />';
         } else {
             $markup .= "</{$tag}>";
         }
 
-        if ($tag === 'select') {
+        if ('select' === $tag) {
             $markup .= '</div>'; // select-style
         }
 
@@ -462,14 +483,14 @@ class FormView implements FormViewInterface
         return $markup;
     }
 
-    /** @inheritdoc */
+    /** {@inheritdoc} */
     public function fieldError($field)
     {
         if (is_string($field)) {
             $field = $this->formInstance->getField($field);
         }
 
-        if ($field === null) {
+        if (null === $field) {
             return '';
         }
 
@@ -480,7 +501,7 @@ class FormView implements FormViewInterface
         }
 
         $displayRules = $field->getDisplayRules();
-        $attributes   = [
+        $attributes = [
             'class' => 'label-error',
         ];
 
@@ -489,45 +510,45 @@ class FormView implements FormViewInterface
         }
 
         $attributesHtml = paramsToHtml($attributes);
-        $markup         = "<label {$attributesHtml}>";
-        $markup         .= implode(', ', $errors);
-        $markup         .= '</label>';
+        $markup = "<label {$attributesHtml}>";
+        $markup .= implode(', ', $errors);
+        $markup .= '</label>';
 
         return $markup;
     }
 
-    /** @inheritdoc */
+    /** {@inheritdoc} */
     public function fieldHelp($field)
     {
         if (is_string($field)) {
             $field = $this->formInstance->getField($field);
         }
 
-        if ($field === null) {
+        if (null === $field) {
             return '';
         }
 
         $displayRules = $field->getDisplayRules();
 
-        if (!array_key_exists('help', $displayRules) || $displayRules['help'] === false) {
+        if (!array_key_exists('help', $displayRules) || false === $displayRules['help']) {
             return '';
         }
 
         return "<span class=\"help\">{$displayRules['help']}</span>";
     }
 
-    /** @inheritdoc */
+    /** {@inheritdoc} */
     public function fieldWrapEnd($field)
     {
         if (is_string($field)) {
             $field = $this->formInstance->getField($field);
         }
 
-        if ($field === null) {
+        if (null === $field) {
             return '';
         }
 
-        $displayRules   = $field->getDisplayRules();
+        $displayRules = $field->getDisplayRules();
         $wrapAttributes = array_key_exists('wrapAttributes', $displayRules) ? $displayRules['wrapAttributes'] : [];
 
         if (array_key_exists('no-wrap', $wrapAttributes) && $wrapAttributes['no-wrap']) {
@@ -543,23 +564,23 @@ class FormView implements FormViewInterface
         return $markup;
     }
 
-    /** @inheritdoc */
+    /** {@inheritdoc} */
     public function formEnd(array $optsEnd = [])
     {
         $markup = '';
 
         $defaultOptions = [
-            'showFormTag'   => true,
-            'showSubmit'    => true,
-            'submitLabel'   => __('submit'),
-            'showReset'     => false,
-            'resetLabel'    => __('reset'),
+            'showFormTag' => true,
+            'showSubmit' => true,
+            'submitLabel' => __('submit'),
+            'showReset' => false,
+            'resetLabel' => __('reset'),
             'btnAttributes' => [
-                'type'  => 'submit',
+                'type' => 'submit',
                 'class' => 'btn button',
             ],
             'resetbtnAttributes' => [
-                'type'  => 'reset',
+                'type' => 'reset',
                 'class' => 'btn button btn-secondary',
             ],
         ];
@@ -567,10 +588,10 @@ class FormView implements FormViewInterface
         $options = array_merge_recursive_distinct($defaultOptions, $optsEnd);
 
         if ($options['showSubmit']) {
-            $markup        .= '<div class="submitFormField">
-                <button ' . paramsToHtml($options['btnAttributes']) . '>' . $options['submitLabel'] . '</button>';
+            $markup .= '<div class="submitFormField">
+                <button '.paramsToHtml($options['btnAttributes']).'>'.$options['submitLabel'].'</button>';
             if ($options['showReset']) {
-                $markup.='  <button '.paramsToHtml($options['resetbtnAttributes']).'>'.$options['resetLabel'].'</button>';
+                $markup .= '  <button '.paramsToHtml($options['resetbtnAttributes']).'>'.$options['resetLabel'].'</button>';
             }
             $markup .= '</div>';
         }
@@ -590,14 +611,14 @@ class FormView implements FormViewInterface
     protected function getValidationInputAttributes(array $validationRules)
     {
         $attributes = [];
-        $validator  = $this->getFormValidator();
+        $validator = $this->getFormValidator();
 
         if ($validator::hasRule($validationRules, NotEmpty::class)) {
             $attributes['required'] = 'required';
         }
 
         $lengthRule = $validator::getRule($validationRules, Length::class);
-        if ($lengthRule instanceof Length && $lengthRule->maxValue !== null) {
+        if ($lengthRule instanceof Length && null !== $lengthRule->maxValue) {
             $attributes['maxlength'] = $lengthRule->maxValue;
         }
 
@@ -637,10 +658,10 @@ class FormView implements FormViewInterface
      */
     protected function getValidationLabelContent($label, FieldInterface $field)
     {
-        $validator       = $this->getFormValidator();
+        $validator = $this->getFormValidator();
         $validationRules = $field->getValidationRules();
 
-        if ($field->getType() !== 'radio' && $validator::hasRule($validationRules, NotEmpty::class)) {
+        if ('radio' !== $field->getType() && $validator::hasRule($validationRules, NotEmpty::class)) {
             $label .= '<span class="required">*</span>';
         }
 
