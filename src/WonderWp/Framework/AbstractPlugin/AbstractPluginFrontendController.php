@@ -53,10 +53,10 @@ abstract class AbstractPluginFrontendController
      * @param  string $viewName
      * @param  array  $params
      */
-    protected function renderPage($viewName, $params)
+    protected function renderPage($viewName, array $params = [])
     {
         $post             = new \stdClass();
-        $title            = $params['title'];
+        $title            = isset($params['title']) ? $params['title'] : '';
         $post->post_title = $title;
         $post->post_name  = sanitize_title($title);
 
