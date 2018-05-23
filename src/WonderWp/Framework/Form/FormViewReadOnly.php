@@ -69,7 +69,7 @@ class FormViewReadOnly extends FormView
         $val = $field->getValue();
 
         //If group -> recurse
-        if ($field instanceof FieldGroupInterface) {
+        if ($field instanceof FieldGroupInterface && !$field instanceof OptionsFieldInterface) {
             $group = $field->getGroup();
 
             foreach ($group as $fFromFroup) {
@@ -106,9 +106,10 @@ class FormViewReadOnly extends FormView
 
     public function formEnd(array $optsEnd = [])
     {
-        if(!isset($optsEnd['showSubmit'])){
+        if (!isset($optsEnd['showSubmit'])) {
             $optsEnd['showSubmit'] = false;
         }
+
         return parent::formEnd($optsEnd);
     }
 }
