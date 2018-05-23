@@ -33,6 +33,13 @@ interface FormViewInterface
     public function formStart(array $optsStart = []);
 
     /**
+     * @param array $optsBeforeFields
+     *
+     * @return string
+     */
+    public function formBeforeFields($optsBeforeFields = []);
+
+    /**
      * @return string
      */
     public function formErrors();
