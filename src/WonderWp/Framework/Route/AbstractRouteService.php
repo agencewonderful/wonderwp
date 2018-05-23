@@ -2,6 +2,7 @@
 
 namespace WonderWp\Framework\Route;
 
+use WonderWp\Framework\AbstractPlugin\AbstractManager;
 use WonderWp\Framework\AbstractPlugin\AbstractPluginManager;
 
 /**
@@ -114,7 +115,7 @@ abstract class AbstractRouteService implements RouteServiceInterface
         } elseif ($defaultLocale && isset($patterns[$defaultLocale])) {
             $url = $patterns[$defaultLocale];
         } else {
-            return $url;
+            $url = reset($patterns);
         }
         // Replace markers in pattern found
         foreach ($params as $search => $replace) {
@@ -197,5 +198,22 @@ abstract class AbstractRouteService implements RouteServiceInterface
         }
         $patterns = is_array($patterns) ? $patterns : [$patterns];
         return $patterns;
+    }
+
+    /**
+     * @param AbstractPluginManager $manager
+     * @param           $type
+     * @param           $action
+     * @param string    $method
+     */
+    protected function expandRoutes($manager, $type, $action, $method = 'ALL')
+    {
+        if (is_array($manager->getConfig($type))) {
+            foreach ($manager->getConfig($type) as $typeUrl) {
+                $this->routes[] = [ltrim($typeUrl, '/'), [$manager->getController(AbstractManager::PUBLIC_CONTROLLER_TYPE), $action], $method];
+            }
+        } else {
+            $this->routes[] = [ltrim($manager->getConfig($type), '/'), [$manager->getController(AbstractManager::PUBLIC_CONTROLLER_TYPE), $action], $method];
+        }
     }
 }
