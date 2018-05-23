@@ -39,6 +39,13 @@ interface FormInterface
     public function addField(FieldInterface $field = null, $groupName = '');
 
     /**
+     * @param array $fieldNames
+     *
+     * @return static
+     */
+    public function removeFields(array $fieldNames);
+
+    /**
      * @param array FieldInterface[] $fields
      */
     public function setFields(array $fields);

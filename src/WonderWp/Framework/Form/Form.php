@@ -36,7 +36,6 @@ class Form implements FormInterface
         return $formView->render($opts);
     }
 
-
     /** @inheritdoc */
     public function getView()
     {
@@ -116,6 +115,20 @@ class Form implements FormInterface
     }
 
     /** @inheritdoc */
+    public function removeFields(array $fieldNames)
+    {
+        if (!empty($fieldNames)) {
+            foreach ($fieldNames as $fieldName) {
+                if (isset($this->fields[$fieldName])) {
+                    unset($this->fields[$fieldName]);
+                }
+            }
+        }
+
+        return $this;
+    }
+
+    /** @inheritdoc */
     public function getGroups()
     {
         return $this->groups;
@@ -158,7 +171,7 @@ class Form implements FormInterface
     {
 
         $formData = $this->getValues();
-        $data = array_merge_recursive_distinct($formData,$data);
+        $data     = array_merge_recursive_distinct($formData, $data);
 
         $fields = $this->getFields();
         if (!empty($fields)) {
@@ -213,7 +226,7 @@ class Form implements FormInterface
                         continue;
                     } else {
                         $data = is_string($data[$ndx]) && strpos($data[$ndx], '\\\\') !== false ? str_replace('\\\\', '\\', $data[$ndx]) : $data[$ndx];
-                        if(is_string($data)){
+                        if (is_string($data)) {
                             $data = stripslashes($data);
                         }
                     }
@@ -235,7 +248,8 @@ class Form implements FormInterface
     }
 
     /** @inheritdoc */
-    public function getValues(){
+    public function getValues()
+    {
         $values = [];
 
         $fields = $this->getFields();
@@ -266,7 +280,6 @@ class Form implements FormInterface
                 }
             }
         }
-
 
         return $values;
     }
