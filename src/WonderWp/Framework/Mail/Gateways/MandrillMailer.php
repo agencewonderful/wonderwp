@@ -212,8 +212,10 @@ class MandrillMailer extends AbstractMailer
             foreach($array as $key=>$val){
                 if(is_array($val)){
                     $array[$key] = $this->correctEncodingRecursive($val);
-                } else {
+                } elseif(is_string($val)) {
                     $array[$key] = $this->correctEncoding($val);
+                } else {
+                    $array[$key] = $val;
                 }
             }
         }
