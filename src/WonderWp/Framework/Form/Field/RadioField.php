@@ -6,8 +6,11 @@ use function WonderWp\Framework\array_merge_recursive_distinct;
 use WonderWp\Framework\DependencyInjection\Container;
 use WonderWp\Framework\Form\Validation\Validator;
 
-class RadioField extends FieldGroup
+class RadioField extends FieldGroup implements OptionsFieldInterface
 {
+
+    use OptionsFieldTrait;
+
     /** @inheritdoc */
     public function __construct($name, $value = null, array $displayRules = [], array $validationRules = [])
     {
