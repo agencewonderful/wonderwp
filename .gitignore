@@ -15,4 +15,8 @@ wp-content/plugins/hello.php
 /readme.html
 /sitemap.xml
 /sitemap.xml.gz
-
+/composer.lock
+/vendor
+/wordpress
+tests/reports
+!/tests/reports/.gitkeep
