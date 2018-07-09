@@ -534,7 +534,7 @@ class FormView implements FormViewInterface
             return '';
         }
 
-        return "<span class=\"help\">{$displayRules['help']}</span>";
+        return "<div class=\"help\"><span>{$displayRules['help']}</span></div>";
     }
 
     /** {@inheritdoc} */

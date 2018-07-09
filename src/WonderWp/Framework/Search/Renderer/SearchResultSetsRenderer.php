@@ -115,7 +115,7 @@ class SearchResultSetsRenderer implements SearchResultsRendererInterface
                 ]);
             } else {
                 if (!isset($opts['limit']) || (isset($opts['limit']) && $totalCount > $opts['limit'])) {
-                    $markup .= '<a href="/?' . http_build_query($baseQueryComponents) . '">' . __('see.all.results', WWP_THEME_TEXTDOMAIN) . '</a>';
+                    $markup .= '<a href="/?' . http_build_query($baseQueryComponents) . '" class="search-all-res-in-cat">' . __('see.all.results', WWP_THEME_TEXTDOMAIN) . '</a>';
                 }
             }
 
@@ -141,7 +141,7 @@ class SearchResultSetsRenderer implements SearchResultsRendererInterface
     {
 
         $text    = str_replace(["\r\n", "\r"], " ", strip_tags($content));
-        $testpos = strpos(strtolower($text), strtolower($query));
+        $testpos = !empty($query) ? strpos(strtolower($text), strtolower($query)) : 0;
         $size    = 140;
         $half    = ceil($size / 2);
         $mindif  = $testpos - $half;
