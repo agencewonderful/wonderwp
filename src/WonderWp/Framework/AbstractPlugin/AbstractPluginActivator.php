@@ -48,10 +48,10 @@ abstract class AbstractPluginActivator implements ActivatorInterface
                     $result = new Result(200,['msg'=>'All files copied successfully']);
                 }
             } else {
-                $result = new Result(200,['msg'=>'Nothing to copy']);
+                $result = new Result(200,['msg'=>'No language file found in source folder, nothing to copy','srcFolder'=>$srcLangFolder]);
             }
         } else {
-            $result = new Result(200,['msg'=>'Nothing to copy']);
+            $result = new Result(200,['msg'=>'Source lang folder not found, nothing to copy','srcFolder'=>$srcLangFolder]);
         }
         return $result;
     }
