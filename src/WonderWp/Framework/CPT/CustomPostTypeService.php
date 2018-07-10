@@ -45,4 +45,7 @@ class CustomPostTypeService extends AbstractService
         return $this;
     }
 
+    public function register(){
+        $this->customPostType->register();
+    }
 }
