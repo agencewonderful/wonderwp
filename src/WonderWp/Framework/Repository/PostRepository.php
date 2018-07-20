@@ -23,7 +23,7 @@ class PostRepository implements RepositoryInterface
     {
         $criteria = [
             'numberpost' => -1,
-            'post_type'=>static::POST_TYPE
+            'post_type'  => static::POST_TYPE,
         ];
 
         return get_posts($criteria);
@@ -36,8 +36,8 @@ class PostRepository implements RepositoryInterface
     public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
 
-        if(empty($criteria['post_type'])){
-            $criteria['post_type']=static::POST_TYPE;
+        if (empty($criteria['post_type'])) {
+            $criteria['post_type'] = static::POST_TYPE;
         }
 
         if (!empty($limit)) {
@@ -49,9 +49,14 @@ class PostRepository implements RepositoryInterface
             $criteria['offset'] = $offset;
         }
 
-        if(!empty($orderBy)) {
+        if (!empty($orderBy)) {
             $criteria['orderby'] = array_keys($orderBy);
-            $criteria['order'] = array_values($orderBy);
+            $criteria['order']   = array_values($orderBy);
+
+            if (count($orderBy) == 1) {
+                $criteria['orderby'] = reset($criteria['orderby']);
+                $criteria['order']   = reset($criteria['order']);
+            }
         }
 
         return get_posts($criteria);
